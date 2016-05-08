@@ -24,16 +24,31 @@ repositories {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar']) //we aren't uploading the api to a maven repo just yet
-    compile 'com.beust:jcommander:1.1.48' //command line argument support
+    compile 'com.beust:jcommander:1.48' //command line argument support
     compile 'ninja.leaping.configurate:configurate-hocon:3.1.1'//configuration
+
+    compile 'org.jsoup:jsoup:1.9.1' //scraping from html pages as needed
+    compile 'org.beanshell:bsh:2.0b5' //commands
+
+    compile 'com.sparkjava:spark-core:2.5'  //for creating a web interface and rest endpoints
+    compile 'com.sparkjava:spark-debug-tools:0.5' //debugging errors w/ endpoints
+    compile 'com.sparkjava:spark-template-mustache:2.3' //webpage templates
+
+    compile 'com.google.inject:guice:4.0' //injections
+
+    compile 'org.slf4j:slf4j-jdk14:1.7.21' //send slf4j to java's logger for now
+    compile 'org.projectlombok:lombok:1.16.8'
+
+
     //below here are deps for the javacurselib itself
     //compile 'com.feed_the_beast:javacurselib:0.0.1-9999999'
-	compile 'com.google.code.gson:gson:2.2.4'//JSON support
+    compile 'com.google.code.gson:gson:2.2.4'//JSON support using same version as MC
     compile 'org.glassfish.tyrus.bundles:tyrus-standalone-client-jdk:1.12' // websocket RI
     //compile 'org.eclipse.jetty.websocket:javax-websocket-client-impl:9.3.9.M1' // Jetty's implementation
-    compile 'commons-io:commons-io:2.4'//general utility classes
-    compile 'com.google.guava:guava:17.0'//general utility classes
+    compile 'commons-io:commons-io:2.4'//general utility classes using same version as MC
+    compile 'com.google.guava:guava:17.0'//general utility classes using same version as MC
     compile 'com.google.code.findbugs:jsr305:1.3.9'//nonnull stuff
+    compile 'org.slf4j:slf4j-api:1.7.21'//logging chose version that matches sponge
 
     // test frameworks
     testCompile 'junit:junit:4.12'
@@ -41,6 +56,8 @@ dependencies {
     testCompile 'org.powermock:powermock-module-junit4:1.6.3'
     testCompile 'org.powermock:powermock-api-mockito:1.6.3'
     testCompile 'org.powermock:powermock-module-junit4-rule-agent:1.6.3'
+    testCompile 'org.openjdk.jmh:jmh-core:1.12'
+    testCompile 'org.openjdk.jmh:jmh-generator-annprocess:1.12'
     deployerJars 'org.apache.maven.wagon:wagon-ssh:2.2'
 }
 
@@ -55,11 +72,11 @@ if (System.getenv().BUILD_NUMBER != null) {
 }
 
 mainClassName = project.mainClass
-group = 'com.feed_the_beast.ftbcurseappbot'
+group = 'com.feed_the_beast'
 version = "0.0.1-${project.buildNum}"
 description = "FTB moderation bot for CurseApp"
-sourceCompatibility = 1.7
-targetCompatibility = 1.7
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 shadowJar  {
   exclude 'META-INF/*.DSA'
   exclude 'META-INF/*.RSA'
