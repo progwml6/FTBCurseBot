@@ -18,22 +18,22 @@ public class ConversationEvent implements Task<ConversationMessageNotification> 
     @Override
     public void execute (@Nonnull WebSocket webSocket, @Nonnull ConversationMessageNotification msg) {
         if (msg.notificationType == ConversationNotificationType.NORMAL || msg.notificationType == ConversationNotificationType.EDITED) {
-            if (msg.body.startsWith("!ban")) {
-                log.info("LOLBAN " + msg.body.replace("!ban", ""));
-                webSocket.sendMessage(msg.conversationID, "not actually going to ban " + msg.body.replace("!ban", ""));
-            } else if (msg.body.startsWith("!repeat")) {
-                log.info("repeat " + msg.body.replace("!repeat", ""));
-                webSocket.sendMessage(msg.conversationID, msg.body.replace("!repeat", ""));
-            } else if (msg.body.startsWith("!commands")) {
+            if (msg.body.startsWith(Main.getBotTrigger() + "ban")) {
+                log.info("LOLBAN " + msg.body.replace(Main.getBotTrigger() + "ban", ""));
+                webSocket.sendMessage(msg.conversationID, "not actually going to ban " + msg.body.replace(Main.getBotTrigger() + "ban", ""));
+            } else if (msg.body.startsWith(Main.getBotTrigger() + "repeat")) {
+                log.info("repeat " + msg.body.replace(Main.getBotTrigger() + "repeat", ""));
+                webSocket.sendMessage(msg.conversationID, msg.body.replace(Main.getBotTrigger() + "repeat", ""));
+            } else if (msg.body.startsWith(Main.getBotTrigger() + "commands")) {
                 log.info("commands ");
-                webSocket.sendMessage(msg.conversationID, "please try !help");
-            } else if (msg.body.startsWith("!api")) {
-                log.info("api " + msg.body.replace("!api", ""));
+                webSocket.sendMessage(msg.conversationID, "please try "+ Main.getBotTrigger() + "help");
+            } else if (msg.body.startsWith(Main.getBotTrigger() + "api")) {
+                log.info("api " + msg.body.replace(Main.getBotTrigger() + "api", ""));
                 webSocket.sendMessage(msg.conversationID, "CurseApp api is located at http://api.feed-the-beast.com/curseapiaccess.php");
-            } else if (msg.body.startsWith("!help")) {
+            } else if (msg.body.startsWith(Main.getBotTrigger() + "help")) {
                 log.info("help ");
-                webSocket.sendMessage(msg.conversationID, "commands are: !ban, !help, !repeat, !api, will try to delete things containing \"autodeletetest\" ");
-            } else if (msg.body.contains("autodeletetest") && !msg.isDeleted && !isOwner(msg.senderRoles)) {
+                webSocket.sendMessage(msg.conversationID, "commands are: "+ Main.getBotTrigger() + "ban, "+ Main.getBotTrigger() + "help, "+ Main.getBotTrigger() + "repeat, "+ Main.getBotTrigger() + "api, will try to delete things containing \"autodeletetest\" ");
+            } else if (msg.body.contains("autodeletetest") && !msg.isDeleted && !isOwner(msg.senderRoles) && !msg.body.startsWith("commands are:")) {
                 log.info("autodelete " + msg.body);
                 if (msg.conversationType == ConversationType.GROUP || msg.conversationType == ConversationType.FRIENDSHIP) {
                     CurseApp.deleteMessage(msg.conversationID.serialize(), msg.serverID.serialize(), msg.timestamp, Main.getToken().get());

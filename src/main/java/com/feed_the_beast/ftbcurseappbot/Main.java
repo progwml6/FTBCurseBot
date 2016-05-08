@@ -41,8 +41,11 @@ public class Main {
     private static Optional<CreateSessionResponse> session = Optional.empty();
     @Getter
     public static CommentedConfigurationNode config = null;
+    @Getter
+    public static String botTrigger;
 
     public static void main (String args[]) {
+        log.info("FTB CurseApp bot V 0.0.1");
         JCommander jc = null;
         try {
             jc = new JCommander(CommandArgs.getSettings(), args);
@@ -72,6 +75,8 @@ public class Main {
             contacts = Optional.of(CurseApp.getContacts(token.get()));
             session = Optional.of(CurseApp.getSession(token.get(), CurseGUID.newRandomUUID(), DevicePlatform.UNKNOWN));
         }
+        botTrigger = config.getNode("botSettings", "triggerKey").getString("!");
+        log.info("bot trigger is " + botTrigger);
         // websocket testing code starts here
         WebSocket ws = null;
         try {
