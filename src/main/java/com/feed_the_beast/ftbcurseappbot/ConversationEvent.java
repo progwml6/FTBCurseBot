@@ -83,7 +83,7 @@ public class ConversationEvent implements Task<ConversationMessageNotification> 
             ret += getPrettyStatus(me.getKey(), true);
         }
         if (ret.endsWith("|")) {
-            ret.substring(0, ret.length() - 2);
+            ret = removeLastChar(ret);
         }
         return ret;
     }
@@ -115,7 +115,7 @@ public class ConversationEvent implements Task<ConversationMessageNotification> 
             }
             if (!changelist.isEmpty()) {
                 if (changelist.endsWith("|")) {
-                    changelist = changelist.substring(0, changelist.length() - 2);
+                    changelist = removeLastChar(changelist);
                 }
                 return "MC Status Has Changed to: " + changelist;
             }
@@ -171,4 +171,8 @@ public class ConversationEvent implements Task<ConversationMessageNotification> 
         }
         return false;
     }
+    private static String removeLastChar(String str) {
+        return str.substring(0,str.length()-1);
+    }
+
 }
