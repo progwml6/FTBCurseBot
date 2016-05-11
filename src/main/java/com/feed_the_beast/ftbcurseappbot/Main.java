@@ -15,15 +15,18 @@ import com.feed_the_beast.javacurselib.websocket.WebSocket;
 import com.feed_the_beast.javacurselib.websocket.messages.handler.ResponseHandler;
 import com.feed_the_beast.javacurselib.websocket.messages.notifications.NotificationsServiceContractType;
 import com.google.common.eventbus.EventBus;
+import com.google.common.reflect.TypeToken;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
+import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CountDownLatch;
 
@@ -40,9 +43,11 @@ public class Main {
     @Getter
     private static Optional<CreateSessionResponse> session = Optional.empty();
     @Getter
-    public static CommentedConfigurationNode config = null;
+    private static CommentedConfigurationNode config = null;
     @Getter
-    public static String botTrigger;
+    private static String botTrigger;
+    @Getter
+    private static Optional<List<String>> mcStatusChangeNotificationsEnabled = Optional.empty();
 
     public static void main (String args[]) {
         log.info("FTB CurseApp bot V 0.0.1");
@@ -76,6 +81,11 @@ public class Main {
             session = Optional.of(CurseApp.getSession(token.get(), CurseGUID.newRandomUUID(), DevicePlatform.UNKNOWN));
         }
         botTrigger = config.getNode("botSettings", "triggerKey").getString("!");
+        try {
+            mcStatusChangeNotificationsEnabled = Optional.ofNullable(config.getNode("botSettings", "MCStatusChangeNotificationsEnabled").getList(TypeToken.of(String.class)));
+        } catch (ObjectMappingException e) {
+            log.error("couldn't map bot settings", e);
+        }
         log.info("bot trigger is " + botTrigger);
         // websocket testing code starts here
         WebSocket ws = null;
@@ -92,7 +102,6 @@ public class Main {
         responseHandler.addTask(new DefaultResponseTask(), NotificationsServiceContractType.CONVERSATION_READ_NOTIFICATION);
         responseHandler.addTask(new ConversationEvent(), NotificationsServiceContractType.CONVERSATION_MESSAGE_NOTIFICATION);
         responseHandler.addTask(new DebugResponseTask(), NotificationsServiceContractType.UNKNOWN);
-
         // to add your own handlers call ws.getResponseHandler() and configure it
         CountDownLatch latch = new CountDownLatch(1);
         ws.start();
