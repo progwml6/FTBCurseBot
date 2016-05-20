@@ -42,11 +42,15 @@ dependencies {
 
     //below here are deps for the javacurselib itself
     //compile 'com.feed_the_beast:javacurselib:0.0.1-9999999'
-    compile 'com.google.code.gson:gson:2.2.4'//JSON support using same version as MC
+    compile 'com.google.code.gson:gson:2.2.4'//JSON support
     compile 'org.glassfish.tyrus.bundles:tyrus-standalone-client-jdk:1.12' // websocket RI
     //compile 'org.eclipse.jetty.websocket:javax-websocket-client-impl:9.3.9.M1' // Jetty's implementation
-    compile 'commons-io:commons-io:2.4'//general utility classes using same version as MC
-    compile 'com.google.guava:guava:17.0'//general utility classes using same version as MC
+
+    compile 'com.squareup.retrofit2:retrofit:2.0.2'
+    compile 'com.squareup.retrofit2:adapter-java8:2.0.2'
+
+    compile 'commons-io:commons-io:2.4'//general utility classes
+    compile 'com.google.guava:guava:17.0'//general utility classes
     compile 'com.google.code.findbugs:jsr305:1.3.9'//nonnull stuff
     compile 'org.slf4j:slf4j-api:1.7.21'//logging chose version that matches sponge
 

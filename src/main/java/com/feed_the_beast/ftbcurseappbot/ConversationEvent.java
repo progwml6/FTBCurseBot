@@ -1,13 +1,14 @@
 package com.feed_the_beast.ftbcurseappbot;
 
-import com.beust.jcommander.internal.Maps;
 import com.feed_the_beast.javacurselib.examples.app_v1.CurseApp;
+import com.feed_the_beast.javacurselib.rest.REST;
 import com.feed_the_beast.javacurselib.service.contacts.contacts.ContactsResponse;
 import com.feed_the_beast.javacurselib.service.conversations.conversations.ConversationNotificationType;
 import com.feed_the_beast.javacurselib.service.conversations.conversations.ConversationType;
 import com.feed_the_beast.javacurselib.websocket.WebSocket;
 import com.feed_the_beast.javacurselib.websocket.messages.handler.tasks.Task;
 import com.feed_the_beast.javacurselib.websocket.messages.notifications.ConversationMessageNotification;
+import com.google.common.collect.Maps;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
@@ -49,7 +50,7 @@ public class ConversationEvent implements Task<ConversationMessageNotification> 
             } else if (msg.body.contains("autodeletetest") && !msg.isDeleted && !isOwner(msg.senderRoles) && !msg.body.startsWith("commands are:")) {
                 log.info("autodelete " + msg.body);
                 if (msg.conversationType == ConversationType.GROUP || msg.conversationType == ConversationType.FRIENDSHIP) {
-                    CurseApp.deleteMessage(msg.conversationID.serialize(), msg.serverID.serialize(), msg.timestamp, Main.getToken().get());
+                    REST.conversations.deleteMessage(msg.conversationID, msg.serverID, msg.timestamp);
                 }
             }
         }
