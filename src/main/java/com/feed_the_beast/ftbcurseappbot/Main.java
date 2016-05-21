@@ -155,7 +155,7 @@ public class Main {
             log.error("websocket failed", e);
             System.exit(0);
         }
-
+        CommandRegistry.registerBaseCommands();
         ResponseHandler responseHandler = ws.getResponseHandler();
         responseHandler.addTask(new DebugResponseTask(), NotificationsServiceContractType.CONVERSATION_MESSAGE_NOTIFICATION);
         responseHandler.addTask(new DefaultResponseTask(), NotificationsServiceContractType.CONVERSATION_READ_NOTIFICATION);
