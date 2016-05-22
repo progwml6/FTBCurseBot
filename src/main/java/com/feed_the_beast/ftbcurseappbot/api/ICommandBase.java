@@ -22,7 +22,7 @@ public interface ICommandBase {
     Pattern getTriggerRegex();
 
     default Pattern getSimpleCommand(String name) {
-        return Pattern.compile("(?m)^" + Main.getBotTrigger() + name, Pattern.CASE_INSENSITIVE);
+        return Pattern.compile("(?m)^" + Main.getBotTrigger() + name+"(.*)", Pattern.CASE_INSENSITIVE);
     }
 
     /**

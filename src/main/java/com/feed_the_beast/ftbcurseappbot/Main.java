@@ -96,7 +96,7 @@ public class Main {
             }
             System.exit(1);
         }
-        log.info("Synchronous login done: for user" + lr.session.username);
+        log.info("Synchronous login done: for user " + lr.session.username);
 
         // TODO: fix this by making REST fully non-static class and/or using other proper design patterns
         REST.setAuthToken(lr.session.token);

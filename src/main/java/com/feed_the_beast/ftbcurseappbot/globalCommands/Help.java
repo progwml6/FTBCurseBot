@@ -11,14 +11,13 @@ import java.util.regex.Pattern;
  * Created by progwml6 on 5/20/16.
  */
 @Slf4j
-public class Help extends CommandBase{
+public class Help extends CommandBase {
 
     @Override
     public void onMessage (WebSocket webSocket, ConversationMessageNotification msg) {
         log.info("help ");
-        webSocket.sendMessage(msg.conversationID, "commands are: " + Main.getBotTrigger() + "ban, " + Main.getBotTrigger() + "help, " + Main.getBotTrigger() + "repeat, " + Main.getBotTrigger()
-                + "mcstatus, " + Main.getBotTrigger() + "api, will try to delete things containing \"autodeletetest\" ");
-
+        webSocket.sendMessage(msg.conversationID, "commands are: " + Main.getBotTrigger() + "ban, " + Main.getBotTrigger() + "help, " + Main.getBotTrigger() + "haspaidmc, " + Main.getBotTrigger() +
+                "repeat, " + Main.getBotTrigger() + "mcstatus, " + Main.getBotTrigger() +  "mcuuid, " + Main.getBotTrigger() +  "api, will try to delete things containing \"autodeletetest\" ");
     }
 
     @Override

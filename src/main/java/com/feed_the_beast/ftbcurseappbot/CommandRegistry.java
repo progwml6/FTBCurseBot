@@ -2,8 +2,10 @@ package com.feed_the_beast.ftbcurseappbot;
 
 import com.feed_the_beast.ftbcurseappbot.api.ICommandBase;
 import com.feed_the_beast.ftbcurseappbot.globalCommands.Commands;
+import com.feed_the_beast.ftbcurseappbot.globalCommands.HasPaidMC;
 import com.feed_the_beast.ftbcurseappbot.globalCommands.Help;
 import com.feed_the_beast.ftbcurseappbot.globalCommands.MCStatus;
+import com.feed_the_beast.ftbcurseappbot.globalCommands.MCUUID;
 import com.feed_the_beast.ftbcurseappbot.globalCommands.Repeat;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -54,7 +56,9 @@ public class CommandRegistry {
         log.info("registering base commands");
         new Commands();
         new Help();
+        new HasPaidMC();
         new MCStatus();
+        new MCUUID();
         new Repeat();
         log.info("registered " + commands.size() + " base commands");
     }

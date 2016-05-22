@@ -18,9 +18,6 @@ import java.util.regex.Pattern;
 
 import javax.annotation.Nonnull;
 
-/**
- * Created by progwml6 on 5/20/16.
- */
 @Slf4j
 public class MCStatus extends CommandBase {
 
@@ -28,7 +25,6 @@ public class MCStatus extends CommandBase {
     public void onMessage (WebSocket webSocket, ConversationMessageNotification msg) {
         log.info("mcstatus " + msg.body.replace(Main.getBotTrigger() + "mcstatus", ""));
         webSocket.sendMessage(msg.conversationID, getMCStatus());
-
     }
 
     @Override
