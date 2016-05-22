@@ -2,6 +2,7 @@ package com.feed_the_beast.ftbcurseappbot;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.ParameterException;
+import com.feed_the_beast.javacurselib.common.enums.DevicePlatform;
 import com.feed_the_beast.javacurselib.data.Apis;
 import com.feed_the_beast.javacurselib.examples.app_v1.DebugResponseTask;
 import com.feed_the_beast.javacurselib.examples.app_v1.DefaultResponseTask;
@@ -11,7 +12,6 @@ import com.feed_the_beast.javacurselib.service.logins.login.LoginRequest;
 import com.feed_the_beast.javacurselib.service.logins.login.LoginResponse;
 import com.feed_the_beast.javacurselib.service.sessions.sessions.CreateSessionRequest;
 import com.feed_the_beast.javacurselib.service.sessions.sessions.CreateSessionResponse;
-import com.feed_the_beast.javacurselib.service.sessions.sessions.DevicePlatform;
 import com.feed_the_beast.javacurselib.utils.CurseGUID;
 import com.feed_the_beast.javacurselib.websocket.WebSocket;
 import com.feed_the_beast.javacurselib.websocket.messages.handler.ResponseHandler;
