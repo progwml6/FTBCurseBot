@@ -2,6 +2,7 @@ package com.feed_the_beast.ftbcurseappbot;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.ParameterException;
+import com.feed_the_beast.ftbcurseappbot.runnables.McStatusChecker;
 import com.feed_the_beast.javacurselib.common.enums.DevicePlatform;
 import com.feed_the_beast.javacurselib.data.Apis;
 import com.feed_the_beast.javacurselib.examples.app_v1.DebugResponseTask;
@@ -31,9 +32,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.*;
 
 /**
  * Created by progwml6 on 5/7/16.
@@ -53,6 +52,10 @@ public class Main {
     private static String botTrigger;
     @Getter
     private static Optional<List<String>> mcStatusChangeNotificationsEnabled = Optional.empty();
+    @Getter
+    private static WebSocket webSocket;
+    @Getter
+    private static ScheduledExecutorService scheduledTasks = Executors.newScheduledThreadPool(5);
 
     public static void main (String args[]) {
         log.info("FTB CurseApp bot V 0.0.1");
@@ -148,22 +151,22 @@ public class Main {
         }
         log.info("bot trigger is " + botTrigger);
         // websocket testing code starts here
-        WebSocket ws = null;
         try {
-            ws = new WebSocket(lr, session.get(), new URI(Apis.NOTIFICATIONS));
+            webSocket = new WebSocket(lr, session.get(), new URI(Apis.NOTIFICATIONS));
         } catch (Exception e) {
             log.error("websocket failed", e);
             System.exit(0);
         }
         CommandRegistry.registerBaseCommands();
-        ResponseHandler responseHandler = ws.getResponseHandler();
+        scheduledTasks.scheduleAtFixedRate(new McStatusChecker(webSocket, contacts.get()), 0, 60, TimeUnit.SECONDS);
+        ResponseHandler responseHandler = webSocket.getResponseHandler();
         responseHandler.addTask(new DebugResponseTask(), NotificationsServiceContractType.CONVERSATION_MESSAGE_NOTIFICATION);
         responseHandler.addTask(new DefaultResponseTask(), NotificationsServiceContractType.CONVERSATION_READ_NOTIFICATION);
         responseHandler.addTask(new ConversationEvent(), NotificationsServiceContractType.CONVERSATION_MESSAGE_NOTIFICATION);
         responseHandler.addTask(new DebugResponseTask(), NotificationsServiceContractType.UNKNOWN);
         // to add your own handlers call ws.getResponseHandler() and configure it
         CountDownLatch latch = new CountDownLatch(1);
-        ws.start();
+        webSocket.start();
         try {
             latch.await();
         } catch (InterruptedException e) {
