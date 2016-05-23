@@ -36,6 +36,7 @@ public class ConversationEvent implements Task<ConversationMessageNotification> 
                     REST.conversations.deleteMessage(msg.conversationID, msg.serverID, msg.timestamp);
                 }
             }
+            webSocket.sendMarkRead(msg.conversationID);
         }
     }
 
