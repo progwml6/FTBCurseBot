@@ -2,6 +2,7 @@ package com.feed_the_beast.ftbcurseappbot;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.ParameterException;
+import com.feed_the_beast.ftbcurseappbot.runnables.GHStatusChecker;
 import com.feed_the_beast.ftbcurseappbot.runnables.McStatusChecker;
 import com.feed_the_beast.javacurselib.common.enums.DevicePlatform;
 import com.feed_the_beast.javacurselib.data.Apis;
@@ -32,7 +33,12 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by progwml6 on 5/7/16.
@@ -52,6 +58,8 @@ public class Main {
     private static String botTrigger;
     @Getter
     private static Optional<List<String>> mcStatusChangeNotificationsEnabled = Optional.empty();
+    @Getter
+    private static Optional<List<String>> gHStatusChangeNotificationsEnabled = Optional.empty();
     @Getter
     private static WebSocket webSocket;
     @Getter
@@ -147,8 +155,14 @@ public class Main {
         try {
             mcStatusChangeNotificationsEnabled = Optional.ofNullable(config.getNode("botSettings", "MCStatusChangeNotificationsEnabled").getList(TypeToken.of(String.class)));
         } catch (ObjectMappingException e) {
-            log.error("couldn't map bot settings", e);
+            log.error("couldn't map bot settings - mc", e);
         }
+        try {
+            gHStatusChangeNotificationsEnabled = Optional.ofNullable(config.getNode("botSettings", "GHStatusChangeNotificationsEnabled").getList(TypeToken.of(String.class)));
+        } catch (ObjectMappingException e) {
+            log.error("couldn't map bot settings - gh", e);
+        }
+
         log.info("bot trigger is " + botTrigger);
         // websocket testing code starts here
         try {
@@ -159,6 +173,7 @@ public class Main {
         }
         CommandRegistry.registerBaseCommands();
         scheduledTasks.scheduleAtFixedRate(new McStatusChecker(webSocket, contacts.get()), 0, 60, TimeUnit.SECONDS);
+        scheduledTasks.scheduleAtFixedRate(new GHStatusChecker(webSocket, contacts.get()), 0, 60, TimeUnit.SECONDS);
         ResponseHandler responseHandler = webSocket.getResponseHandler();
         responseHandler.addTask(new DebugResponseTask(), NotificationsServiceContractType.CONVERSATION_MESSAGE_NOTIFICATION);
         responseHandler.addTask(new DefaultResponseTask(), NotificationsServiceContractType.CONVERSATION_READ_NOTIFICATION);

@@ -16,8 +16,9 @@ public class Help extends CommandBase {
     @Override
     public void onMessage (WebSocket webSocket, ConversationMessageNotification msg) {
         log.info("help ");
-        webSocket.sendMessage(msg.conversationID, "commands are: " + Main.getBotTrigger() + "ban, " + Main.getBotTrigger() + "help, " + Main.getBotTrigger() + "haspaidmc, " + Main.getBotTrigger() +
-                "repeat, " + Main.getBotTrigger() + "mcstatus, " + Main.getBotTrigger() +  "mcuuid, " + Main.getBotTrigger() +  "api, will try to delete things containing \"autodeletetest\" ");
+        webSocket.sendMessage(msg.conversationID, "commands are: " + Main.getBotTrigger() + "ban, " + Main.getBotTrigger() + "ghstatus, " + Main.getBotTrigger() + "help, " + Main.getBotTrigger()
+                + "haspaidmc, " + Main.getBotTrigger() + "repeat, " + Main.getBotTrigger() + "mcstatus, " + Main.getBotTrigger() +  "mcuuid, " + Main.getBotTrigger()
+                +  "api, will try to delete things containing \"autodeletetest\" ");
     }
 
     @Override

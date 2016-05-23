@@ -37,7 +37,6 @@ public class MCStatus extends CommandBase {
         return "gets the health status of MC services from mojang";
     }
 
-    //TODO test this and hook up to something that calls getMCStatus() every x amount of time
     public static void sendMCHealthChangeNotifications (@Nonnull ContactsResponse cr, @Nonnull WebSocket ws, @Nonnull String message) {
         if (message.isEmpty()) {
             log.info("no change in mc health status");
