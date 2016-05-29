@@ -5,9 +5,11 @@ import com.feed_the_beast.ftbcurseappbot.globalCommands.Commands;
 import com.feed_the_beast.ftbcurseappbot.globalCommands.GHStatus;
 import com.feed_the_beast.ftbcurseappbot.globalCommands.HasPaidMC;
 import com.feed_the_beast.ftbcurseappbot.globalCommands.Help;
+import com.feed_the_beast.ftbcurseappbot.globalCommands.MCDrama;
 import com.feed_the_beast.ftbcurseappbot.globalCommands.MCStatus;
 import com.feed_the_beast.ftbcurseappbot.globalCommands.MCUUID;
 import com.feed_the_beast.ftbcurseappbot.globalCommands.Repeat;
+import com.feed_the_beast.ftbcurseappbot.globalCommands.Shorten;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -59,9 +61,11 @@ public class CommandRegistry {
         new GHStatus();
         new Help();
         new HasPaidMC();
+        new MCDrama();
         new MCStatus();
         new MCUUID();
         new Repeat();
+        new Shorten();
         log.info("registered " + commands.size() + " base commands");
     }
 }
