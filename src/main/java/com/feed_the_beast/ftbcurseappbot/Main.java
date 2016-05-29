@@ -2,6 +2,7 @@ package com.feed_the_beast.ftbcurseappbot;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.ParameterException;
+import com.feed_the_beast.ftbcurseappbot.persistance.MongoConnection;
 import com.feed_the_beast.ftbcurseappbot.runnables.GHStatusChecker;
 import com.feed_the_beast.ftbcurseappbot.runnables.McStatusChecker;
 import com.feed_the_beast.javacurselib.common.enums.DevicePlatform;
@@ -164,6 +165,8 @@ public class Main {
         }
 
         log.info("bot trigger is " + botTrigger);
+        // startup persistance engine
+        MongoConnection.start();
         // websocket testing code starts here
         try {
             webSocket = new WebSocket(lr, session.get(), new URI(Apis.NOTIFICATIONS));

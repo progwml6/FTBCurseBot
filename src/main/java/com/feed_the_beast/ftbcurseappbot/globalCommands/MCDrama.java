@@ -28,7 +28,7 @@ public class MCDrama extends CommandBase {
     public static String getDrama() {
         String drama = null;
         try {
-            Document doc = Jsoup.connect("http://mc-drama.herokuapp.com/raw")..get();
+            Document doc = Jsoup.connect("http://mc-drama.herokuapp.com/raw").get();
             drama = doc.text();
         } catch (Exception e) {
             log.error("error getting mc drama ", e);
