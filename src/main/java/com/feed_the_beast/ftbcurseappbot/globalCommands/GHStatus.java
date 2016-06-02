@@ -79,7 +79,7 @@ public class GHStatus extends CommandBase {
                 statusChanged = true;
             }
             if(message.equals(lastMessage)){
-                log.info("lastMessage is the same");
+                log.info("lastMessage is the same from GH");
             } else {
                 messageChanged = true;
             }
