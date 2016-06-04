@@ -26,7 +26,7 @@ import java.util.regex.Pattern;
 public class CommandRegistry {
 
     @Getter
-    public static HashMap<Pattern, ICommandBase> commands = new HashMap<>();
+    private static HashMap<Pattern, ICommandBase> commands = new HashMap<>();
 
     public static void register (ICommandBase c) {
         commands.put(c.getTriggerRegex(), c);
