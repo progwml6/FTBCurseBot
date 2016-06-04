@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbcurseappbot;
 
 import com.feed_the_beast.ftbcurseappbot.api.ICommandBase;
+import com.feed_the_beast.ftbcurseappbot.globalCommands.BBStatus;
 import com.feed_the_beast.ftbcurseappbot.globalCommands.CFStatus;
 import com.feed_the_beast.ftbcurseappbot.globalCommands.Commands;
 import com.feed_the_beast.ftbcurseappbot.globalCommands.GHStatus;
@@ -60,6 +61,7 @@ public class CommandRegistry {
         log.info("registering base commands");
         new CFStatus();
         new Commands();
+        new BBStatus();
         new GHStatus();
         new Help();
         new HasPaidMC();

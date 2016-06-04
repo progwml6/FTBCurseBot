@@ -3,6 +3,7 @@ package com.feed_the_beast.ftbcurseappbot;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.ParameterException;
 import com.feed_the_beast.ftbcurseappbot.persistance.MongoConnection;
+import com.feed_the_beast.ftbcurseappbot.runnables.BBStatusChecker;
 import com.feed_the_beast.ftbcurseappbot.runnables.CFStatusChecker;
 import com.feed_the_beast.ftbcurseappbot.runnables.GHStatusChecker;
 import com.feed_the_beast.ftbcurseappbot.runnables.McStatusChecker;
@@ -58,6 +59,8 @@ public class Main {
     private static CommentedConfigurationNode config = null;
     @Getter
     private static String botTrigger;
+    @Getter
+    private static Optional<List<String>> bBStatusChangeNotificationsEnabled = Optional.empty();
     @Getter
     private static Optional<List<String>> cFStatusChangeNotificationsEnabled = Optional.empty();
     @Getter
@@ -157,6 +160,11 @@ public class Main {
 
         botTrigger = config.getNode("botSettings", "triggerKey").getString("!");
         try {
+            bBStatusChangeNotificationsEnabled = Optional.ofNullable(config.getNode("botSettings", "BBStatusChangeNotificationsEnabled").getList(TypeToken.of(String.class)));
+        } catch (ObjectMappingException e) {
+            log.error("couldn't map bot settings - bb", e);
+        }
+        try {
             cFStatusChangeNotificationsEnabled = Optional.ofNullable(config.getNode("botSettings", "CFStatusChangeNotificationsEnabled").getList(TypeToken.of(String.class)));
         } catch (ObjectMappingException e) {
             log.error("couldn't map bot settings - cf", e);
@@ -184,9 +192,10 @@ public class Main {
             System.exit(0);
         }
         CommandRegistry.registerBaseCommands();
-        scheduledTasks.scheduleAtFixedRate(new McStatusChecker(webSocket, contacts.get()), 0, 60, TimeUnit.SECONDS);
-        scheduledTasks.scheduleAtFixedRate(new GHStatusChecker(webSocket, contacts.get()), 0, 60, TimeUnit.SECONDS);
+        scheduledTasks.scheduleAtFixedRate(new BBStatusChecker(webSocket, contacts.get()), 0, 60, TimeUnit.SECONDS);
         scheduledTasks.scheduleAtFixedRate(new CFStatusChecker(webSocket, contacts.get()), 0, 60, TimeUnit.SECONDS);
+        scheduledTasks.scheduleAtFixedRate(new GHStatusChecker(webSocket, contacts.get()), 0, 60, TimeUnit.SECONDS);
+        scheduledTasks.scheduleAtFixedRate(new McStatusChecker(webSocket, contacts.get()), 0, 60, TimeUnit.SECONDS);
 
         ResponseHandler responseHandler = webSocket.getResponseHandler();
         responseHandler.addTask(new DebugResponseTask(), NotificationsServiceContractType.CONVERSATION_MESSAGE_NOTIFICATION);
