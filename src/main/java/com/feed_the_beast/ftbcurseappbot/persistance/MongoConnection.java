@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import org.jongo.Jongo;
 
-import java.util.Arrays;
+import java.util.Collections;
 
 @Slf4j
 public class MongoConnection {
@@ -21,32 +21,47 @@ public class MongoConnection {
     private static MongoDatabase database;
     @Getter
     private static Jongo jongo;
-    public static void start() {
+
+    public static void start () {
         CommentedConfigurationNode config = Main.getConfig().getNode("mongo");
-        if(config.getNode("enabled").getBoolean()) {
+        if (config.getNode("enabled").getBoolean()) {
             log.info("starting up mongo client");
             String username = config.getNode("username").getString();
             String pass = config.getNode("password").getString();
             String url = config.getNode("url").getString();
-            String db  = config.getNode("database").getString();
+            String db = config.getNode("database").getString();
 
             int port = config.getNode("port").getInt(27017);
-            if(username != null && !username.isEmpty() && pass != null && !pass.isEmpty()) {
+            if (username != null && !username.isEmpty() && pass != null && !pass.isEmpty()) {
                 MongoCredential credential = MongoCredential.createCredential(username, db, pass.toCharArray());
-                client = new MongoClient(new ServerAddress(url, port), Arrays.asList(credential));
+                client = new MongoClient(new ServerAddress(url, port), Collections.singletonList(credential));
             } else {
                 client = new MongoClient(url, port);
             }
             database = client.getDatabase(db);
             jongo = new Jongo(client.getDB(db));
             log.info("started up mongo client");
-            VersionInfo info  = jongo.getCollection("dbinfo").findOne("{service: 'ftbcursebot'}").as(VersionInfo.class);
-            if(info == null) {
+            VersionInfo info = jongo.getCollection("dbinfo").findOne("{service: 'ftbcursebot'}").as(VersionInfo.class);
+            if (info == null) {
                 jongo.getCollection("dbinfo").save(new VersionInfo());
                 log.info("created VersionInfo for database");
             } else {
-            log.info("mongo DB version: " + info.getVersion());
+                log.info("mongo DB version: " + info.getVersion());
+            }
+            VersionInfo current = new VersionInfo();
+            if (info.getVersion() < current.getVersion()) {
+                log.info("database needs to be migrated from version " + info.getVersion() + " to " + current.getVersion());
+                migrate(info, current);
             }
         }
+    }
+
+    /**
+     * this is where we would handle when DB migrations are needed past creating the main collections
+     * @param dbVersion version in the database
+     * @param expected version the bot is expecting
+     */
+    private static void migrate (VersionInfo dbVersion, VersionInfo expected) {
+        jongo.getCollection("dbinfo").save(expected.getVersion());
     }
 }
