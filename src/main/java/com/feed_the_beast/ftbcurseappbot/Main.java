@@ -7,6 +7,7 @@ import com.feed_the_beast.ftbcurseappbot.runnables.BBStatusChecker;
 import com.feed_the_beast.ftbcurseappbot.runnables.CFStatusChecker;
 import com.feed_the_beast.ftbcurseappbot.runnables.GHStatusChecker;
 import com.feed_the_beast.ftbcurseappbot.runnables.McStatusChecker;
+import com.feed_the_beast.ftbcurseappbot.runnables.TravisStatusChecker;
 import com.feed_the_beast.javacurselib.common.enums.DevicePlatform;
 import com.feed_the_beast.javacurselib.data.Apis;
 import com.feed_the_beast.javacurselib.examples.app_v1.DebugResponseTask;
@@ -67,6 +68,9 @@ public class Main {
     private static Optional<List<String>> mcStatusChangeNotificationsEnabled = Optional.empty();
     @Getter
     private static Optional<List<String>> gHStatusChangeNotificationsEnabled = Optional.empty();
+    @Getter
+    private static Optional<List<String>> travisStatusChangeNotificationsEnabled = Optional.empty();
+
     @Getter
     private static WebSocket webSocket;
     @Getter
@@ -181,6 +185,11 @@ public class Main {
             log.error("couldn't map bot settings - mc", e);
         }
 
+        try {
+            travisStatusChangeNotificationsEnabled = Optional.ofNullable(config.getNode("botSettings", "TravisStatusChangeNotificationsEnabled").getList(TypeToken.of(String.class)));
+        } catch (ObjectMappingException e) {
+            log.error("couldn't map bot settings - travis", e);
+        }
         log.info("bot trigger is " + botTrigger);
         // startup persistance engine
         MongoConnection.start();
@@ -196,6 +205,8 @@ public class Main {
         scheduledTasks.scheduleAtFixedRate(new CFStatusChecker(webSocket, contacts.get()), 0, 60, TimeUnit.SECONDS);
         scheduledTasks.scheduleAtFixedRate(new GHStatusChecker(webSocket, contacts.get()), 0, 60, TimeUnit.SECONDS);
         scheduledTasks.scheduleAtFixedRate(new McStatusChecker(webSocket, contacts.get()), 0, 60, TimeUnit.SECONDS);
+        scheduledTasks.scheduleAtFixedRate(new TravisStatusChecker(webSocket, contacts.get()), 0, 60, TimeUnit.SECONDS);
+
 
         ResponseHandler responseHandler = webSocket.getResponseHandler();
         responseHandler.addTask(new DebugResponseTask(), NotificationsServiceContractType.CONVERSATION_MESSAGE_NOTIFICATION);

@@ -43,7 +43,8 @@ public class MongoConnection {
             log.info("started up mongo client");
             VersionInfo info = jongo.getCollection("dbinfo").findOne("{service: 'ftbcursebot'}").as(VersionInfo.class);
             if (info == null) {
-                jongo.getCollection("dbinfo").save(new VersionInfo());
+                info = new VersionInfo();
+                jongo.getCollection("dbinfo").save(info);
                 log.info("created VersionInfo for database");
             } else {
                 log.info("mongo DB version: " + info.getVersion());

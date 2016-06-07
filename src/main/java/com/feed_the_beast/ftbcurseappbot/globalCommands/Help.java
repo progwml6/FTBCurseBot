@@ -19,7 +19,7 @@ public class Help extends CommandBase {
         webSocket.sendMessage(msg.conversationID,
                 "commands are: " + Main.getBotTrigger() + "ban, " + Main.getBotTrigger() + "bbstatus, " + Main.getBotTrigger() + "cfstatus, " + Main.getBotTrigger() + "ghstatus, "
                         + Main.getBotTrigger() + "help, " + Main.getBotTrigger() + "haspaidmc, " + Main.getBotTrigger() + "repeat, " + Main.getBotTrigger() + "mcstatus, " + Main.getBotTrigger()
-                        + "mcuuid, " + Main.getBotTrigger() + "shorten, " + Main.getBotTrigger() + "mcdrama, " + Main.getBotTrigger()
+                        + "mcuuid, " + Main.getBotTrigger() + "shorten, " + Main.getBotTrigger() + "mcdrama, " + Main.getBotTrigger() + "travisstatus, " + Main.getBotTrigger()
                         + "api, will try to delete things containing \"autodeletetest\" ");
     }
 

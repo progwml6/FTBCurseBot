@@ -12,6 +12,7 @@ import com.feed_the_beast.ftbcurseappbot.globalCommands.MCStatus;
 import com.feed_the_beast.ftbcurseappbot.globalCommands.MCUUID;
 import com.feed_the_beast.ftbcurseappbot.globalCommands.Repeat;
 import com.feed_the_beast.ftbcurseappbot.globalCommands.Shorten;
+import com.feed_the_beast.ftbcurseappbot.globalCommands.TravisStatus;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -70,6 +71,7 @@ public class CommandRegistry {
         new MCUUID();
         new Repeat();
         new Shorten();
+        new TravisStatus();
         log.info("registered " + commands.size() + " base commands");
     }
 }
