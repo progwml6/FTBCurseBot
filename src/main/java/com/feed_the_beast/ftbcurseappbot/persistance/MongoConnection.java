@@ -2,6 +2,7 @@ package com.feed_the_beast.ftbcurseappbot.persistance;
 
 import com.feed_the_beast.ftbcurseappbot.Main;
 import com.feed_the_beast.ftbcurseappbot.persistance.data.VersionInfo;
+import com.feed_the_beast.javacurselib.utils.CurseGUID;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
@@ -12,6 +13,8 @@ import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import org.jongo.Jongo;
 
 import java.util.Collections;
+
+import javax.annotation.Nullable;
 
 @Slf4j
 public class MongoConnection {
@@ -56,7 +59,9 @@ public class MongoConnection {
             }
         }
     }
+    public static void logEvent(PersistanceEventType event, CurseGUID serverID, @Nullable CurseGUID channel, long performer, long affects, String info) {
 
+    }
     /**
      * this is where we would handle when DB migrations are needed past creating the main collections
      * @param dbVersion version in the database

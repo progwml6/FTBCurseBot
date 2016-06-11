@@ -1,5 +1,9 @@
 package com.feed_the_beast.ftbcurseappbot.globalCommands;
 
+import com.feed_the_beast.ftbcurseappbot.persistance.MongoConnection;
+import com.feed_the_beast.ftbcurseappbot.persistance.PersistanceEventType;
+import com.feed_the_beast.javacurselib.rest.REST;
+import com.feed_the_beast.javacurselib.utils.CurseGUID;
 import com.feed_the_beast.javacurselib.websocket.WebSocket;
 import com.feed_the_beast.javacurselib.websocket.messages.notifications.ConversationMessageNotification;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +28,12 @@ public class Ban extends CommandBase {
         String[] msplit = msg.body.split(" ");
         if (msplit.length > 1) {
             if (canBan) {
+                String desc = "";
+                if(msplit.length > 2){
+                    desc = msplit[2];
+                }
                 webSocket.sendMessage(msg.conversationID, "You can ban " + msplit[1] + "!");
+                MongoConnection.logEvent(PersistanceEventType.BAN, msg.serverID, msg.conversationID, msg.senderID, 9999, desc);//TODO put the userID of the person getting banned here!
             }
         } else {
             webSocket.sendMessage(msg.conversationID, "You need to enter a username to ban!");
