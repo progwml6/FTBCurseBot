@@ -2,6 +2,7 @@ package com.feed_the_beast.ftbcurseappbot;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.ParameterException;
+import com.feed_the_beast.ftbcurseappbot.persistance.CacheService;
 import com.feed_the_beast.ftbcurseappbot.persistance.MongoConnection;
 import com.feed_the_beast.ftbcurseappbot.runnables.BBStatusChecker;
 import com.feed_the_beast.ftbcurseappbot.runnables.CFStatusChecker;
@@ -56,6 +57,8 @@ public class Main {
     private static Optional<ContactsResponse> contacts = Optional.empty();
     @Getter
     private static Optional<CreateSessionResponse> session = Optional.empty();
+    @Getter
+    private static CacheService cacheService;
     @Getter
     private static CommentedConfigurationNode config = null;
     @Getter
@@ -206,7 +209,7 @@ public class Main {
         scheduledTasks.scheduleAtFixedRate(new GHStatusChecker(webSocket, contacts.get()), 0, 60, TimeUnit.SECONDS);
         scheduledTasks.scheduleAtFixedRate(new McStatusChecker(webSocket, contacts.get()), 0, 60, TimeUnit.SECONDS);
         scheduledTasks.scheduleAtFixedRate(new TravisStatusChecker(webSocket, contacts.get()), 0, 60, TimeUnit.SECONDS);
-
+        cacheService = new CacheService();
 
         ResponseHandler responseHandler = webSocket.getResponseHandler();
         responseHandler.addTask(new DebugResponseTask(), NotificationsServiceContractType.CONVERSATION_MESSAGE_NOTIFICATION);
