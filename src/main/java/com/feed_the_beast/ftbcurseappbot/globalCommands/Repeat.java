@@ -15,7 +15,7 @@ public class Repeat extends CommandBase {
     @Override
     public void onMessage (WebSocket webSocket, ConversationMessageNotification msg) {
         log.info("repeat " + msg.body.replace(Main.getBotTrigger() + "repeat", ""));
-        webSocket.sendMessage(msg.conversationID, msg.body.replace(Main.getBotTrigger() + "repeat", ""));
+        webSocket.sendMessage(msg.conversationID, msg.body.replace(Main.getBotTrigger() + "repeat ", "").replace(Main.getBotTrigger() + "repeat", ""));
 
     }
 
