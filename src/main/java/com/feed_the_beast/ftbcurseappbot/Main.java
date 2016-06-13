@@ -213,10 +213,12 @@ public class Main {
         cacheService = new CacheService();
 
         ResponseHandler responseHandler = webSocket.getResponseHandler();
-        responseHandler.addTask(new DebugResponseTask(), NotificationsServiceContractType.CONVERSATION_MESSAGE_NOTIFICATION);
-        responseHandler.addTask(new DefaultResponseTask(), NotificationsServiceContractType.CONVERSATION_READ_NOTIFICATION);
         responseHandler.addTask(new ConversationEvent(), NotificationsServiceContractType.CONVERSATION_MESSAGE_NOTIFICATION);
-        responseHandler.addTask(new DebugResponseTask(), NotificationsServiceContractType.UNKNOWN);
+        if (config.getNode("botSettings", "debug").getBoolean(true)) {
+            responseHandler.addTask(new DebugResponseTask(), NotificationsServiceContractType.CONVERSATION_MESSAGE_NOTIFICATION);
+            responseHandler.addTask(new DefaultResponseTask(), NotificationsServiceContractType.CONVERSATION_READ_NOTIFICATION);
+            responseHandler.addTask(new DebugResponseTask(), NotificationsServiceContractType.UNKNOWN);
+        }
         // to add your own handlers call ws.getResponseHandler() and configure it
         CountDownLatch latch = new CountDownLatch(1);
         webSocket.start();
