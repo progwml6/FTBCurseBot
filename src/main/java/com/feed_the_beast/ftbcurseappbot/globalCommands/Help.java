@@ -7,9 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.regex.Pattern;
 
-/**
- * Created by progwml6 on 5/20/16.
- */
 @Slf4j
 public class Help extends CommandBase {
 
@@ -18,9 +15,9 @@ public class Help extends CommandBase {
         log.info("help ");
         webSocket.sendMessage(msg.conversationID,
                 "commands are: " + Main.getBotTrigger() + "ban, " + Main.getBotTrigger() + "bbstatus, " + Main.getBotTrigger() + "cfstatus, " + Main.getBotTrigger() + "ghstatus, "
-                        + Main.getBotTrigger() + "help, " + Main.getBotTrigger() + "haspaidmc, " + Main.getBotTrigger() + "repeat, " + Main.getBotTrigger() + "mcstatus, " + Main.getBotTrigger()
-                        + "mcuuid, " + Main.getBotTrigger() + "shorten, " + Main.getBotTrigger() + "mcdrama, " + Main.getBotTrigger() + "travisstatus, " + Main.getBotTrigger()
-                        + "api, will try to delete things containing \"autodeletetest\" ");
+                        + Main.getBotTrigger() + "ftbbot, " + Main.getBotTrigger() + "help, " + Main.getBotTrigger() + "haspaidmc, " + Main.getBotTrigger() + "repeat, " + Main.getBotTrigger() +
+                        "mcstatus, " + Main.getBotTrigger() + "mcuuid, " + Main.getBotTrigger() + "shorten, " + Main.getBotTrigger() + "mcdrama, " + Main.getBotTrigger() + "travisstatus, "
+                        + Main.getBotTrigger() + "api, will try to delete things containing \"autodeletetest\" ");
     }
 
     @Override

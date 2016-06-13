@@ -50,6 +50,7 @@ import java.util.concurrent.TimeUnit;
  */
 @Slf4j
 public class Main {
+    public static final String VERSION = "0.0.1";
     public static EventBus eventBus = new EventBus();
     @Getter
     private static Optional<String> token = Optional.empty();
@@ -80,7 +81,7 @@ public class Main {
     private static ScheduledExecutorService scheduledTasks = Executors.newScheduledThreadPool(5);
 
     public static void main (String args[]) {
-        log.info("FTB CurseApp bot V 0.0.1");
+        log.info("FTB CurseApp bot V " + VERSION);
         JCommander jc = null;
         try {
             jc = new JCommander(CommandArgs.getSettings(), args);
