@@ -15,9 +15,9 @@ public class Help extends CommandBase {
         log.info("help ");
         webSocket.sendMessage(msg.conversationID,
                 "commands are: " + Main.getBotTrigger() + "ban, " + Main.getBotTrigger() + "bbstatus, " + Main.getBotTrigger() + "cfstatus, " + Main.getBotTrigger() + "ghstatus, "
-                        + Main.getBotTrigger() + "ftbbot, " + Main.getBotTrigger() + "help, " + Main.getBotTrigger() + "haspaidmc, " + Main.getBotTrigger() + "repeat, " + Main.getBotTrigger() +
-                        "mcstatus, " + Main.getBotTrigger() + "mcuuid, " + Main.getBotTrigger() + "shorten, " + Main.getBotTrigger() + "mcdrama, " + Main.getBotTrigger() + "travisstatus, "
-                        + Main.getBotTrigger() + "api, will try to delete things containing \"autodeletetest\" ");
+                        + Main.getBotTrigger() + "ftbbot, " + Main.getBotTrigger() + "help, " + Main.getBotTrigger() + "haspaidmc, " + Main.getBotTrigger() + "ipban, " + Main.getBotTrigger()
+                        + "kick, " + Main.getBotTrigger() + "repeat, " + Main.getBotTrigger() + "mcstatus, " + Main.getBotTrigger() + "mcuuid, " + Main.getBotTrigger() + "shorten, "
+                        + Main.getBotTrigger() + "mcdrama, " + Main.getBotTrigger() + "travisstatus, " + Main.getBotTrigger() + "api, will try to delete things containing \"autodeletetest\" ");
     }
 
     @Override

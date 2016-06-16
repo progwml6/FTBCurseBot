@@ -9,10 +9,10 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.regex.Pattern;
 
 @Slf4j
-public class Ban extends CommandBase {
+public class IpBan extends CommandBase {
     @Override
     public void onMessage (WebSocket webSocket, ConversationMessageNotification msg) {
-        String lg = "Ban sender: " + msg.senderName + " " + msg.senderID + " " + msg.serverID + " ";
+        String lg = "IpBan sender from server: " + msg.senderName + " " + msg.senderID + " " + msg.serverID + " ";
         boolean canBan = false;
         for (int i : msg.senderRoles) {
             lg += i + " ";
@@ -30,23 +30,23 @@ public class Ban extends CommandBase {
                 if(msplit.length > 2){
                     desc = msplit[2];
                 }
-                webSocket.sendMessage(msg.conversationID, "You can ban " + msplit[1] + "!");
+                webSocket.sendMessage(msg.conversationID, "You can IpBan " + msplit[1] + "!");
                 MongoConnection.logEvent(PersistanceEventType.BAN, msg.serverID, msg.conversationID, msg.senderID, 9999, desc);//TODO put the userID of the person getting banned here!
             }
         } else {
-            webSocket.sendMessage(msg.conversationID, "You need to enter a username to ban!");
+            webSocket.sendMessage(msg.conversationID, "You need to enter a username to IpBan!");
         }
 
     }
 
     @Override
     public Pattern getTriggerRegex () {
-        return getSimpleCommand("ban");
+        return getSimpleCommand("ipban");
     }
 
     @Override
     public String getHelp () {
-        return "bans <user> <optional reason> permanently bans a user from the server";
+        return "ipban <user> <optional reason> permanently ipbans a user from the server";
     }
 
     @Override

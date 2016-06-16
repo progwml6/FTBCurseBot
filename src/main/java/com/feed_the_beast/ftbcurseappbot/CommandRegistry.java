@@ -9,6 +9,8 @@ import com.feed_the_beast.ftbcurseappbot.globalCommands.FTBBot;
 import com.feed_the_beast.ftbcurseappbot.globalCommands.GHStatus;
 import com.feed_the_beast.ftbcurseappbot.globalCommands.HasPaidMC;
 import com.feed_the_beast.ftbcurseappbot.globalCommands.Help;
+import com.feed_the_beast.ftbcurseappbot.globalCommands.IpBan;
+import com.feed_the_beast.ftbcurseappbot.globalCommands.Kick;
 import com.feed_the_beast.ftbcurseappbot.globalCommands.MCDrama;
 import com.feed_the_beast.ftbcurseappbot.globalCommands.MCStatus;
 import com.feed_the_beast.ftbcurseappbot.globalCommands.MCUUID;
@@ -70,6 +72,8 @@ public class CommandRegistry {
         new GHStatus();
         new Help();
         new HasPaidMC();
+        new IpBan();
+        new Kick();
         new MCDrama();
         new MCStatus();
         new MCUUID();

@@ -13,6 +13,7 @@ import com.feed_the_beast.javacurselib.common.enums.DevicePlatform;
 import com.feed_the_beast.javacurselib.data.Apis;
 import com.feed_the_beast.javacurselib.examples.app_v1.DebugResponseTask;
 import com.feed_the_beast.javacurselib.examples.app_v1.DefaultResponseTask;
+import com.feed_the_beast.javacurselib.rest.LoginsWebService;
 import com.feed_the_beast.javacurselib.rest.REST;
 import com.feed_the_beast.javacurselib.service.contacts.contacts.ContactsResponse;
 import com.feed_the_beast.javacurselib.service.logins.login.LoginRequest;
