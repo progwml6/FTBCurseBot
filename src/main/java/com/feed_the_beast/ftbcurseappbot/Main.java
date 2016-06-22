@@ -9,10 +9,11 @@ import com.feed_the_beast.ftbcurseappbot.runnables.CFStatusChecker;
 import com.feed_the_beast.ftbcurseappbot.runnables.GHStatusChecker;
 import com.feed_the_beast.ftbcurseappbot.runnables.McStatusChecker;
 import com.feed_the_beast.ftbcurseappbot.runnables.TravisStatusChecker;
+import com.feed_the_beast.ftbcurseappbot.webserver.WebService;
 import com.feed_the_beast.javacurselib.common.enums.DevicePlatform;
 import com.feed_the_beast.javacurselib.data.Apis;
-import com.feed_the_beast.javacurselib.examples.app_v1.DebugResponseTask;
 import com.feed_the_beast.javacurselib.examples.app_v1.DefaultResponseTask;
+import com.feed_the_beast.javacurselib.examples.app_v1.TraceResponseTask;
 import com.feed_the_beast.javacurselib.rest.REST;
 import com.feed_the_beast.javacurselib.service.contacts.contacts.ContactsResponse;
 import com.feed_the_beast.javacurselib.service.logins.login.LoginRequest;
@@ -52,6 +53,8 @@ import java.util.concurrent.TimeUnit;
 public class Main {
     public static final String VERSION = "0.0.1";
     public static EventBus eventBus = new EventBus();
+    @Getter
+    private static String username = null;
     @Getter
     private static Optional<String> token = Optional.empty();
     @Getter
@@ -108,7 +111,8 @@ public class Main {
         LoginResponse lr = null;
 
         try {
-            lr = REST.login.login(new LoginRequest(config.getNode("credentials", "CurseAppLogin", "username").getString(), config.getNode("credentials", "CurseAppLogin", "password").getString()))
+            username = config.getNode("credentials", "CurseAppLogin", "username").getString();
+            lr = REST.login.login(new LoginRequest(username, config.getNode("credentials", "CurseAppLogin", "password").getString()))
                     .get();
         } catch (InterruptedException e) {
             // should not happen, just ignore
@@ -215,9 +219,12 @@ public class Main {
         ResponseHandler responseHandler = webSocket.getResponseHandler();
         responseHandler.addTask(new ConversationEvent(), NotificationsServiceContractType.CONVERSATION_MESSAGE_NOTIFICATION);
         if (config.getNode("botSettings", "debug").getBoolean(true)) {
-            responseHandler.addTask(new DebugResponseTask(), NotificationsServiceContractType.CONVERSATION_MESSAGE_NOTIFICATION);
+            responseHandler.addTask(new TraceResponseTask(), NotificationsServiceContractType.CONVERSATION_MESSAGE_NOTIFICATION);
             responseHandler.addTask(new DefaultResponseTask(), NotificationsServiceContractType.CONVERSATION_READ_NOTIFICATION);
-            responseHandler.addTask(new DebugResponseTask(), NotificationsServiceContractType.UNKNOWN);
+            responseHandler.addTask(new TraceResponseTask(), NotificationsServiceContractType.UNKNOWN);
+        }
+        if (config.getNode("botSettings", "webEnabled").getBoolean(true)) {
+            WebService service = new WebService();
         }
         // to add your own handlers call ws.getResponseHandler() and configure it
         CountDownLatch latch = new CountDownLatch(1);
