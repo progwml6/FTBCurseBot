@@ -54,6 +54,8 @@ public class Main {
     public static final String VERSION = "0.0.1";
     public static EventBus eventBus = new EventBus();
     @Getter
+    private static boolean debug;
+    @Getter
     private static String username = null;
     @Getter
     private static Optional<String> token = Optional.empty();
@@ -218,7 +220,8 @@ public class Main {
 
         ResponseHandler responseHandler = webSocket.getResponseHandler();
         responseHandler.addTask(new ConversationEvent(), NotificationsServiceContractType.CONVERSATION_MESSAGE_NOTIFICATION);
-        if (config.getNode("botSettings", "debug").getBoolean(true)) {
+        debug = config.getNode("botSettings", "debug").getBoolean(false);
+        if (debug) {
             responseHandler.addTask(new TraceResponseTask(), NotificationsServiceContractType.CONVERSATION_MESSAGE_NOTIFICATION);
             responseHandler.addTask(new DefaultResponseTask(), NotificationsServiceContractType.CONVERSATION_READ_NOTIFICATION);
             responseHandler.addTask(new TraceResponseTask(), NotificationsServiceContractType.UNKNOWN);

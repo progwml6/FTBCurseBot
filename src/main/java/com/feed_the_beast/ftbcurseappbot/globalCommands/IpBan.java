@@ -2,6 +2,7 @@ package com.feed_the_beast.ftbcurseappbot.globalCommands;
 
 import com.feed_the_beast.ftbcurseappbot.persistance.MongoConnection;
 import com.feed_the_beast.ftbcurseappbot.persistance.PersistanceEventType;
+import com.feed_the_beast.javacurselib.common.enums.GroupPermissions;
 import com.feed_the_beast.javacurselib.websocket.WebSocket;
 import com.feed_the_beast.javacurselib.websocket.messages.notifications.ConversationMessageNotification;
 import lombok.extern.slf4j.Slf4j;
@@ -14,11 +15,8 @@ public class IpBan extends CommandBase {
     public void onMessage (WebSocket webSocket, ConversationMessageNotification msg) {
         String lg = "IpBan sender from server: " + msg.senderName + " " + msg.senderID + " " + msg.serverID + " ";
         boolean canBan = false;
-        for (int i : msg.senderRoles) {
-            lg += i + " ";
-            if (i == -1 || i == 1 || i == 2 || i == 512) {
-                canBan = true;
-            }
+        if (msg.senderPermissions.contains(GroupPermissions.BAN_USER)) {
+            canBan = true;
         }
         log.info(lg);
 
@@ -32,6 +30,8 @@ public class IpBan extends CommandBase {
                 }
                 webSocket.sendMessage(msg.conversationID, "You can IpBan " + msplit[1] + "!");
                 MongoConnection.logEvent(PersistanceEventType.BAN, msg.serverID, msg.conversationID, msg.senderID, 9999, desc);//TODO put the userID of the person getting banned here!
+            } else {
+                webSocket.sendMessage(msg.conversationID, "You do not have permission to use the ipban command!");
             }
         } else {
             webSocket.sendMessage(msg.conversationID, "You need to enter a username to IpBan!");
