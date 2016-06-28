@@ -2,10 +2,12 @@ package com.feed_the_beast.ftbcurseappbot.globalCommands;
 
 import com.feed_the_beast.ftbcurseappbot.Main;
 import com.feed_the_beast.javacurselib.service.contacts.contacts.ContactsResponse;
+import com.feed_the_beast.javacurselib.utils.CurseGUID;
 import com.feed_the_beast.javacurselib.websocket.WebSocket;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 import javax.annotation.Nonnull;
@@ -33,9 +35,19 @@ public abstract class StatusCommandBase extends CommandBase {
             for (String s : channelsEnabled.get()) {
                 if (s.contains(".")) {
                     String[] g = s.split("\\.");
-                    ws.sendMessage(Main.getCacheService().getContacts().get().getChannelIdByName(g[0], g[1]), message);
+                    Optional<CurseGUID> ci = Main.getCacheService().getContacts().get().getChannelIdbyNames(g[0], g[1]);
+                    if (ci.isPresent()) {
+                        ws.sendMessage(ci.get(), message);
+                    } else {
+                        log.error("no channel id exists for " + g[0] + " " + g[1]);
+                    }
                 } else {
-                    ws.sendMessage(Main.getCacheService().getContacts().get().getChannelIdByName(s), message);
+                    Optional<CurseGUID> ci = Main.getCacheService().getContacts().get().getGroupIdByName(s);
+                    if (ci.isPresent()) {
+                        ws.sendMessage(ci.get(), message);
+                    } else {
+                        log.error("no channel id exists for " + s);
+                    }
 
                 }
             }
