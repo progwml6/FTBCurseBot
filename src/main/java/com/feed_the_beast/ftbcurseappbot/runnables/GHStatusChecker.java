@@ -15,7 +15,7 @@ import javax.annotation.Nonnull;
 @Slf4j
 public class GHStatusChecker extends ServiceStatusBase {
 
-    public GHStatusChecker (@Nonnull WebSocket webSocket, @Nonnull ContactsResponse contactsResponse) {
-        super(webSocket, contactsResponse, GHStatus.getInstance(), Main.getGHStatusChangeNotificationsEnabled());
+    public GHStatusChecker (@Nonnull WebSocket webSocket) {
+        super(webSocket, GHStatus.getInstance(), Main.getGHStatusChangeNotificationsEnabled());
     }
 }

@@ -10,8 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class BBStatusChecker extends ServiceStatusBase {
 
-    public BBStatusChecker (WebSocket webSocket, ContactsResponse contactsResponse) {
-        super(webSocket, contactsResponse, BBStatus.getInstance(), Main.getBBStatusChangeNotificationsEnabled());
+    public BBStatusChecker (WebSocket webSocket) {
+        super(webSocket, BBStatus.getInstance(), Main.getBBStatusChangeNotificationsEnabled());
     }
 
 }

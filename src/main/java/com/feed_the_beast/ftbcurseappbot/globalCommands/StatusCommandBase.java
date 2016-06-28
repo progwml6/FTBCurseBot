@@ -1,10 +1,9 @@
 package com.feed_the_beast.ftbcurseappbot.globalCommands;
 
-import com.feed_the_beast.javacurselib.examples.app_v1.CurseApp;
+import com.feed_the_beast.ftbcurseappbot.Main;
 import com.feed_the_beast.javacurselib.service.contacts.contacts.ContactsResponse;
 import com.feed_the_beast.javacurselib.websocket.WebSocket;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
 
 import java.util.List;
 import java.util.regex.Pattern;
@@ -34,9 +33,10 @@ public abstract class StatusCommandBase extends CommandBase {
             for (String s : channelsEnabled.get()) {
                 if (s.contains(".")) {
                     String[] g = s.split("\\.");
-                    ws.sendMessage(CurseApp.getChangelIDFromChannelName(cr, g[0], g[1]), message);
+                    ws.sendMessage(Main.getCacheService().getContacts().get().getChannelIdByName(g[0], g[1]), message);
                 } else {
-                    ws.sendMessage(CurseApp.getChangelIDFromChannelName(cr, null, s), message);
+                    ws.sendMessage(Main.getCacheService().getContacts().get().getChannelIdByName(s), message);
+
                 }
             }
         }

@@ -9,8 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class McStatusChecker extends ServiceStatusBase {
 
-    public McStatusChecker (WebSocket webSocket, ContactsResponse contactsResponse) {
-        super(webSocket, contactsResponse, MCStatus.getInstance(), Main.getMcStatusChangeNotificationsEnabled());
+    public McStatusChecker (WebSocket webSocket) {
+        super(webSocket, MCStatus.getInstance(), Main.getMcStatusChangeNotificationsEnabled());
     }
 
 }

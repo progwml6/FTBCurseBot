@@ -59,9 +59,11 @@ public class MongoConnection {
             }
         }
     }
-    public static void logEvent(PersistanceEventType event, CurseGUID serverID, @Nullable CurseGUID channel, long performer, long affects, String info) {
+
+    public static void logEvent (PersistanceEventType event, CurseGUID serverID, @Nullable CurseGUID channel, long performer, long affects, String info) {
 
     }
+
     /**
      * this is where we would handle when DB migrations are needed past creating the main collections
      * @param dbVersion version in the database

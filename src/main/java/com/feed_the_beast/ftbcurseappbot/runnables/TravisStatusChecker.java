@@ -10,8 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class TravisStatusChecker extends ServiceStatusBase {
 
-    public TravisStatusChecker (WebSocket webSocket, ContactsResponse contactsResponse) {
-        super(webSocket, contactsResponse, TravisStatus.getInstance(), Main.getTravisStatusChangeNotificationsEnabled());
+    public TravisStatusChecker (WebSocket webSocket) {
+        super(webSocket, TravisStatus.getInstance(), Main.getTravisStatusChangeNotificationsEnabled());
     }
 
 }

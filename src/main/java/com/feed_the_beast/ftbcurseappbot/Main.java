@@ -15,7 +15,7 @@ import com.feed_the_beast.javacurselib.data.Apis;
 import com.feed_the_beast.javacurselib.examples.app_v1.DefaultResponseTask;
 import com.feed_the_beast.javacurselib.examples.app_v1.TraceResponseTask;
 import com.feed_the_beast.javacurselib.rest.REST;
-import com.feed_the_beast.javacurselib.service.contacts.contacts.ContactsResponse;
+import com.feed_the_beast.javacurselib.rest.RestUserEndpoints;
 import com.feed_the_beast.javacurselib.service.logins.login.LoginRequest;
 import com.feed_the_beast.javacurselib.service.logins.login.LoginResponse;
 import com.feed_the_beast.javacurselib.service.sessions.sessions.CreateSessionRequest;
@@ -60,11 +60,11 @@ public class Main {
     @Getter
     private static Optional<String> token = Optional.empty();
     @Getter
-    private static Optional<ContactsResponse> contacts = Optional.empty();
-    @Getter
     private static Optional<CreateSessionResponse> session = Optional.empty();
     @Getter
     private static CacheService cacheService;
+    @Getter
+    private static RestUserEndpoints restUserEndpoints;
     @Getter
     private static CommentedConfigurationNode config = null;
     @Getter
@@ -132,6 +132,8 @@ public class Main {
 
         // TODO: fix this by making REST fully non-static class and/or using other proper design patterns
         REST.setAuthToken(lr.session.token);
+        restUserEndpoints = new RestUserEndpoints();
+        restUserEndpoints.setAuthToken(lr.session.token);
 
         CountDownLatch sessionLatch = new CountDownLatch(1);
 
@@ -169,7 +171,6 @@ public class Main {
          *  experiment with data.
          ***************************/
 
-        contacts = Optional.of(REST.contacts.get().join()); // wil throw RuntimeException if fails
         token = Optional.of(lr.session.token);
 
         botTrigger = config.getNode("botSettings", "triggerKey").getString("!");
@@ -211,11 +212,11 @@ public class Main {
             System.exit(0);
         }
         CommandRegistry.registerBaseCommands();
-        scheduledTasks.scheduleAtFixedRate(new BBStatusChecker(webSocket, contacts.get()), 0, 60, TimeUnit.SECONDS);
-        scheduledTasks.scheduleAtFixedRate(new CFStatusChecker(webSocket, contacts.get()), 0, 60, TimeUnit.SECONDS);
-        scheduledTasks.scheduleAtFixedRate(new GHStatusChecker(webSocket, contacts.get()), 0, 60, TimeUnit.SECONDS);
-        scheduledTasks.scheduleAtFixedRate(new McStatusChecker(webSocket, contacts.get()), 0, 60, TimeUnit.SECONDS);
-        scheduledTasks.scheduleAtFixedRate(new TravisStatusChecker(webSocket, contacts.get()), 0, 60, TimeUnit.SECONDS);
+        scheduledTasks.scheduleAtFixedRate(new BBStatusChecker(webSocket), 0, 60, TimeUnit.SECONDS);
+        scheduledTasks.scheduleAtFixedRate(new CFStatusChecker(webSocket), 0, 60, TimeUnit.SECONDS);
+        scheduledTasks.scheduleAtFixedRate(new GHStatusChecker(webSocket), 0, 60, TimeUnit.SECONDS);
+        scheduledTasks.scheduleAtFixedRate(new McStatusChecker(webSocket), 0, 60, TimeUnit.SECONDS);
+        scheduledTasks.scheduleAtFixedRate(new TravisStatusChecker(webSocket), 0, 60, TimeUnit.SECONDS);
         cacheService = new CacheService();
 
         ResponseHandler responseHandler = webSocket.getResponseHandler();

@@ -9,8 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class CFStatusChecker extends ServiceStatusBase {
 
-    public CFStatusChecker (WebSocket webSocket, ContactsResponse contactsResponse) {
-        super(webSocket, contactsResponse, CFStatus.getInstance(), Main.getCFStatusChangeNotificationsEnabled());
+    public CFStatusChecker (WebSocket webSocket) {
+        super(webSocket, CFStatus.getInstance(), Main.getCFStatusChangeNotificationsEnabled());
     }
 
 }
