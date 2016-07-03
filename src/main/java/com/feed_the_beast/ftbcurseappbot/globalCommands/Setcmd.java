@@ -6,7 +6,6 @@ import com.feed_the_beast.javacurselib.common.enums.GroupPermissions;
 import com.feed_the_beast.javacurselib.websocket.WebSocket;
 import com.feed_the_beast.javacurselib.websocket.messages.notifications.ConversationMessageNotification;
 
-import java.util.Set;
 import java.util.regex.Pattern;
 
 /**
@@ -18,13 +17,13 @@ public class Setcmd extends CommandBase {
             if (MongoConnection.isPersistanceEnabled()) {
                 String[] parts = msg.body.split(" ");
                 if (parts.length < 3) {
-                    webSocket.sendMessage(msg.conversationID, "usage: " + Main.getBotTrigger() + "setcmd <command> <content>" );
+                    webSocket.sendMessage(msg.conversationID, "usage: " + Main.getBotTrigger() + "setcmd <command> <content>");
 
                 } else {
-                    String commandName = parts[1];
+                    String commandRegex = parts[1];
                     String content = parts[2];
-                    String regex = commandName;//TODO make this autobuild regex if r/ isn't in the string start
-                    MongoConnection.createOrModifyCommandForServer(regex, content, null, msg.serverID);
+                    String regex = commandRegex;//TODO make this autobuild regex if trigger isn't in the string start, don't keep the trigger in the database
+                    MongoConnection.createOrModifyCommandForServer(regex, content, null, msg.serverID, commandRegex.contains(Main.getBotTrigger()));
                 }
             } else {
                 webSocket.sendMessage(msg.conversationID, "can not add command as persistance is disabled");
