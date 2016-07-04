@@ -1,4 +1,4 @@
-package com.feed_the_beast.ftbcurseappbot.persistance.data;
+package com.feed_the_beast.ftbcurseappbot.persistence.data;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.feed_the_beast.ftbcurseappbot.Main;
@@ -60,11 +60,15 @@ public class MongoCommand {
             return Pattern.compile(regex);
         }
     }
-
+    @JsonIgnore
+    public Set<GroupPermissions> getGroupPermissions () {
+        return EnumSetHelpers.deserialize(permissions, GroupPermissions.class);
+    }
     public MongoCommand () {
         //needed for Jackson
     }
 
+    //TODO channel level, folder level, multi channel commands, role based stuff
     public MongoCommand (@Nonnull String regex, @Nonnull String content, @Nullable Set<GroupPermissions> requiredPermissions, @Nonnull CurseGUID serverID, boolean usesTrigger) {
         this.regex = regex;
         this.content = content;

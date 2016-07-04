@@ -1,4 +1,4 @@
-package com.feed_the_beast.ftbcurseappbot.persistance.data;
+package com.feed_the_beast.ftbcurseappbot.persistence.data;
 
 import lombok.Getter;
 import org.jongo.marshall.jackson.oid.MongoId;

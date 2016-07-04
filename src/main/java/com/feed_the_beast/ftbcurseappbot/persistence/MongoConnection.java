@@ -1,8 +1,8 @@
-package com.feed_the_beast.ftbcurseappbot.persistance;
+package com.feed_the_beast.ftbcurseappbot.persistence;
 
 import com.feed_the_beast.ftbcurseappbot.Main;
-import com.feed_the_beast.ftbcurseappbot.persistance.data.MongoCommand;
-import com.feed_the_beast.ftbcurseappbot.persistance.data.VersionInfo;
+import com.feed_the_beast.ftbcurseappbot.persistence.data.MongoCommand;
+import com.feed_the_beast.ftbcurseappbot.persistence.data.VersionInfo;
 import com.feed_the_beast.javacurselib.common.enums.GroupPermissions;
 import com.feed_the_beast.javacurselib.utils.CurseGUID;
 import com.feed_the_beast.javacurselib.utils.EnumSetHelpers;
@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import javax.annotation.Nonnull;
@@ -94,7 +95,7 @@ public class MongoConnection {
             commandPermissions = GroupPermissions.NONE;
         }
         //TODO check for existing object, and use/save that
-        MongoCommand command = jongo.getCollection(MONGO_COMMANDS_COLLECTION).findOne("{regex:" + regex + ", usesTrigger:" + usesTrigger + ", serverID: " + serverID.serialize() + "}")
+        MongoCommand command = jongo.getCollection(MONGO_COMMANDS_COLLECTION).findOne("{regex:'" + regex + "', usesTrigger:" + usesTrigger + ", serverID: '" + serverID.serialize() + "'}")
                 .as(MongoCommand.class);
         if (command == null) {
             command = new MongoCommand(regex, content, commandPermissions, serverID, usesTrigger);
@@ -102,20 +103,38 @@ public class MongoConnection {
             command.setContent(content);
             command.setPermissions(EnumSetHelpers.serialize(requiredPermissions, GroupPermissions.class));
         }
+        log.info("setting custom command '{}' on server {} to {} usesTrigger {}", regex, serverID.serialize(), content, usesTrigger);
         jongo.getCollection(MONGO_COMMANDS_COLLECTION).save(command);
+    }
+
+    /**
+     *
+     * @param regex command regex
+     * @param serverID curse server ID
+     * @param usesTrigger uses the bot's trigger if true like simple commands, if false this is a regex based command
+     */
+    //TODO make sure to setup mongo indexes for some of this to speed up searching
+    public static void removeCommandForServer (@Nonnull String regex, @Nonnull CurseGUID serverID, boolean usesTrigger) {
+        log.info("setting removing command '{}' on server {}  usesTrigger {}", regex, serverID.serialize(), usesTrigger);
+        jongo.getCollection(MONGO_COMMANDS_COLLECTION).remove("{regex:'" + regex + "', usesTrigger:" + usesTrigger + ", serverID: '" + serverID.serialize() + "'}");
     }
 
     @Nonnull
     //TODO should this use streams?
-    public static List<MongoCommand> getCommandsForServer (CurseGUID serverID) throws IOException {
-        List<MongoCommand> commandRet = new ArrayList<>();
-        MongoCursor<MongoCommand> commands = jongo.getCollection(MONGO_COMMANDS_COLLECTION).find("serverID: " + serverID.serialize() + "}")
-                .as(MongoCommand.class);
-        while (commands.hasNext()) {
-            commandRet.add(commands.next());
+    public static Optional<List<MongoCommand>> getCommandsForServer (CurseGUID serverID) {
+        try {
+            List<MongoCommand> commandRet = new ArrayList<>();
+            MongoCursor<MongoCommand> commands = jongo.getCollection(MONGO_COMMANDS_COLLECTION).find("{serverID: '" + serverID.serialize() + "'}")
+                    .as(MongoCommand.class);
+            while (commands.hasNext()) {
+                commandRet.add(commands.next());
+            }
+            commands.close();
+            return Optional.ofNullable(commandRet);
+        } catch (IOException e) {
+            log.error("error getting commands for server", e);
+            return Optional.empty();
         }
-        commands.close();
-        return commandRet;
     }
 
     /**

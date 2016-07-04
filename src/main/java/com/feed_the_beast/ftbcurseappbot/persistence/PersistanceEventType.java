@@ -1,4 +1,4 @@
-package com.feed_the_beast.ftbcurseappbot.persistance;
+package com.feed_the_beast.ftbcurseappbot.persistence;
 
 /**
  * Created by progwml6 on 6/10/16.

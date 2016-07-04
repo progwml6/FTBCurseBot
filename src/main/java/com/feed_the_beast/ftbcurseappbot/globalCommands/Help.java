@@ -14,10 +14,11 @@ public class Help extends CommandBase {
     public void onMessage (WebSocket webSocket, ConversationMessageNotification msg) {
         log.info("help ");
         webSocket.sendMessage(msg.conversationID,
-                "commands are: " + Main.getBotTrigger() + "ban, " + Main.getBotTrigger() + "bbstatus, " + Main.getBotTrigger() + "cfstatus, " + Main.getBotTrigger() + "ghstatus, "
-                        + Main.getBotTrigger() + "ftbbot, " + Main.getBotTrigger() + "help, " + Main.getBotTrigger() + "haspaidmc, " + Main.getBotTrigger() + "ipban, " + Main.getBotTrigger()
-                        + "kick, " + Main.getBotTrigger() + "repeat, " + Main.getBotTrigger() + "mcstatus, " + Main.getBotTrigger() + "mcuuid, " + Main.getBotTrigger() + "shorten, "
-                        + Main.getBotTrigger() + "mcdrama, " + Main.getBotTrigger() + "travisstatus, " + Main.getBotTrigger() + "api, will try to delete things containing \"autodeletetest\" ");
+                "commands are: " + Main.getBotTrigger() + "ban, " + Main.getBotTrigger() + "bbstatus, " + Main.getBotTrigger() + "cfstatus, " + Main.getBotTrigger()
+                        + "customcommands, " + Main.getBotTrigger() + "delcmd, " + Main.getBotTrigger() + "ghstatus, " + Main.getBotTrigger() + "ftbbot, " + Main.getBotTrigger() + "help, " + Main
+                        .getBotTrigger() + "haspaidmc, " + Main.getBotTrigger() + "ipban, " + Main.getBotTrigger() + "kick, " + Main.getBotTrigger() + "repeat, " + Main.getBotTrigger() + "mcstatus, "
+                        + Main.getBotTrigger() + "mcuuid, " + Main.getBotTrigger() + "shorten, " + Main.getBotTrigger() + "setcmd, " + Main.getBotTrigger() + "mcdrama, " + Main.getBotTrigger()
+                        + "travisstatus, " + Main.getBotTrigger() + "api, will try to delete things containing \"autodeletetest\" ");
     }
 
     @Override

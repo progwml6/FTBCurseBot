@@ -1,6 +1,8 @@
-package com.feed_the_beast.ftbcurseappbot.persistance;
+package com.feed_the_beast.ftbcurseappbot.persistence;
 
+import com.beust.jcommander.internal.Maps;
 import com.feed_the_beast.ftbcurseappbot.Main;
+import com.feed_the_beast.ftbcurseappbot.persistence.data.MongoCommand;
 import com.feed_the_beast.javacurselib.service.contacts.contacts.ContactsResponse;
 import com.feed_the_beast.javacurselib.service.contacts.contacts.GroupNotification;
 import com.feed_the_beast.javacurselib.service.groups.servers.GroupRoleDetails;
@@ -14,6 +16,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -30,10 +33,13 @@ public class CacheService {
     private LoadingCache<CurseGUID, List<GroupRoleDetails>> grouproledetails;
     private LoadingCache<CurseGUID, GroupNotification> groupnotifications;
     @Getter
+    private Map<CurseGUID, List<MongoCommand>> customServerCommands;
+    @Getter
     private Supplier<ContactsResponse> contacts = Suppliers.memoizeWithExpiration(this::getContactsFromURL,
             5, TimeUnit.MINUTES);
 
     public CacheService () {
+        customServerCommands = Maps.newHashMap();
         grouproledetails = CacheBuilder.newBuilder()
                 .maximumSize(1000)
                 .expireAfterWrite(5, TimeUnit.MINUTES)
@@ -72,6 +78,14 @@ public class CacheService {
                     }
                 });
 
+    }
+
+    @Nonnull
+    public Optional<List<MongoCommand>> getCustomCommandsForServer(@Nonnull CurseGUID serverId) {
+        return Optional.ofNullable(customServerCommands.get(serverId));
+    }
+    public void setServerCommandsEntry (@Nonnull CurseGUID serverId, List<MongoCommand> commands) {
+            customServerCommands.put(serverId, commands);
     }
 
     @Nonnull

@@ -21,7 +21,7 @@ public class ConversationEvent implements Task<ConversationMessageNotification> 
     @Override
     public void execute (@Nonnull WebSocket webSocket, @Nonnull ConversationMessageNotification msg) {
         if (msg.notificationType == ConversationNotificationType.NORMAL || msg.notificationType == ConversationNotificationType.EDITED) {
-            Optional<ICommandBase> command = CommandRegistry.getCommand(msg.conversationID.serialize(), msg.body);
+            Optional<ICommandBase> command = CommandRegistry.getCommand(msg.rootConversationID, msg.body);
             if (command.isPresent()) {
                 command.get().onMessage(webSocket, msg);
             } else if (msg.body.startsWith(Main.getBotTrigger() + "ban")) {
@@ -33,8 +33,10 @@ public class ConversationEvent implements Task<ConversationMessageNotification> 
             } else if (msg.body.contains("autodeletetest") && !msg.isDeleted && !isOwner(msg.senderRoles) && !msg.body.startsWith("commands are:")) {
                 log.info("autodelete " + msg.body);
                 if (msg.conversationType == ConversationType.GROUP || msg.conversationType == ConversationType.FRIENDSHIP) {
-                    REST.conversations.deleteMessage(msg.conversationID, msg.serverID, msg.timestamp);
+                    REST.conversations.deleteMessage(msg.conversationID, msg.serverID, msg.timestamp);//this actually needs serverID from the conversation
                 }
+            } else {//custom server commands
+                CommandRegistry.processServerCommands(msg.rootConversationID, webSocket, msg);
             }
             webSocket.sendMarkRead(msg.conversationID);
         }

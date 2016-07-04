@@ -2,8 +2,8 @@ package com.feed_the_beast.ftbcurseappbot;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.ParameterException;
-import com.feed_the_beast.ftbcurseappbot.persistance.CacheService;
-import com.feed_the_beast.ftbcurseappbot.persistance.MongoConnection;
+import com.feed_the_beast.ftbcurseappbot.persistence.CacheService;
+import com.feed_the_beast.ftbcurseappbot.persistence.MongoConnection;
 import com.feed_the_beast.ftbcurseappbot.runnables.BBStatusChecker;
 import com.feed_the_beast.ftbcurseappbot.runnables.CFStatusChecker;
 import com.feed_the_beast.ftbcurseappbot.runnables.GHStatusChecker;

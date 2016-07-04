@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbcurseappbot.globalCommands;
 
-import com.feed_the_beast.ftbcurseappbot.persistance.MongoConnection;
-import com.feed_the_beast.ftbcurseappbot.persistance.PersistanceEventType;
+import com.feed_the_beast.ftbcurseappbot.persistence.MongoConnection;
+import com.feed_the_beast.ftbcurseappbot.persistence.PersistanceEventType;
 import com.feed_the_beast.javacurselib.common.enums.GroupPermissions;
 import com.feed_the_beast.javacurselib.websocket.WebSocket;
 import com.feed_the_beast.javacurselib.websocket.messages.notifications.ConversationMessageNotification;
