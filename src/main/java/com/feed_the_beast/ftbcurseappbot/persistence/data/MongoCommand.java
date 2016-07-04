@@ -48,7 +48,7 @@ public class MongoCommand {
     //TODO make sure this isn't serialized to mongo
     @JsonIgnore
     public CurseGUID getServerIDAsGUID () {
-        return CurseGUID.newFromString(serverID);
+        return CurseGUID.newInstance(serverID);
     }
 
     //TODO make sure this isn't serialized to mongo
