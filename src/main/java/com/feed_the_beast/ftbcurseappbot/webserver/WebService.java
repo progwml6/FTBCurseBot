@@ -9,6 +9,9 @@ import com.feed_the_beast.ftbcurseappbot.Main;
 import com.feed_the_beast.ftbcurseappbot.webserver.endpoints.HealthEndpoint;
 import com.feed_the_beast.ftbcurseappbot.webserver.transformers.JsonTransformer;
 import com.google.common.base.Strings;
+import org.apache.commons.codec.digest.HmacUtils;
+
+import javax.annotation.Nonnull;
 
 /**
  * Created by progwml6 on 6/21/16.
@@ -31,9 +34,11 @@ public class WebService {
             String signature = request.headers(SIGNATURE_HEADER);
             String eventType = request.headers(EVENT_HEADER);
             String deliveryID = request.headers(DELIVERY_HEADER);
-            if (!Strings.isNullOrEmpty(signature) && ghSignatureMatches(signature, request.body())) {
-                handleGHWebhook(eventType, request.body());
-                //TODO throw 500 error if this fails
+            String key = "NEED_SECURE_KEYS_AND_STORAGE_CODE";//TODO<<
+            if (!Strings.isNullOrEmpty(signature) && ghSignatureMatches(signature, request.body(), key)) {
+                if (!handleGHWebhook(eventType, request.body())) {
+                    //TODO throw 500 error here
+                }
             } else {
                 //TODO throw credential error
             }
@@ -44,11 +49,64 @@ public class WebService {
 
     }
 
-    private boolean ghSignatureMatches (String signature, String body) {
-        return true;
+    private boolean ghSignatureMatches (@Nonnull String signature, @Nonnull String body, @Nonnull String key) {
+        return HmacUtils.hmacSha1Hex(key, body).equals(signature);
     }
 
     private boolean handleGHWebhook (String eventtype, String body) {
+        switch (eventtype) {
+        case "commit_comment":
+            break;
+        case "create":
+            break;
+        case "delete":
+            break;
+        case "deployment":
+            break;
+        case "deployment_status":
+            break;
+        case "fork":
+            break;
+        case "gollum":
+            break;
+        case "issue":
+            break;
+        case "issue_comment":
+            break;
+        case "issues":
+            break;
+        case "member":
+            break;
+        case "membership":
+            break;
+        case "page_build":
+            break;
+        case "public":
+            break;
+        case "pull_request_review_comment":
+            break;
+        case "pull_request":
+            break;
+        case "push":
+            break;
+        case "repository":
+            break;
+        case "release":
+            break;
+        case "status":
+            break;
+        case "team_add":
+            break;
+        case "watch":
+            break;
+        case "*":
+            break; //wildcard
+        case "ping":
+            break; //tests
+        default:
+            //TODO implement
+            break;
+        }
         return true;
     }
 }

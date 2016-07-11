@@ -46,7 +46,7 @@ dependencies {
     compile 'org.mongodb:mongodb-driver:3.2.2'//nosql storage for commands & ban data
     compile 'org.jongo:jongo:1.4-early-20160606-0118'//mongo helpers & pojo mappings
 
-
+    compile 'commons-codec:commons-codec:1.10'
 
     //below here are deps for the javacurselib itself
     //compile 'com.feed_the_beast:javacurselib:0.0.1-9999999'
