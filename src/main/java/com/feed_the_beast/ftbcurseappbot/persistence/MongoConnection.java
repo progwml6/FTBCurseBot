@@ -62,7 +62,7 @@ public class MongoConnection {
             VersionInfo info = jongo.getCollection(MONGO_CONFIG_COLLECTION).findOne("{service: 'ftbcursebot'}").as(VersionInfo.class);
             if (info == null) {
                 info = new VersionInfo();
-                jongo.getCollection(MONGO_CONFIG_COLLECTION).save(info);
+                info.setVersion(0);//we need to force a migration to occur this will get saved in the migration code
                 log.info("created VersionInfo for database");
             } else {
                 log.info("mongo DB version: " + info.getVersion());
@@ -143,6 +143,13 @@ public class MongoConnection {
      * @param expected version the bot is expecting
      */
     private static void migrate (VersionInfo dbVersion, VersionInfo expected) {
-        jongo.getCollection("dbinfo").save(expected.getVersion());
+        //mongo supports bulk updates ... they are MUCH faster than iterating through the DB
+        if (dbVersion.getVersion() == 0) {
+            jongo.getCollection(MONGO_COMMANDS_COLLECTION).ensureIndex("{ serverID: 1 }");
+        }
+        //do this last
+        dbVersion.setVersion(expected.getVersion());
+        jongo.getCollection(MONGO_CONFIG_COLLECTION).save(dbVersion);
+
     }
 }

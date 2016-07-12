@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbcurseappbot.persistence.data;
 
 import lombok.Getter;
+import lombok.Setter;
 import org.jongo.marshall.jackson.oid.MongoId;
 
 public class VersionInfo {
@@ -11,5 +12,6 @@ public class VersionInfo {
      * version of the database should start at 0 and increase when migrations are needed
      */
     @Getter
-    private int version = 0;
+    @Setter
+    private int version = 1;
 }
