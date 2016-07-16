@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbcurseappbot.webserver;
 
 import static spark.Spark.get;
+import static spark.Spark.halt;
 import static spark.Spark.port;
 import static spark.Spark.post;
 import static spark.debug.DebugScreen.enableDebugScreen;
@@ -30,14 +31,19 @@ public class WebService {
         get("/health", "application/json", (request, response) -> {
             return new HealthEndpoint();
         }, new JsonTransformer());
-        post("/webhooks/github", (request, response) -> {//TODO put in support for multiple repo hook locations
+        post("/webhooks/github/:hookName", (request, response) -> {//TODO put in support for multiple repo hook locations
             String signature = request.headers(SIGNATURE_HEADER);
             String eventType = request.headers(EVENT_HEADER);
             String deliveryID = request.headers(DELIVERY_HEADER);
-            String key = "NEED_SECURE_KEYS_AND_STORAGE_CODE";//TODO<<
+            String hookName = request.params(":hookName");
+            String key = getKeyFromHookName(hookName);
+            if (Strings.isNullOrEmpty(key)) {
+                //TODO throw error here as we don't have a GH hook at this location
+            }
             if (!Strings.isNullOrEmpty(signature) && ghSignatureMatches(signature, request.body(), key)) {
                 if (!handleGHWebhook(eventType, request.body())) {
                     //TODO throw 500 error here
+                    halt(500, "internal server error");//TODO helper methods for errors
                 }
             } else {
                 //TODO throw credential error
@@ -45,8 +51,23 @@ public class WebService {
             return API_POST_SUCCESS;
         }, new JsonTransformer());
 
+        get("/mdtest", (request, response) -> {
+            return Main.getCommonMarkUtils().renderToHTML("## Commonmark Parser > Web :D\n"
+                    + "### It will probably be used for help pages\n"
+                    + "This is rendered into html from commonmark inside FTBBot.  This is powered by\n"
+                    + "[Atlassian's Commonmark lib](https://github.com/atlassian/commonmark-java).\n"
+                    + "\n"
+                    + "1. nice list\n"
+                    + "2. right\n"
+                    + "   - sublist\n"
+                    + "   - sublist\n"
+                    + "\n");
+        });
         get("/", (request, response) -> "No fancy web config yet check back soon!");
+    }
 
+    private String getKeyFromHookName (String hookName) {
+        return "TODO implement key storage/lookup/caching!!!";
     }
 
     private boolean ghSignatureMatches (@Nonnull String signature, @Nonnull String body, @Nonnull String key) {

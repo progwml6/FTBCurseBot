@@ -9,6 +9,7 @@ import com.feed_the_beast.ftbcurseappbot.runnables.CFStatusChecker;
 import com.feed_the_beast.ftbcurseappbot.runnables.GHStatusChecker;
 import com.feed_the_beast.ftbcurseappbot.runnables.McStatusChecker;
 import com.feed_the_beast.ftbcurseappbot.runnables.TravisStatusChecker;
+import com.feed_the_beast.ftbcurseappbot.utils.CommonMarkUtils;
 import com.feed_the_beast.ftbcurseappbot.webserver.WebService;
 import com.feed_the_beast.javacurselib.common.enums.DevicePlatform;
 import com.feed_the_beast.javacurselib.data.Apis;
@@ -79,7 +80,8 @@ public class Main {
     private static Optional<List<String>> gHStatusChangeNotificationsEnabled = Optional.empty();
     @Getter
     private static Optional<List<String>> travisStatusChangeNotificationsEnabled = Optional.empty();
-
+    @Getter
+    private static CommonMarkUtils commonMarkUtils;
     @Getter
     private static WebSocket webSocket;
     @Getter
@@ -227,6 +229,7 @@ public class Main {
             responseHandler.addTask(new DefaultResponseTask(), NotificationsServiceContractType.CONVERSATION_READ_NOTIFICATION);
             responseHandler.addTask(new TraceResponseTask(), NotificationsServiceContractType.UNKNOWN);
         }
+        commonMarkUtils = new CommonMarkUtils();
         if (config.getNode("botSettings", "webEnabled").getBoolean(true)) {
             WebService service = new WebService();
         }
