@@ -35,14 +35,14 @@ public abstract class StatusCommandBase extends CommandBase {
             for (String s : channelsEnabled.get()) {
                 if (s.contains(".")) {
                     String[] g = s.split("\\.");
-                    Optional<CurseGUID> ci = Main.getCacheService().getContacts().get().getChannelIdbyNames(g[0], g[1]);
+                    Optional<CurseGUID> ci = Main.getCacheService().getContacts().get().getChannelIdbyNames(g[0], g[1], true);
                     if (ci.isPresent()) {
                         ws.sendMessage(ci.get(), message);
                     } else {
                         log.error("no channel id exists for " + g[0] + " " + g[1]);
                     }
                 } else {
-                    Optional<CurseGUID> ci = Main.getCacheService().getContacts().get().getGroupIdByName(s);
+                    Optional<CurseGUID> ci = Main.getCacheService().getContacts().get().getGroupIdByName(s, String::equalsIgnoreCase);
                     if (ci.isPresent()) {
                         ws.sendMessage(ci.get(), message);
                     } else {
