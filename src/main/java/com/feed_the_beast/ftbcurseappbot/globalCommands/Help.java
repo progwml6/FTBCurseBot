@@ -18,7 +18,7 @@ public class Help extends CommandBase {
                         + "customcommands, " + Main.getBotTrigger() + "delcmd, " + Main.getBotTrigger() + "ghstatus, " + Main.getBotTrigger() + "ftbbot, " + Main.getBotTrigger() + "help, " + Main
                         .getBotTrigger() + "haspaidmc, " + Main.getBotTrigger() + "ipban, " + Main.getBotTrigger() + "kick, " + Main.getBotTrigger() + "repeat, " + Main.getBotTrigger() + "mcstatus, "
                         + Main.getBotTrigger() + "mcuuid, " + Main.getBotTrigger() + "shorten, " + Main.getBotTrigger() + "setcmd, " + Main.getBotTrigger() + "mcdrama, " + Main.getBotTrigger()
-                        + "travisstatus, " + Main.getBotTrigger() + "api, will try to delete things containing \"autodeletetest\" ");
+                        + "travisstatus, " + Main.getBotTrigger() + "api");
     }
 
     @Override
