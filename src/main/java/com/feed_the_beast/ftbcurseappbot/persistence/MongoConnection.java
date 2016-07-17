@@ -59,7 +59,7 @@ public class MongoConnection {
             database = client.getDatabase(db);
             jongo = new Jongo(client.getDB(db));
             log.info("started up mongo client");
-            VersionInfo info = jongo.getCollection(MONGO_CONFIG_COLLECTION).findOne("{service: 'ftbcursebot'}").as(VersionInfo.class);
+            VersionInfo info = jongo.getCollection(MONGO_CONFIG_COLLECTION).findOne("{_id: 'ftbcursebot'}").as(VersionInfo.class);
             if (info == null) {
                 info = new VersionInfo();
                 info.setVersion(0);//we need to force a migration to occur this will get saved in the migration code
@@ -69,7 +69,7 @@ public class MongoConnection {
             }
             VersionInfo current = new VersionInfo();
             if (info.getVersion() < current.getVersion()) {
-                log.info("database needs to be migrated from version " + info.getVersion() + " to " + current.getVersion());
+                log.info("database needs to be migrated from version {} to {}", info.getVersion(), current.getVersion());
                 migrate(info, current);
             }
         }
