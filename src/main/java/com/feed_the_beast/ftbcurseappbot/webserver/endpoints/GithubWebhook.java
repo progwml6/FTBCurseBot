@@ -2,6 +2,7 @@ package com.feed_the_beast.ftbcurseappbot.webserver.endpoints;
 
 import static spark.Spark.halt;
 
+import com.feed_the_beast.ftbcurseappbot.webserver.WebService;
 import com.google.common.base.Strings;
 import org.apache.commons.codec.digest.HmacUtils;
 import spark.Request;
@@ -14,7 +15,6 @@ import javax.annotation.Nonnull;
  * Created by progwml6 on 7/16/16.
  */
 public class GithubWebhook {
-    private static String API_POST_SUCCESS = "POST SUCCESSFUL";
     private static String EVENT_HEADER = "X-GitHub-Event";
     private static String SIGNATURE_HEADER = "X-Hub-Signature";
     private static String DELIVERY_HEADER = "X-GitHub-Delivery";
@@ -40,7 +40,7 @@ public class GithubWebhook {
         } else {
             //TODO throw credential error
         }
-        return API_POST_SUCCESS;
+        return WebService.API_POST_SUCCESS;
     };
 
     private static String getKeyFromHookName (String hookName) {
