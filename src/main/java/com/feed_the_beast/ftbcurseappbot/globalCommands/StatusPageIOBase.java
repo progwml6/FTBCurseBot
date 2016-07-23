@@ -21,6 +21,7 @@ public abstract class StatusPageIOBase extends StatusCommandBase {
 
     private Map<String, Component> componentStatuses;
     private Status mainStatus;
+    private boolean changed = false;
 
     public abstract String getBaseURL ();
 
@@ -53,6 +54,7 @@ public abstract class StatusPageIOBase extends StatusCommandBase {
     public @Nonnull String updateServiceHealth () {
         String ret = "";
         boolean init = false;
+        changed = false;
         try {
             StatusSummary summary = JsonFactory.GSON.fromJson(Jsoup.connect(getBaseURL() + "v2/summary.json").ignoreContentType(true).get().text(), StatusSummary.class);
             if (componentStatuses == null) {
@@ -67,6 +69,7 @@ public abstract class StatusPageIOBase extends StatusCommandBase {
                 } else {//put it in an update if its changed
                     if (old.getUpdatedAt().before(nw.getUpdatedAt())) {
                         ret += init ? "" : getStatusUpdate(nw) + ", ";
+                        changed = true;
                         componentStatuses.replace(nw.getName(), nw);
                     }
                 }
@@ -77,6 +80,7 @@ public abstract class StatusPageIOBase extends StatusCommandBase {
             } else {
                 if (!mainStatus.getIndicator().equals(summary.status.getIndicator()) || !mainStatus.getDescription().equals(summary.status.getDescription())) {
                     ret = getService() + " Status: " + summary.status.getIndicator() + " " + summary.status.getDescription() + ", " + ret;
+                    changed = true;
                     mainStatus = summary.status;
                 }
             }
@@ -98,5 +102,11 @@ public abstract class StatusPageIOBase extends StatusCommandBase {
     private static String removeLastTwoChars (String str) {
         return str.substring(0, str.length() - 2);
     }
+
+    @Override
+    public boolean hasChanged () {
+        return changed;
+    }
+
 
 }

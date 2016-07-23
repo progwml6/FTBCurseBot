@@ -18,7 +18,7 @@ import javax.annotation.Nonnull;
 @Slf4j
 public class MCStatus extends StatusCommandBase {
     public static StatusCommandBase instance;
-
+    private boolean changed = false;
     public MCStatus () {
         instance = this;
     }
@@ -83,6 +83,7 @@ public class MCStatus extends StatusCommandBase {
                     mcstatushealth.put(mcstatusmappings.get(a.getKey()), a.getValue().getAsString());
                     if (cstatus != null && !cstatus.isEmpty() && !cstatus.equals(a.getValue().getAsString())) {
                         buf.append(getPrettyStatus(a.getKey(), true));
+                        changed = true;
                     }
                 }
             }
@@ -97,6 +98,10 @@ public class MCStatus extends StatusCommandBase {
             log.error("error getting mc status", e);
         }
         return "";
+    }
+
+    @Override public boolean hasChanged () {
+        return changed;
     }
 
     public static String getPrettyStatus (String item, boolean needPipe) {

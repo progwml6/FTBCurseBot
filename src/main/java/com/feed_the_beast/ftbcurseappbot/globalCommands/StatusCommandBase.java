@@ -26,13 +26,17 @@ public abstract class StatusCommandBase extends CommandBase {
     @Nonnull
     public abstract String updateServiceHealth ();
 
+    public abstract boolean hasChanged ();
+
     public void sendServiceStatusNotifications (@Nonnull ContactsResponse cr, @Nonnull WebSocket ws, @Nonnull String message, @Nonnull java.util.Optional<List<String>> channelsEnabled) {
         if (message.isEmpty()) {
-            log.info("no change in " + getService() + " health status");
+            log.info("no change in {} health status", getService());
             return;
         }
         if (channelsEnabled.isPresent()) {
+            log.info("{} has had a status change", getService());
             for (String s : channelsEnabled.get()) {
+                log.info("sending {} change to {}", getService(), s);
                 if (s.contains(".")) {
                     String[] g = s.split("\\.");
                     Optional<CurseGUID> ci = Main.getCacheService().getContacts().get().getChannelIdbyNames(g[0], g[1], true);

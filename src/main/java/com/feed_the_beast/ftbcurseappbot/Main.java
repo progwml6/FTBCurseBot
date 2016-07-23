@@ -118,8 +118,6 @@ public class Main {
         lr = restUserEndpoints.doLogin(new LoginRequest(username, config.getNode("credentials", "CurseAppLogin", "password").getString()));
         log.info("Synchronous login done: for user " + lr.session.username);
 
-        restUserEndpoints.setAuthToken(lr.session.token);
-
         CountDownLatch sessionLatch = new CountDownLatch(1);
         CompletableFuture<CreateSessionResponse> createSessionResponseCompletableFuture = restUserEndpoints.session.create(new CreateSessionRequest(CurseGUID.newRandomUUID(), DevicePlatform.UNKNOWN));
 
@@ -221,6 +219,7 @@ public class Main {
         try {
             latch.await();
         } catch (InterruptedException e) {
+            log.error("latch await error", e);
         }
     }
 }

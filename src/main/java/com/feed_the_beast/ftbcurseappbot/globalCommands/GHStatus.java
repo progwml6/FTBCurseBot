@@ -17,12 +17,14 @@ import javax.annotation.Nonnull;
 @Slf4j
 public class GHStatus extends StatusCommandBase {
     public static StatusCommandBase instance;
+    private boolean statusChanged = false;
+    private boolean messageChanged = false;
 
     public GHStatus () {
         instance = this;
     }
 
-    public static StatusCommandBase getInstance(){
+    public static StatusCommandBase getInstance () {
         return instance;
     }
 
@@ -73,8 +75,6 @@ public class GHStatus extends StatusCommandBase {
             }
             ApiStatus status = JsonFactory.GSON.fromJson(Jsoup.connect(urls.getStatus_url()).ignoreContentType(true).get().text(), ApiStatus.class);
             StatusMessage lastMessage = JsonFactory.GSON.fromJson(Jsoup.connect(urls.getLast_message_url()).ignoreContentType(true).get().text(), StatusMessage.class);
-            boolean statusChanged = false;
-            boolean messageChanged = false;
             if (apiStatus == null) {
                 apiStatus = status;
             }
@@ -83,12 +83,16 @@ public class GHStatus extends StatusCommandBase {
             }
             if (apiStatus.equals(status)) {
                 log.info("gh status hasn't changed");
+                statusChanged = false;
             } else {
+                log.info("ghstatus changed");
                 statusChanged = true;
             }
             if (message.equals(lastMessage)) {
                 log.info("lastMessage is the same from GH");
+                messageChanged = false;
             } else {
+                log.info("ghMessage changed");
                 messageChanged = true;
             }
             if (status.getStatus().equals(lastMessage.getStatus())) {
@@ -105,6 +109,11 @@ public class GHStatus extends StatusCommandBase {
         }
         return ret.replace("major", ":negative_squared_cross_mark:").replace("minor", ":construction:")
                 .replace("good", ":white_check_mark:");
+    }
+
+    @Override
+    public boolean hasChanged () {
+        return messageChanged || statusChanged;
     }
 
 }

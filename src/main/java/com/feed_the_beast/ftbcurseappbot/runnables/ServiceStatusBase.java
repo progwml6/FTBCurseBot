@@ -2,7 +2,6 @@ package com.feed_the_beast.ftbcurseappbot.runnables;
 
 import com.feed_the_beast.ftbcurseappbot.Main;
 import com.feed_the_beast.ftbcurseappbot.globalCommands.StatusCommandBase;
-import com.feed_the_beast.javacurselib.service.contacts.contacts.ContactsResponse;
 import com.feed_the_beast.javacurselib.websocket.WebSocket;
 import lombok.extern.slf4j.Slf4j;
 
@@ -32,7 +31,9 @@ public class ServiceStatusBase implements Runnable {
             log.info(statusCommand.getService() + " health initialized");
             return;
         }
-        statusCommand.sendServiceStatusNotifications(Main.getCacheService().getContacts().get(), webSocket, result, this.channelsEnabled);
+        if (statusCommand.hasChanged()) {
+            statusCommand.sendServiceStatusNotifications(Main.getCacheService().getContacts().get(), webSocket, result, this.channelsEnabled);
+        }
     }
 
 }

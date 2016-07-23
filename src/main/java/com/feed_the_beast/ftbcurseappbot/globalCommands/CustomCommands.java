@@ -25,7 +25,7 @@ public class CustomCommands extends CommandBase {
         if (commands.isPresent()) {
             for (MongoCommand c : commands.get()) {
                 if (c.isUsesTrigger()) {
-                    bdr.append(Main.getBotTrigger() + c.getRegex() + ", ");
+                    bdr.append(Main.getBotTrigger()).append(c.getRegex()).append(", ");
                 } else {
                     bdr.append(c.getRegex()).append(", ");
                 }

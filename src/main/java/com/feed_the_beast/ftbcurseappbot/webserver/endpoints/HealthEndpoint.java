@@ -5,6 +5,7 @@ import com.feed_the_beast.ftbcurseappbot.Main;
 /**
  * this should be useful to anyone who wants to know what is being run
  */
+
 public class HealthEndpoint {
 
     private String buildNumber;
