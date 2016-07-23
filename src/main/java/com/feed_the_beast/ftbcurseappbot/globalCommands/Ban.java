@@ -13,7 +13,6 @@ import java.util.regex.Pattern;
 public class Ban extends CommandBase {
     @Override
     public void onMessage (WebSocket webSocket, ConversationMessageNotification msg) {
-        String lg = "Ban sender: " + msg.senderName + " " + msg.senderID + " " + msg.serverID + " ";
         boolean canBan = false;
         if (msg.senderPermissions.contains(GroupPermissions.BAN_USER)) {
             canBan = true;

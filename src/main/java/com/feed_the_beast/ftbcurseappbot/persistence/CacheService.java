@@ -50,11 +50,6 @@ public class CacheService {
                         List<GroupRoleDetails> server = null;
                         try {
                             server = Main.getRestUserEndpoints().servers.getServerRoles(serverId).get();
-                            String lg = "";
-                            for (GroupRoleDetails g : server) {
-                                lg += g.toString();
-                            }
-                            log.info(lg);
                         } catch (InterruptedException | ExecutionException e) {
                             log.error("error getting server roles from curse for server: " + serverId, e);
                         }

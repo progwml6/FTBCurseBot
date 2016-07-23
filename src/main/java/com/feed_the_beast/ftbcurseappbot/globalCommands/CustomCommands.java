@@ -13,22 +13,24 @@ import java.util.regex.Pattern;
 public class CustomCommands extends CommandBase {
     @Override public void onMessage (WebSocket webSocket, ConversationMessageNotification msg) {
         Optional<List<MongoCommand>> commands = Main.getCacheService().getCustomCommandsForServer(msg.rootConversationID);
-        String ret = "Custom Commands for this server: ";
+        String ret;
         if (!commands.isPresent()) {//check mongo if nothing exists for the server
             commands = MongoConnection.getCommandsForServer(msg.rootConversationID);
             if (commands.isPresent()) {
                 Main.getCacheService().setServerCommandsEntry(msg.rootConversationID, commands.get());
             }
         }
+        StringBuilder bdr = new StringBuilder();
+        bdr.append("Custom Commands for this server:");
         if (commands.isPresent()) {
             for (MongoCommand c : commands.get()) {
                 if (c.isUsesTrigger()) {
-                    ret += Main.getBotTrigger() + c.getRegex() + ", ";
+                    bdr.append(Main.getBotTrigger() + c.getRegex() + ", ");
                 } else {
-                    ret += c.getRegex() + ", ";
+                    bdr.append(c.getRegex()).append(", ");
                 }
             }
-
+            ret = bdr.toString();
         } else {
             ret = "no custom commands exist for this server!";
         }
