@@ -5,25 +5,17 @@ import com.google.common.collect.Maps;
 
 import java.util.Map;
 
+import javax.annotation.Nonnull;
+
 /**
  * Created by progwml6 on 7/16/16.
  */
 public class Md {
-    public static Map render () {
+    public static Map render (@Nonnull String text, @Nonnull String title) {
         Map map = Maps.newHashMap();
-        map.put("commonmark", Main.getCommonMarkUtils().renderToHTML("## Commonmark Parser > Web :D\n"
-                + "### It will probably be used for help pages\n"
-                + "This is rendered into html from commonmark inside FTBBot.  This is powered by\n"
-                + "[Atlassian's Commonmark lib](https://github.com/atlassian/commonmark-java).\n"
-                + "\n"
-                + "1. nice list\n"
-                + "2. right\n"
-                + "   - sublist\n"
-                + "   - sublist\n"
-                + "\n"));
-        map.put("titleText", "MD Test");
+        map.put("commonmark", Main.getCommonMarkUtils().renderToHTML(text));
+        map.put("titleText", title);
         return map;
     }
 
-    ;
 }

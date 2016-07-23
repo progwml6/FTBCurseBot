@@ -49,7 +49,7 @@ public class MCStatus extends StatusCommandBase {
         if (mcstatushealth == null || mcstatushealth.isEmpty()) {
             return "ERROR getting mc status";
         }
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         for (Map.Entry<String, String> me : mcstatushealth.entrySet()) {
             buf.append(getPrettyStatus(me.getKey(), true));
         }
@@ -75,7 +75,7 @@ public class MCStatus extends StatusCommandBase {
             if (mcstatushealth == null) {
                 mcstatushealth = Maps.newHashMap();
             }
-            StringBuffer buf = new StringBuffer();
+            StringBuilder buf = new StringBuilder();
             for (int i = 0; i < report.size(); i++) {
                 for (Map.Entry<String, JsonElement> a : report.get(i).getAsJsonObject().entrySet()) {
                     //log.info(a.getKey() + " " + mcstatusmappings.get(a.getKey()) + " " + a.getValue().getAsString());

@@ -34,7 +34,7 @@ public abstract class StatusPageIOBase extends StatusCommandBase {
 
     public String getServiceStatus () {
         updateServiceHealth();
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         for (Map.Entry<String, Component> me : componentStatuses.entrySet()) {
             Component c = me.getValue();
             if (!c.getStatus().equals("operational")) {

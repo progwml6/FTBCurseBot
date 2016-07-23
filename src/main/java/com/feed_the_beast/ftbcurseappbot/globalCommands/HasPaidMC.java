@@ -48,10 +48,7 @@ public class HasPaidMC extends CommandBase {
             String json = Jsoup.connect("https://api.mojang.com/users/profiles/minecraft/" + user).ignoreContentType(true).get().text();
             JsonParser p = new JsonParser();
             JsonElement report = p.parse(json);
-            if (report == null || !report.isJsonObject()) {
-                return false;
-            }
-            return true;
+            return !(report == null || !report.isJsonObject());
         } catch (JsonParseException e) {
             return false;//TODO is this always the case
         }
