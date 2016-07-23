@@ -15,7 +15,6 @@ import com.feed_the_beast.javacurselib.common.enums.DevicePlatform;
 import com.feed_the_beast.javacurselib.data.Apis;
 import com.feed_the_beast.javacurselib.examples.app_v1.DefaultResponseTask;
 import com.feed_the_beast.javacurselib.examples.app_v1.TraceResponseTask;
-import com.feed_the_beast.javacurselib.rest.REST;
 import com.feed_the_beast.javacurselib.rest.RestUserEndpoints;
 import com.feed_the_beast.javacurselib.service.logins.login.LoginRequest;
 import com.feed_the_beast.javacurselib.service.logins.login.LoginResponse;
@@ -42,7 +41,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -112,34 +110,18 @@ public class Main {
         } catch (IOException e) {
             log.error("error with config loading", e);
         }
+        restUserEndpoints = new RestUserEndpoints();
+        restUserEndpoints.setupEndpoints();
         LoginResponse lr = null;
 
-        try {
-            username = config.getNode("credentials", "CurseAppLogin", "username").getString();
-            lr = REST.login.login(new LoginRequest(username, config.getNode("credentials", "CurseAppLogin", "password").getString()))
-                    .get();
-        } catch (InterruptedException e) {
-            // should not happen, just ignore
-        } catch (ExecutionException e) {
-            if (e.getCause() instanceof HttpException) {
-                log.error("Request failed: HTTP code: " + ((HttpException) e.getCause()).code());
-                // TODO: add helper function(s) to verbosely debug fail reason(s) and/or check if retrofit/okhttp logging
-            } else {
-                // network or  parser error, just print exception with causes
-                log.error("error logging in", e);
-            }
-            System.exit(1);
-        }
+        username = config.getNode("credentials", "CurseAppLogin", "username").getString();
+        lr = restUserEndpoints.doLogin(new LoginRequest(username, config.getNode("credentials", "CurseAppLogin", "password").getString()));
         log.info("Synchronous login done: for user " + lr.session.username);
 
-        // TODO: fix this by making REST fully non-static class and/or using other proper design patterns
-        REST.setAuthToken(lr.session.token);
-        restUserEndpoints = new RestUserEndpoints();
         restUserEndpoints.setAuthToken(lr.session.token);
 
         CountDownLatch sessionLatch = new CountDownLatch(1);
-
-        CompletableFuture<CreateSessionResponse> createSessionResponseCompletableFuture = REST.session.create(new CreateSessionRequest(CurseGUID.newRandomUUID(), DevicePlatform.UNKNOWN));
+        CompletableFuture<CreateSessionResponse> createSessionResponseCompletableFuture = restUserEndpoints.session.create(new CreateSessionRequest(CurseGUID.newRandomUUID(), DevicePlatform.UNKNOWN));
 
         createSessionResponseCompletableFuture.whenComplete((r, e) -> {
             if (e != null) {
