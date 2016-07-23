@@ -82,14 +82,14 @@ public class GHStatus extends StatusCommandBase {
                 message = lastMessage;
             }
             if (apiStatus.equals(status)) {
-                log.info("gh status hasn't changed");
+                log.debug("gh status hasn't changed");
                 statusChanged = false;
             } else {
                 log.info("ghstatus changed");
                 statusChanged = true;
             }
             if (message.equals(lastMessage)) {
-                log.info("lastMessage is the same from GH");
+                log.debug("lastMessage is the same from GH");
                 messageChanged = false;
             } else {
                 log.info("ghMessage changed");
