@@ -9,6 +9,7 @@ import com.feed_the_beast.ftbcurseappbot.globalCommands.Commands;
 import com.feed_the_beast.ftbcurseappbot.globalCommands.CustomCommands;
 import com.feed_the_beast.ftbcurseappbot.globalCommands.DelCmd;
 import com.feed_the_beast.ftbcurseappbot.globalCommands.FTBBot;
+import com.feed_the_beast.ftbcurseappbot.globalCommands.FTBFaq;
 import com.feed_the_beast.ftbcurseappbot.globalCommands.GHStatus;
 import com.feed_the_beast.ftbcurseappbot.globalCommands.HasPaidMC;
 import com.feed_the_beast.ftbcurseappbot.globalCommands.Help;
@@ -114,6 +115,7 @@ public class CommandRegistry {
         new CustomCommands();
         new DelCmd();
         new FTBBot();
+        new FTBFaq();
         new GHStatus();
         new Help();
         new HasPaidMC();

@@ -15,10 +15,10 @@ public class Help extends CommandBase {
         log.info("help ");
         webSocket.sendMessage(msg.conversationID,
                 "commands are: " + Main.getBotTrigger() + "ban, " + Main.getBotTrigger() + "bbstatus, " + Main.getBotTrigger() + "cfstatus, " + Main.getBotTrigger() + "chatformatting, " + Main
-                        .getBotTrigger() + "customcommands, " + Main.getBotTrigger() + "delcmd, " + Main.getBotTrigger() + "ghstatus, " + Main.getBotTrigger() + "ftbbot, " + Main.getBotTrigger()
-                        + "help, " + Main.getBotTrigger() + "haspaidmc, " + Main.getBotTrigger() + "ipban, " + Main.getBotTrigger() + "kick, " + Main.getBotTrigger() + "repeat, " + Main
-                        .getBotTrigger() + "mcstatus, " + Main.getBotTrigger() + "mcuuid, " + Main.getBotTrigger() + "shorten, " + Main.getBotTrigger() + "setcmd, " + Main.getBotTrigger()
-                        + "mcdrama, " + Main.getBotTrigger() + "travisstatus, " + Main.getBotTrigger() + "api");
+                        .getBotTrigger() + "customcommands, " + Main.getBotTrigger() + "delcmd, " + Main.getBotTrigger() + "ftbfaq, " + Main.getBotTrigger() + "ghstatus, " + Main.getBotTrigger()
+                        + "ftbbot, " + Main.getBotTrigger() + "help, " + Main.getBotTrigger() + "haspaidmc, " + Main.getBotTrigger() + "ipban, " + Main.getBotTrigger() + "kick, " + Main
+                        .getBotTrigger() + "repeat, " + Main.getBotTrigger() + "mcstatus, " + Main.getBotTrigger() + "mcuuid, " + Main.getBotTrigger() + "shorten, " + Main.getBotTrigger() + "setcmd, "
+                        + Main.getBotTrigger() + "mcdrama, " + Main.getBotTrigger() + "travisstatus, " + Main.getBotTrigger() + "api");
     }
 
     @Override
