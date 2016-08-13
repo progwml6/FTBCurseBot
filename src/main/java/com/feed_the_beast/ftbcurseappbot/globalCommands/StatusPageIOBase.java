@@ -79,7 +79,7 @@ public abstract class StatusPageIOBase extends StatusCommandBase {
                 serviceName = summary.page.getName();
             } else {
                 if (!mainStatus.getIndicator().equals(summary.status.getIndicator()) || !mainStatus.getDescription().equals(summary.status.getDescription())) {
-                    ret = getService() + " Status: " + summary.status.getIndicator() + " " + summary.status.getDescription() + ", " + ret;
+                    ret = getService() + " Status: " + /*summary.status.getIndicator() + " " +*/ summary.status.getDescription() + ", " + ret;
                     changed = true;
                     mainStatus = summary.status;
                 }
@@ -91,7 +91,8 @@ public abstract class StatusPageIOBase extends StatusCommandBase {
         if (ret.endsWith(", ")) {
             ret = removeLastTwoChars(ret);
         }
-        return ret.replace("major_outage", ":negative_squared_cross_mark:").replace("degraded_performance", ":construction:")
+        return ret.replace("critical", ":negative_squared_cross_mark:").replace("minor", ":construction:").replace("major", ":construction:")
+                .replace("none", ":white_check_mark:").replace("major_outage", ":negative_squared_cross_mark:").replace("degraded_performance", ":construction:")
                 .replace("partial_outage", ":construction:").replace("operational", ":white_check_mark:");
     }
 

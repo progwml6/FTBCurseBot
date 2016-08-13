@@ -84,6 +84,7 @@ public class Main {
     private static WebSocket webSocket;
     @Getter
     private static ScheduledExecutorService scheduledTasks = Executors.newScheduledThreadPool(5);
+    private static final int CHECKER_POLL_TIME = 120;
 
     public static void main (String args[]) {
         log.info("FTB CurseApp bot V " + VERSION);
@@ -194,11 +195,11 @@ public class Main {
             System.exit(0);
         }
         CommandRegistry.registerBaseCommands();
-        scheduledTasks.scheduleAtFixedRate(new BBStatusChecker(webSocket), 0, 60, TimeUnit.SECONDS);
-        scheduledTasks.scheduleAtFixedRate(new CFStatusChecker(webSocket), 0, 60, TimeUnit.SECONDS);
-        scheduledTasks.scheduleAtFixedRate(new GHStatusChecker(webSocket), 0, 60, TimeUnit.SECONDS);
-        scheduledTasks.scheduleAtFixedRate(new McStatusChecker(webSocket), 0, 60, TimeUnit.SECONDS);
-        scheduledTasks.scheduleAtFixedRate(new TravisStatusChecker(webSocket), 0, 60, TimeUnit.SECONDS);
+        scheduledTasks.scheduleAtFixedRate(new BBStatusChecker(webSocket), 0, CHECKER_POLL_TIME, TimeUnit.SECONDS);
+        scheduledTasks.scheduleAtFixedRate(new CFStatusChecker(webSocket), 0, CHECKER_POLL_TIME, TimeUnit.SECONDS);
+        scheduledTasks.scheduleAtFixedRate(new GHStatusChecker(webSocket), 0, CHECKER_POLL_TIME, TimeUnit.SECONDS);
+        scheduledTasks.scheduleAtFixedRate(new McStatusChecker(webSocket), 0, CHECKER_POLL_TIME, TimeUnit.SECONDS);
+        scheduledTasks.scheduleAtFixedRate(new TravisStatusChecker(webSocket), 0, CHECKER_POLL_TIME, TimeUnit.SECONDS);
         cacheService = new CacheService();
 
         ResponseHandler responseHandler = webSocket.getResponseHandler();

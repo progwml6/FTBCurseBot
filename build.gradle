@@ -31,24 +31,24 @@ dependencies {
     compile 'com.beust:jcommander:1.48' //command line argument support
     compile 'ninja.leaping.configurate:configurate-hocon:3.1.1'//configuration
 
-    compile 'org.jsoup:jsoup:1.9.1' //scraping from html pages as needed
-    compile 'org.beanshell:bsh:2.0b5' //commands
+    compile 'org.jsoup:jsoup:1.9.2' //scraping from html pages as needed
+    compile 'org.apache-extras.beanshell:bsh:2.0b6' //commands
 
     compile 'com.sparkjava:spark-core:2.5'  //for creating a web interface and rest endpoints
     compile 'com.sparkjava:spark-debug-tools:0.5' //debugging errors w/ endpoints
     compile 'com.sparkjava:spark-template-mustache:2.3' //webpage templates
 
-    compile 'com.atlassian.commonmark:commonmark:0.5.1'//commonmark markdown lib for java
-    compile 'com.atlassian.commonmark:commonmark-ext-gfm-tables:0.5.1'//tables from GitHub Flavored Markdown
-    compile 'com.atlassian.commonmark:commonmark-ext-gfm-strikethrough:0.5.1'//strikethrough of text
+    compile 'com.atlassian.commonmark:commonmark:0.6.0'//commonmark markdown lib for java
+    compile 'com.atlassian.commonmark:commonmark-ext-gfm-tables:0.6.0'//tables from GitHub Flavored Markdown
+    compile 'com.atlassian.commonmark:commonmark-ext-gfm-strikethrough:0.6.0'//strikethrough of text
 
 
-    compile 'com.google.inject:guice:4.0' //injections
+    compile 'com.google.inject:guice:4.1.0' //injections
 
     compile 'org.slf4j:slf4j-jdk14:1.7.21' //send slf4j to java's logger for now
-    compile 'org.projectlombok:lombok:1.16.8'
+    compile 'org.projectlombok:lombok:1.16.10'
 
-    compile 'org.mongodb:mongodb-driver:3.2.2'//nosql storage for commands & ban data
+    compile 'org.mongodb:mongodb-driver:3.3.0'//nosql storage for commands & ban data
     compile 'org.jongo:jongo:1.4-early-20160606-0118'//mongo helpers & pojo mappings
 
     compile 'commons-codec:commons-codec:1.10'

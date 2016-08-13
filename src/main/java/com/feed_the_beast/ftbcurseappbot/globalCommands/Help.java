@@ -12,7 +12,7 @@ public class Help extends CommandBase {
 
     @Override
     public void onMessage (WebSocket webSocket, ConversationMessageNotification msg) {
-        log.info("help ");
+        log.info("help " + msg.senderName);
         webSocket.sendMessage(msg.conversationID,
                 "commands are: " + Main.getBotTrigger() + "ban, " + Main.getBotTrigger() + "bbstatus, " + Main.getBotTrigger() + "cfstatus, " + Main.getBotTrigger() + "chatformatting, " + Main
                         .getBotTrigger() + "customcommands, " + Main.getBotTrigger() + "delcmd, " + Main.getBotTrigger() + "ftbfaq, " + Main.getBotTrigger() + "ghstatus, " + Main.getBotTrigger()
