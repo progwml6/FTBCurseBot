@@ -7,11 +7,11 @@ import com.feed_the_beast.javacurselib.service.contacts.contacts.ContactsRespons
 import com.feed_the_beast.javacurselib.service.contacts.contacts.GroupNotification;
 import com.feed_the_beast.javacurselib.service.groups.servers.GroupRoleDetails;
 import com.feed_the_beast.javacurselib.utils.CurseGUID;
+import com.github.benmanes.caffeine.cache.CacheLoader;
+import com.github.benmanes.caffeine.cache.Caffeine;
+import com.github.benmanes.caffeine.cache.LoadingCache;
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -40,7 +40,7 @@ public class CacheService {
 
     public CacheService () {
         customServerCommands = Maps.newHashMap();
-        grouproledetails = CacheBuilder.newBuilder()
+        grouproledetails = Caffeine.newBuilder()
                 .maximumSize(1000)
                 .expireAfterWrite(5, TimeUnit.MINUTES)
                 .build(new CacheLoader<CurseGUID, List<GroupRoleDetails>>() { // build the cacheloader
@@ -56,7 +56,7 @@ public class CacheService {
                         return server;
                     }
                 });
-        groupnotifications = CacheBuilder.newBuilder()
+        groupnotifications = Caffeine.newBuilder()
                 .maximumSize(1000)
                 .expireAfterWrite(5, TimeUnit.MINUTES)
                 .build(new CacheLoader<CurseGUID, GroupNotification>() { // build the cacheloader
@@ -76,21 +76,17 @@ public class CacheService {
     }
 
     @Nonnull
-    public Optional<List<MongoCommand>> getCustomCommandsForServer(@Nonnull CurseGUID serverId) {
+    public Optional<List<MongoCommand>> getCustomCommandsForServer (@Nonnull CurseGUID serverId) {
         return Optional.ofNullable(customServerCommands.get(serverId));
     }
+
     public void setServerCommandsEntry (@Nonnull CurseGUID serverId, List<MongoCommand> commands) {
-            customServerCommands.put(serverId, commands);
+        customServerCommands.put(serverId, commands);
     }
 
     @Nonnull
     public Optional<List<GroupRoleDetails>> getServerRole (@Nonnull CurseGUID serverId) {
-        try {
-            return Optional.of(grouproledetails.get(serverId));
-        } catch (ExecutionException e) {
-            log.error("error getting details from cache", e);
-        }
-        return Optional.empty();
+        return Optional.of(grouproledetails.get(serverId));
     }
 
     @Nullable
