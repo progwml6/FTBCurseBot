@@ -21,6 +21,10 @@ repositories {
         url = 'http://ftb.cursecdn.com/FTB2/maven'
     }
     maven {
+        name = 'jenkins'
+        url = 'http://repo.jenkins-ci.org/public'
+    }
+    maven {
         name = 'cloudbees-jongo-early-release'
         url = 'http://repository-jongo.forge.cloudbees.com/release'
     }
@@ -45,6 +49,9 @@ dependencies {
 
     compile 'org.kohsuke:github-api:1.77'//GH integrations
     compile 'org.slf4j:jcl-over-slf4j:1.7.21'// we don't want commons logging around
+
+    compile 'com.github.ben-manes.caffeine:caffeine:2.3.2'//high performance local cache
+    compile 'com.github.ben-manes.caffeine:guava:2.3.2'
 
 
     compile 'com.google.inject:guice:4.1.0' //injections

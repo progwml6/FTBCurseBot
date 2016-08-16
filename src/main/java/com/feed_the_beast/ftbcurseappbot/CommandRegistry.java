@@ -22,6 +22,7 @@ import com.feed_the_beast.ftbcurseappbot.globalCommands.Repeat;
 import com.feed_the_beast.ftbcurseappbot.globalCommands.Setcmd;
 import com.feed_the_beast.ftbcurseappbot.globalCommands.Shorten;
 import com.feed_the_beast.ftbcurseappbot.globalCommands.TravisStatus;
+import com.feed_the_beast.ftbcurseappbot.globalCommands.TwitchStatus;
 import com.feed_the_beast.ftbcurseappbot.persistence.MongoConnection;
 import com.feed_the_beast.ftbcurseappbot.persistence.data.MongoCommand;
 import com.feed_the_beast.javacurselib.utils.CurseGUID;
@@ -128,6 +129,7 @@ public class CommandRegistry {
         new Setcmd();
         new Shorten();
         new TravisStatus();
+        new TwitchStatus();
         log.info("registered " + commands.size() + " base commands");
     }
 }

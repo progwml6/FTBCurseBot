@@ -9,6 +9,7 @@ import com.feed_the_beast.ftbcurseappbot.runnables.CFStatusChecker;
 import com.feed_the_beast.ftbcurseappbot.runnables.GHStatusChecker;
 import com.feed_the_beast.ftbcurseappbot.runnables.McStatusChecker;
 import com.feed_the_beast.ftbcurseappbot.runnables.TravisStatusChecker;
+import com.feed_the_beast.ftbcurseappbot.runnables.TwitchStatusChecker;
 import com.feed_the_beast.ftbcurseappbot.utils.CommonMarkUtils;
 import com.feed_the_beast.ftbcurseappbot.webserver.WebService;
 import com.feed_the_beast.javacurselib.common.enums.DevicePlatform;
@@ -78,6 +79,9 @@ public class Main {
     private static Optional<List<String>> gHStatusChangeNotificationsEnabled = Optional.empty();
     @Getter
     private static Optional<List<String>> travisStatusChangeNotificationsEnabled = Optional.empty();
+    @Getter
+    private static Optional<List<String>> twitchStatusChangeNotificationsEnabled = Optional.empty();
+
     @Getter
     private static CommonMarkUtils commonMarkUtils;
     @Getter
@@ -190,6 +194,12 @@ public class Main {
         } catch (ObjectMappingException e) {
             log.error("couldn't map bot settings - travis", e);
         }
+        try {
+            twitchStatusChangeNotificationsEnabled = Optional.ofNullable(config.getNode("botSettings", "TwitchStatusChangeNotificationsEnabled").getList(TypeToken.of(String.class)));
+        } catch (ObjectMappingException e) {
+            log.error("couldn't map bot settings - twitch", e);
+        }
+
         log.info("bot trigger is " + botTrigger);
         // startup persistance engine
         MongoConnection.start();
@@ -206,6 +216,8 @@ public class Main {
         scheduledTasks.scheduleAtFixedRate(new GHStatusChecker(webSocket), 0, CHECKER_POLL_TIME, TimeUnit.SECONDS);
         scheduledTasks.scheduleAtFixedRate(new McStatusChecker(webSocket), 0, CHECKER_POLL_TIME, TimeUnit.SECONDS);
         scheduledTasks.scheduleAtFixedRate(new TravisStatusChecker(webSocket), 0, CHECKER_POLL_TIME, TimeUnit.SECONDS);
+        scheduledTasks.scheduleAtFixedRate(new TwitchStatusChecker(webSocket), 0, CHECKER_POLL_TIME, TimeUnit.SECONDS);
+
         cacheService = new CacheService();
 
         ResponseHandler responseHandler = webSocket.getResponseHandler();

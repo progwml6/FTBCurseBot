@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftbcurseappbot.utils;
 
 import lombok.Getter;
-import okhttp3.Headers;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -28,9 +27,6 @@ public class NetworkingUtils {
         if (!response.isSuccessful()) {
             throw new IOException("Unexpected code " + response);
         }
-
-        Headers responseHeaders = response.headers();
-
         return response.body().string();
     }
 }
