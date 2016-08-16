@@ -1,12 +1,12 @@
 package com.feed_the_beast.ftbcurseappbot.globalCommands;
 
+import com.feed_the_beast.ftbcurseappbot.utils.NetworkingUtils;
 import com.feed_the_beast.javacurselib.websocket.WebSocket;
 import com.feed_the_beast.javacurselib.websocket.messages.notifications.ConversationMessageNotification;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 import lombok.extern.slf4j.Slf4j;
-import org.jsoup.Jsoup;
 
 import java.io.IOException;
 import java.util.regex.Pattern;
@@ -45,7 +45,7 @@ public class HasPaidMC extends CommandBase {
 
     public static boolean getHasPaid (String user) throws IOException {
         try {
-            String json = Jsoup.connect("https://api.mojang.com/users/profiles/minecraft/" + user).ignoreContentType(true).get().text();
+            String json = NetworkingUtils.getSynchronous("https://api.mojang.com/users/profiles/minecraft/" + user);
             JsonParser p = new JsonParser();
             JsonElement report = p.parse(json);
             return !(report == null || !report.isJsonObject());

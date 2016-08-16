@@ -102,11 +102,17 @@ public class Main {
             System.exit(0);
         }
         if (CommandArgs.getSettings().getConfigFile() == null || CommandArgs.getSettings().getConfigFile().isEmpty()) {
-            log.error("need an error message");
+            log.error("need an config file");
             System.exit(1);
         }
+        File configFl = new File(CommandArgs.getSettings().getConfigFile());
+        if (!configFl.exists()) {
+            log.error("no config file found");
+            System.exit(1);
+        }
+
         try {
-            ConfigurationLoader<CommentedConfigurationNode> loader = HoconConfigurationLoader.builder().setFile(new File(CommandArgs.getSettings().getConfigFile())).build(); // Create the loader
+            ConfigurationLoader<CommentedConfigurationNode> loader = HoconConfigurationLoader.builder().setFile(configFl).build(); // Create the loader
             config = loader.load(); // Load the configuration into memory
         } catch (IOException e) {
             log.error("error with config loading", e);

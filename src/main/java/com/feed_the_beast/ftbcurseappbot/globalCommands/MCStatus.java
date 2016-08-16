@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbcurseappbot.globalCommands;
 
 import com.feed_the_beast.ftbcurseappbot.Main;
+import com.feed_the_beast.ftbcurseappbot.utils.NetworkingUtils;
 import com.feed_the_beast.javacurselib.websocket.WebSocket;
 import com.feed_the_beast.javacurselib.websocket.messages.notifications.ConversationMessageNotification;
 import com.google.common.collect.Maps;
@@ -8,7 +9,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import lombok.extern.slf4j.Slf4j;
-import org.jsoup.Jsoup;
 
 import java.io.IOException;
 import java.util.Map;
@@ -66,7 +66,7 @@ public class MCStatus extends StatusCommandBase {
     @Override
     public @Nonnull String updateServiceHealth () {
         try {
-            String json = Jsoup.connect("http://status.mojang.com/check").ignoreContentType(true).get().text();
+            String json = NetworkingUtils.getSynchronous("http://status.mojang.com/check");
             JsonParser p = new JsonParser();
             JsonArray report = p.parse(json).getAsJsonArray();
             if (mcstatusmappings == null) {

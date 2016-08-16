@@ -26,12 +26,13 @@ repositories {
     }
 }
 
+configurations.all { exclude group: 'commons-logging' }//we use slf4j and replace this w/ the slf4j bridge
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar']) //we aren't uploading the api to a maven repo just yet
     compile 'com.beust:jcommander:1.48' //command line argument support
     compile 'ninja.leaping.configurate:configurate-hocon:3.1.1'//configuration
 
-    compile 'org.jsoup:jsoup:1.9.2' //scraping from html pages as needed
+    //compile 'org.jsoup:jsoup:1.9.2' //scraping from html pages as needed
     compile 'org.apache-extras.beanshell:bsh:2.0b6' //commands
 
     compile 'com.sparkjava:spark-core:2.5'  //for creating a web interface and rest endpoints
@@ -41,6 +42,9 @@ dependencies {
     compile 'com.atlassian.commonmark:commonmark:0.6.0'//commonmark markdown lib for java
     compile 'com.atlassian.commonmark:commonmark-ext-gfm-tables:0.6.0'//tables from GitHub Flavored Markdown
     compile 'com.atlassian.commonmark:commonmark-ext-gfm-strikethrough:0.6.0'//strikethrough of text
+
+    compile 'org.kohsuke:github-api:1.77'//GH integrations
+    compile 'org.slf4j:jcl-over-slf4j:1.7.21'// we don't want commons logging around
 
 
     compile 'com.google.inject:guice:4.1.0' //injections

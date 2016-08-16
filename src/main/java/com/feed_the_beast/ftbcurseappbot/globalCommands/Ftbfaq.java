@@ -4,12 +4,11 @@ import com.feed_the_beast.ftbcurseappbot.Main;
 import com.feed_the_beast.ftbcurseappbot.api.ftbsupportfaq.FaqData;
 import com.feed_the_beast.ftbcurseappbot.api.ftbsupportfaq.Sitejson;
 import com.feed_the_beast.ftbcurseappbot.utils.JsonFactory;
+import com.feed_the_beast.ftbcurseappbot.utils.NetworkingUtils;
 import com.feed_the_beast.javacurselib.websocket.WebSocket;
 import com.feed_the_beast.javacurselib.websocket.messages.notifications.ConversationMessageNotification;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 
 import java.util.List;
 import java.util.Optional;
@@ -75,9 +74,7 @@ public class FTBFaq extends CommandBase {
     public static Sitejson getFaqData () {
         String faq = null;
         try {
-            Document doc = Jsoup.connect(SUPPORT_FAQ_JSON).userAgent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36")
-                    .ignoreContentType(true).get();
-            faq = doc.text();
+            faq = NetworkingUtils.getSynchronous(SUPPORT_FAQ_JSON);
             return JsonFactory.GSON.fromJson(faq, Sitejson.class);
         } catch (Exception e) {
             log.error("error getting support faq ", e);

@@ -1,11 +1,11 @@
 package com.feed_the_beast.ftbcurseappbot.globalCommands;
 
+import com.feed_the_beast.ftbcurseappbot.utils.NetworkingUtils;
 import com.feed_the_beast.javacurselib.websocket.WebSocket;
 import com.feed_the_beast.javacurselib.websocket.messages.notifications.ConversationMessageNotification;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import lombok.extern.slf4j.Slf4j;
-import org.jsoup.Jsoup;
 
 import java.util.regex.Pattern;
 
@@ -33,7 +33,7 @@ public class Shorten extends CommandBase {
 
     public static String shortenURL (String url) {
         try {
-            String json = Jsoup.connect("http://is.gd/create.php?format=json&url=" + url).ignoreContentType(true).get().text();
+            String json = NetworkingUtils.getSynchronous("http://is.gd/create.php?format=json&url=" + url);
             JsonParser p = new JsonParser();
             JsonElement report = p.parse(json);
             return report.getAsJsonObject().get("shorturl").getAsString();

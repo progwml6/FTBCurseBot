@@ -1,10 +1,9 @@
 package com.feed_the_beast.ftbcurseappbot.globalCommands;
 
+import com.feed_the_beast.ftbcurseappbot.utils.NetworkingUtils;
 import com.feed_the_beast.javacurselib.websocket.WebSocket;
 import com.feed_the_beast.javacurselib.websocket.messages.notifications.ConversationMessageNotification;
 import lombok.extern.slf4j.Slf4j;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 
 import java.util.regex.Pattern;
 
@@ -25,11 +24,11 @@ public class MCDrama extends CommandBase {
     public String getHelp () {
         return "gets mc drama";
     }
-    public static String getDrama() {
+
+    public static String getDrama () {
         String drama = null;
         try {
-            Document doc = Jsoup.connect("http://mc-drama.herokuapp.com/raw").get();
-            drama = doc.text();
+            drama = NetworkingUtils.getSynchronous("http://mc-drama.herokuapp.com/raw");
         } catch (Exception e) {
             log.error("error getting mc drama ", e);
         }

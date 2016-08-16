@@ -5,10 +5,10 @@ import com.feed_the_beast.ftbcurseappbot.api.ghstatus.ApiStatus;
 import com.feed_the_beast.ftbcurseappbot.api.ghstatus.StatusApiUrls;
 import com.feed_the_beast.ftbcurseappbot.api.ghstatus.StatusMessage;
 import com.feed_the_beast.ftbcurseappbot.utils.JsonFactory;
+import com.feed_the_beast.ftbcurseappbot.utils.NetworkingUtils;
 import com.feed_the_beast.javacurselib.websocket.WebSocket;
 import com.feed_the_beast.javacurselib.websocket.messages.notifications.ConversationMessageNotification;
 import lombok.extern.slf4j.Slf4j;
-import org.jsoup.Jsoup;
 
 import java.io.IOException;
 
@@ -71,10 +71,10 @@ public class GHStatus extends StatusCommandBase {
         String ret;
         try {
             if (urls == null) {
-                urls = JsonFactory.GSON.fromJson(Jsoup.connect("https://status.github.com/api.json").ignoreContentType(true).get().text(), StatusApiUrls.class);
+                urls = JsonFactory.GSON.fromJson(NetworkingUtils.getSynchronous("https://status.github.com/api.json"), StatusApiUrls.class);
             }
-            ApiStatus status = JsonFactory.GSON.fromJson(Jsoup.connect(urls.getStatus_url()).ignoreContentType(true).get().text(), ApiStatus.class);
-            StatusMessage lastMessage = JsonFactory.GSON.fromJson(Jsoup.connect(urls.getLast_message_url()).ignoreContentType(true).get().text(), StatusMessage.class);
+            ApiStatus status = JsonFactory.GSON.fromJson(NetworkingUtils.getSynchronous(urls.getStatus_url()), ApiStatus.class);
+            StatusMessage lastMessage = JsonFactory.GSON.fromJson(NetworkingUtils.getSynchronous(urls.getLast_message_url()), StatusMessage.class);
             if (apiStatus == null) {
                 apiStatus = status;
             }

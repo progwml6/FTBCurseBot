@@ -1,12 +1,12 @@
 package com.feed_the_beast.ftbcurseappbot.globalCommands;
 
+import com.feed_the_beast.ftbcurseappbot.utils.NetworkingUtils;
 import com.feed_the_beast.javacurselib.websocket.WebSocket;
 import com.feed_the_beast.javacurselib.websocket.messages.notifications.ConversationMessageNotification;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 import lombok.extern.slf4j.Slf4j;
-import org.jsoup.Jsoup;
 
 import java.io.IOException;
 import java.util.regex.Pattern;
@@ -21,7 +21,7 @@ public class MCUUID extends CommandBase {
         if (msplit.length > 1) {
             log.info("mcuuid " + msplit[1]);
             try {
-                String json = Jsoup.connect("https://api.mojang.com/users/profiles/minecraft/" + msplit[1]).ignoreContentType(true).get().text();
+                String json = NetworkingUtils.getSynchronous("https://api.mojang.com/users/profiles/minecraft/" + msplit[1]);
                 JsonParser p = new JsonParser();
                 JsonElement report = p.parse(json);
                 if(report != null && report.isJsonObject()) {

@@ -5,11 +5,11 @@ import com.feed_the_beast.ftbcurseappbot.api.statuspageio.Component;
 import com.feed_the_beast.ftbcurseappbot.api.statuspageio.Status;
 import com.feed_the_beast.ftbcurseappbot.api.statuspageio.StatusSummary;
 import com.feed_the_beast.ftbcurseappbot.utils.JsonFactory;
+import com.feed_the_beast.ftbcurseappbot.utils.NetworkingUtils;
 import com.feed_the_beast.javacurselib.websocket.WebSocket;
 import com.feed_the_beast.javacurselib.websocket.messages.notifications.ConversationMessageNotification;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
-import org.jsoup.Jsoup;
 
 import java.io.IOException;
 import java.util.Map;
@@ -56,7 +56,7 @@ public abstract class StatusPageIOBase extends StatusCommandBase {
         boolean init = false;
         changed = false;
         try {
-            StatusSummary summary = JsonFactory.GSON.fromJson(Jsoup.connect(getBaseURL() + "v2/summary.json").ignoreContentType(true).get().text(), StatusSummary.class);
+            StatusSummary summary = JsonFactory.GSON.fromJson(NetworkingUtils.getSynchronous(getBaseURL() + "v2/summary.json"), StatusSummary.class);
             if (componentStatuses == null) {
                 componentStatuses = Maps.newHashMap();
                 init = true;
