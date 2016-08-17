@@ -24,6 +24,7 @@ import com.feed_the_beast.javacurselib.service.sessions.sessions.CreateSessionRe
 import com.feed_the_beast.javacurselib.utils.CurseGUID;
 import com.feed_the_beast.javacurselib.websocket.WebSocket;
 import com.feed_the_beast.javacurselib.websocket.messages.handler.ResponseHandler;
+import com.feed_the_beast.javacurselib.websocket.messages.handler.tasks.Task;
 import com.feed_the_beast.javacurselib.websocket.messages.notifications.NotificationsServiceContractType;
 import com.google.common.eventbus.EventBus;
 import com.google.common.reflect.TypeToken;
@@ -220,13 +221,12 @@ public class Main {
 
         cacheService = new CacheService();
 
-        ResponseHandler responseHandler = webSocket.getResponseHandler();
-        responseHandler.addTask(new ConversationEvent(), NotificationsServiceContractType.CONVERSATION_MESSAGE_NOTIFICATION);
+        webSocket.addTask(new ConversationEvent(), NotificationsServiceContractType.CONVERSATION_MESSAGE_NOTIFICATION);
         debug = config.getNode("botSettings", "debug").getBoolean(false);
         if (debug) {
-            responseHandler.addTask(new TraceResponseTask(), NotificationsServiceContractType.CONVERSATION_MESSAGE_NOTIFICATION);
-            responseHandler.addTask(new DefaultResponseTask(), NotificationsServiceContractType.CONVERSATION_READ_NOTIFICATION);
-            responseHandler.addTask(new TraceResponseTask(), NotificationsServiceContractType.UNKNOWN);
+            webSocket.addTask(new TraceResponseTask(), NotificationsServiceContractType.CONVERSATION_MESSAGE_NOTIFICATION);
+            webSocket.addTask(new DefaultResponseTask(), NotificationsServiceContractType.CONVERSATION_READ_NOTIFICATION);
+            webSocket.addTask(new TraceResponseTask(), NotificationsServiceContractType.UNKNOWN);
         }
         commonMarkUtils = new CommonMarkUtils();
         if (config.getNode("botSettings", "webEnabled").getBoolean(true)) {

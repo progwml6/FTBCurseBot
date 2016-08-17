@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbcurseappbot.persistence;
 
 import com.feed_the_beast.ftbcurseappbot.Main;
+import com.feed_the_beast.ftbcurseappbot.persistence.data.ModerationLog;
 import com.feed_the_beast.ftbcurseappbot.persistence.data.MongoCommand;
 import com.feed_the_beast.ftbcurseappbot.persistence.data.VersionInfo;
 import com.feed_the_beast.javacurselib.common.enums.GroupPermissions;
@@ -19,6 +20,7 @@ import org.jongo.MongoCursor;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -38,6 +40,7 @@ public class MongoConnection {
     private static Jongo jongo;
     private static String MONGO_CONFIG_COLLECTION = "dbinfo";
     private static String MONGO_COMMANDS_COLLECTION = "commands";
+    private static String MONGO_MODERATION_LOGGING_COLLECTION = "moderation_logs";
 
     public static void start () {
         CommentedConfigurationNode config = Main.getConfig().getNode("mongo");
@@ -75,7 +78,24 @@ public class MongoConnection {
         }
     }
 
-    public static void logEvent (PersistanceEventType event, CurseGUID serverID, @Nullable CurseGUID channel, long performer, long affects, String info) {
+    //TODO make sure to setup mongo indexes for some of this to speed up searching
+    public static void logEvent (PersistanceEventType event, CurseGUID serverID, @Nullable CurseGUID channel, long performer, String performerName, long affects, String nameAffects, String info,
+            boolean wasDoneByBot) {
+        ModerationLog log = ModerationLog.builder().type(event.getName()).serverID(serverID.serialize()).performer(performer).performerName(performerName).affects(affects).affectsName(nameAffects)
+                .info(info).doneByBot(wasDoneByBot).actionTime(new Date()).build();
+        Optional<String> gpn = Main.getCacheService().getContacts().get().getGroupNamebyId(channel);
+        if (gpn.isPresent()) {
+            log.setServerName(gpn.get());
+        }
+        if (!channel.equals(null)) {
+            log.setChannelID(channel.serialize());
+        } else {
+            Optional<String> chn = Main.getCacheService().getContacts().get().getChannelNamebyId(channel);
+            if (chn.isPresent()) {
+                log.setChannelName(chn.get());
+            }
+        }
+        jongo.getCollection(MONGO_MODERATION_LOGGING_COLLECTION).save(log);
 
     }
 
