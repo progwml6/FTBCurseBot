@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.Map;
 
 import javax.annotation.Nonnull;
@@ -133,8 +134,10 @@ public class TwitchStatus extends StatusCommandBase {
 
     @Override
     public void onMessage (WebSocket webSocket, ConversationMessageNotification msg) {
+        log.info(new Date().toString() + " twitchstatus preupdate");
         log.info(getService() + "status " + msg.body.replace(Main.getBotTrigger() + "twitchstatus", ""));
         webSocket.sendMessage(msg.conversationID, getServiceStatus());
+        log.info(new Date().toString() + " twitchstatus postsend");
     }
 
     @Override

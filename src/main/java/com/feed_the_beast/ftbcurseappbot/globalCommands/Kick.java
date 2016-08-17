@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbcurseappbot.globalCommands;
 
+import com.feed_the_beast.ftbcurseappbot.Main;
 import com.feed_the_beast.ftbcurseappbot.persistence.MongoConnection;
 import com.feed_the_beast.ftbcurseappbot.persistence.PersistanceEventType;
 import com.feed_the_beast.javacurselib.common.enums.GroupPermissions;
@@ -29,7 +30,7 @@ public class Kick extends CommandBase {
                     desc = msplit[2];
                 }
                 webSocket.sendMessage(msg.conversationID, "You can kick " + msplit[1] + "!");
-                MongoConnection.logEvent(PersistanceEventType.BAN, msg.serverID, msg.conversationID, msg.senderID, 9999, desc);//TODO put the userID of the person getting banned here!
+                MongoConnection.logEvent(PersistanceEventType.KICK, msg.serverID, msg.conversationID, msg.senderID, 9999, desc);//TODO put the userID of the person getting kicked here!
             } else {
                 webSocket.sendMessage(msg.conversationID, "You do not have permission to use the kick command!");
             }
