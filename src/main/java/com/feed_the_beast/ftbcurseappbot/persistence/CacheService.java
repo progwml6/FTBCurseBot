@@ -126,7 +126,7 @@ public class CacheService {
         return Optional.of(groupmembers.get(serverId));
     }
 
-    @Nonnull
+    @Nonnull//TODO clean up filter statements
     public Optional<GroupMemberContract> getServerMember (@Nonnull CurseGUID serverId, @Nonnull String name, boolean canTryCacheClear) {
         Optional<List<GroupMemberContract>> members = getServerMembers(serverId);
         boolean hasCleared = false;
@@ -139,8 +139,13 @@ public class CacheService {
             }
         } else {
             members = getServerMembers(serverId);
-            GroupMemberContract gc = members.get().stream().filter(g -> g.nickName.equalsIgnoreCase(name) || g.username.equalsIgnoreCase(name)).findFirst().get();
-            if (gc == null) {
+            Optional<GroupMemberContract> gc = Optional.empty();
+            if (members.isPresent()) {
+                gc = members.get().stream().filter(g -> g == null
+                        ? false
+                        : (g.nickName == null ? false : g.nickName.equalsIgnoreCase(name)) || (g.username == null ? false : g.username.equalsIgnoreCase(name))).findFirst();
+            }
+            if (!gc.isPresent()) {
                 if (canTryCacheClear) {
                     groupmembers.refresh(serverId);
                     members = getServerMembers(serverId);
@@ -149,21 +154,28 @@ public class CacheService {
                     return Optional.empty();
                 }
             } else {
-                return Optional.ofNullable(gc);
+                return gc;
             }
         }
         if (!members.isPresent() || members.get().size() == 0) {
             return Optional.empty();
-        } else {
+        } else if(hasCleared) {
             members = getServerMembers(serverId);
-            GroupMemberContract gc = members.get().stream().filter(g -> g.nickName.equalsIgnoreCase(name) || g.username.equalsIgnoreCase(name)).findFirst().get();
-            if (gc == null) {
+            Optional<GroupMemberContract> gc = Optional.empty();
+            if (members.isPresent()) {
+                gc = members.get().stream().filter(g -> g == null
+                        ? false
+                        : (g.nickName == null ? false : g.nickName.equalsIgnoreCase(name)) || (g.username == null ? false : g.username.equalsIgnoreCase(name)))
+                        .findFirst();
+            }
+            if (!gc.isPresent()) {
                 return Optional.empty();
 
             } else {
-                return Optional.ofNullable(gc);
+                return gc;
             }
         }
+        return Optional.empty();
     }
 
     @Nullable
