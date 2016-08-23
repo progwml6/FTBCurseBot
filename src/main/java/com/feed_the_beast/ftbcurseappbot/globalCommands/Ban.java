@@ -21,7 +21,6 @@ public class Ban extends CommandBase {
             canBan = true;
         }
 
-        String message = msg.body;
         String[] msplit = msg.body.split(" ");
         if (msplit.length > 1)
 

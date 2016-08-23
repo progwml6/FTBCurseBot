@@ -23,8 +23,6 @@ import com.feed_the_beast.javacurselib.service.sessions.sessions.CreateSessionRe
 import com.feed_the_beast.javacurselib.service.sessions.sessions.CreateSessionResponse;
 import com.feed_the_beast.javacurselib.utils.CurseGUID;
 import com.feed_the_beast.javacurselib.websocket.WebSocket;
-import com.feed_the_beast.javacurselib.websocket.messages.handler.ResponseHandler;
-import com.feed_the_beast.javacurselib.websocket.messages.handler.tasks.Task;
 import com.feed_the_beast.javacurselib.websocket.messages.notifications.NotificationsServiceContractType;
 import com.google.common.eventbus.EventBus;
 import com.google.common.reflect.TypeToken;
@@ -206,7 +204,7 @@ public class Main {
         MongoConnection.start();
         // websocket testing code starts here
         try {
-            webSocket = new WebSocket(lr, session.get(), new URI(Apis.NOTIFICATIONS));
+            webSocket = new WebSocket(session.get(), new URI(Apis.NOTIFICATIONS));
         } catch (Exception e) {
             log.error("websocket failed", e);
             System.exit(0);
@@ -217,7 +215,7 @@ public class Main {
         scheduledTasks.scheduleAtFixedRate(new GHStatusChecker(webSocket), 0, CHECKER_POLL_TIME, TimeUnit.SECONDS);
         scheduledTasks.scheduleAtFixedRate(new McStatusChecker(webSocket), 0, CHECKER_POLL_TIME, TimeUnit.SECONDS);
         scheduledTasks.scheduleAtFixedRate(new TravisStatusChecker(webSocket), 0, CHECKER_POLL_TIME, TimeUnit.SECONDS);
-        scheduledTasks.scheduleAtFixedRate(new TwitchStatusChecker(webSocket), 0, CHECKER_POLL_TIME, TimeUnit.SECONDS);
+        scheduledTasks.scheduleAtFixedRate(new TwitchStatusChecker(webSocket), 0, CHECKER_POLL_TIME * 2, TimeUnit.SECONDS);
 
         cacheService = new CacheService();
 
@@ -230,7 +228,7 @@ public class Main {
         }
         commonMarkUtils = new CommonMarkUtils();
         if (config.getNode("botSettings", "webEnabled").getBoolean(true)) {
-            WebService service = new WebService();
+            new WebService();
         }
         // to add your own handlers call ws.getResponseHandler() and configure it
         CountDownLatch latch = new CountDownLatch(1);

@@ -18,7 +18,7 @@ import javax.annotation.Nullable;
 
 @Slf4j
 public class FTBFaq extends CommandBase {
-    private static String SUPPORT_FAQ_JSON = "http://support.feed-the-beast.com/faq/sitejson.json";
+    private static final String SUPPORT_FAQ_JSON = "http://support.feed-the-beast.com/faq/sitejson.json";
 
     @Override public void onMessage (WebSocket webSocket, ConversationMessageNotification msg) {
         log.info("ftbfaq " + msg.body.replace(Main.getBotTrigger() + "ftbfaq", ""));
@@ -71,7 +71,7 @@ public class FTBFaq extends CommandBase {
     }
 
     @Nullable
-    public static Sitejson getFaqData () {
+    private static Sitejson getFaqData () {
         String faq = null;
         try {
             faq = NetworkingUtils.getSynchronous(SUPPORT_FAQ_JSON);

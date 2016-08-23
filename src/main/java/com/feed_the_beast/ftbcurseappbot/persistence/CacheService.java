@@ -50,7 +50,7 @@ public class CacheService {
                 .build(new CacheLoader<CurseGUID, List<GroupRoleDetails>>() { // build the cacheloader
 
                     @Override
-                    public List<GroupRoleDetails> load (CurseGUID serverId) throws Exception {
+                    public List<GroupRoleDetails> load (@Nonnull CurseGUID serverId) throws Exception {
                         List<GroupRoleDetails> server = null;
                         try {
                             server = Main.getRestUserEndpoints().servers.getServerRoles(serverId).get();
@@ -66,7 +66,7 @@ public class CacheService {
                 .build(new CacheLoader<CurseGUID, GroupNotification>() { // build the cacheloader
 
                     @Override
-                    public GroupNotification load (CurseGUID serverId) throws Exception {
+                    public GroupNotification load (@Nonnull CurseGUID serverId) throws Exception {
                         GroupNotification server = null;
                         try {
                             server = Main.getRestUserEndpoints().groups.get(serverId, false).get();
@@ -82,8 +82,7 @@ public class CacheService {
                 .build(new CacheLoader<CurseGUID, List<GroupMemberContract>>() { // build the cacheloader
 
                     @Override
-                    public List<GroupMemberContract> load (CurseGUID serverId) throws Exception {
-                        List<GroupMemberContract> server = null;
+                    public List<GroupMemberContract> load (@Nonnull CurseGUID serverId) throws Exception {
                         try {
                             int page = 1;
                             GroupMemberSearchRequest request = new GroupMemberSearchRequest(page);
@@ -102,7 +101,7 @@ public class CacheService {
                         } catch (InterruptedException | ExecutionException e) {
                             log.error("error getting server roles from curse for server: " + serverId, e);
                         }
-                        return server;
+                        return null;
                     }
                 });
     }
@@ -141,9 +140,7 @@ public class CacheService {
             members = getServerMembers(serverId);
             Optional<GroupMemberContract> gc = Optional.empty();
             if (members.isPresent()) {
-                gc = members.get().stream().filter(g -> g == null
-                        ? false
-                        : (g.nickName == null ? false : g.nickName.equalsIgnoreCase(name)) || (g.username == null ? false : g.username.equalsIgnoreCase(name))).findFirst();
+                gc = members.get().stream().filter(g -> g != null && ((g.nickName != null && g.nickName.equalsIgnoreCase(name)) || (g.username == null ? false : g.username.equalsIgnoreCase(name)))).findFirst();
             }
             if (!gc.isPresent()) {
                 if (canTryCacheClear) {
@@ -163,9 +160,9 @@ public class CacheService {
             members = getServerMembers(serverId);
             Optional<GroupMemberContract> gc = Optional.empty();
             if (members.isPresent()) {
-                gc = members.get().stream().filter(g -> g == null
-                        ? false
-                        : (g.nickName == null ? false : g.nickName.equalsIgnoreCase(name)) || (g.username == null ? false : g.username.equalsIgnoreCase(name)))
+                gc = members.get().stream().filter(g -> g != null && ((g.nickName == null ? false : g.nickName.equalsIgnoreCase(name)) || (g.username == null
+                                                                                                                                                   ? false
+                                                                                                                                                   : g.username.equalsIgnoreCase(name))))
                         .findFirst();
             }
             if (!gc.isPresent()) {

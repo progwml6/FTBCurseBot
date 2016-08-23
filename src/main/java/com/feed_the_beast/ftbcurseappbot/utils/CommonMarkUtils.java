@@ -12,7 +12,7 @@ import java.util.List;
 
 public class CommonMarkUtils {
     private Parser parser;
-    HtmlRenderer renderer;
+    private HtmlRenderer renderer;
     public CommonMarkUtils() {
         List<Extension> extensions = Arrays.asList(TablesExtension.create(), StrikethroughExtension.create());
         parser = Parser.builder().extensions(extensions).build();

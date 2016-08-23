@@ -7,7 +7,7 @@ public class CFStatus extends StatusPageIOBase {
 
     private static final String cfStatusAPIBase = "https://www.cloudflarestatus.com/api/";
 
-    public static StatusCommandBase instance;
+    private static StatusCommandBase instance;
 
     public CFStatus () {
         instance = this;

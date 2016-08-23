@@ -8,13 +8,13 @@ import com.feed_the_beast.ftbcurseappbot.Main;
 
 public class HealthEndpoint {
 
-    private String buildNumber;
-    private String gitBranch;
-    private String gitCommit;
-    private String jenkinsJobName;
-    private String jenkinsTag;
-    private String userName;
-    private String version;
+    private final String buildNumber;
+    private final String gitBranch;
+    private final String gitCommit;
+    private final String jenkinsJobName;
+    private final String jenkinsTag;
+    private final String userName;
+    private final String version;
 
     public HealthEndpoint () {
         //most of these will be empty when not being provided by the build system for containers

@@ -25,7 +25,7 @@ public class MCDrama extends CommandBase {
         return "gets mc drama";
     }
 
-    public static String getDrama () {
+    private static String getDrama () {
         String drama = null;
         try {
             drama = NetworkingUtils.getSynchronous("http://mc-drama.herokuapp.com/raw");

@@ -15,7 +15,6 @@ import java.util.regex.Pattern;
 public class MCUUID extends CommandBase {
     @Override
     public void onMessage (WebSocket webSocket, ConversationMessageNotification msg) {
-        String message = msg.body;
         log.info("mcuuid " + msg.body);
         String[] msplit = msg.body.split(" ");
         if (msplit.length > 1) {

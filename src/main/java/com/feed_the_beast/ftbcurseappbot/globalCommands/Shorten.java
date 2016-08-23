@@ -31,7 +31,7 @@ public class Shorten extends CommandBase {
         return "shorten [url]";
     }
 
-    public static String shortenURL (String url) {
+    private static String shortenURL (String url) {
         try {
             String json = NetworkingUtils.getSynchronous("http://is.gd/create.php?format=json&url=" + url);
             JsonParser p = new JsonParser();

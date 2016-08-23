@@ -145,7 +145,7 @@ public class TwitchStatus extends StatusCommandBase {
         return "gets the health status of MC services from https://twitchstatus.com/";
     }
 
-    public static String getStatusUpdate (Server c, String type) {
+    private static String getStatusUpdate (Server c, String type) {
         if (type.equalsIgnoreCase("ingest")) {
             return c.description.replace(":", "-") + ": " + c.status;
         } else if (type.equalsIgnoreCase("web")) {

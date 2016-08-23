@@ -23,7 +23,6 @@ public class Kick extends CommandBase {
         }
         log.info(lg);
 
-        String message = msg.body;
         String[] msplit = msg.body.split(" ");
         if (msplit.length > 1) {
             if (canKick) {

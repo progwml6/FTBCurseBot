@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbcurseappbot.api.ghstatus;
 
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 

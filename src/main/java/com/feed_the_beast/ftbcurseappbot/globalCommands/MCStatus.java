@@ -17,7 +17,7 @@ import javax.annotation.Nonnull;
 
 @Slf4j
 public class MCStatus extends StatusCommandBase {
-    public static StatusCommandBase instance;
+    private static StatusCommandBase instance;
     private boolean changed = false;
     public MCStatus () {
         instance = this;
@@ -104,7 +104,7 @@ public class MCStatus extends StatusCommandBase {
         return changed;
     }
 
-    public static String getPrettyStatus (String item, boolean needPipe) {
+    private static String getPrettyStatus (String item, boolean needPipe) {
         String ret = getMCStatusFor(item);
         if (!ret.isEmpty()) {
             String pretty = mcstatusmappings.containsKey(item) ? mcstatusmappings.get(item) : item;
@@ -114,7 +114,7 @@ public class MCStatus extends StatusCommandBase {
     }
 
     @Nonnull
-    public static String getMCStatusFor (String s) {
+    private static String getMCStatusFor (String s) {
         if (mcstatusmappings == null) {
             initMappings();
         }
@@ -128,7 +128,7 @@ public class MCStatus extends StatusCommandBase {
 
     }
 
-    public static void initMappings () {
+    private static void initMappings () {
         mcstatusmappings = Maps.newHashMap();
         mcstatusmappings.put("mojang.com", "Mojang.com");
         mcstatusmappings.put("textures.minecraft.net", "Textures");

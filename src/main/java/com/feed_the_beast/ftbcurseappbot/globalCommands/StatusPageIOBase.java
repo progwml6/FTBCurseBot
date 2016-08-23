@@ -33,6 +33,7 @@ public abstract class StatusPageIOBase extends StatusCommandBase {
         webSocket.sendMessage(msg.conversationID, getServiceStatus());
     }
 
+    @Nonnull
     public String getServiceStatus () {
         updateServiceHealth();
         StringBuilder buf = new StringBuilder();
@@ -96,7 +97,7 @@ public abstract class StatusPageIOBase extends StatusCommandBase {
                 .replace("partial_outage", ":construction:").replace("operational", ":white_check_mark:");
     }
 
-    public static String getStatusUpdate (Component c) {
+    private static String getStatusUpdate (Component c) {
         return c.getName() + ": " + c.getStatus();
     }
 

@@ -15,7 +15,6 @@ import java.util.regex.Pattern;
 public class HasPaidMC extends CommandBase {
     @Override
     public void onMessage (WebSocket webSocket, ConversationMessageNotification msg) {
-        String message = msg.body;
         String[] msplit = msg.body.split(" ");
         if (msplit.length > 1) {
             log.info("haspaidmc " + msplit[1]);
@@ -43,7 +42,7 @@ public class HasPaidMC extends CommandBase {
         return "haspaidmc <USERNAME>";
     }
 
-    public static boolean getHasPaid (String user) throws IOException {
+    private static boolean getHasPaid (String user) throws IOException {
         try {
             String json = NetworkingUtils.getSynchronous("https://api.mojang.com/users/profiles/minecraft/" + user);
             JsonParser p = new JsonParser();

@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 public class TravisStatus extends StatusPageIOBase {
     private static final String travisStatusAPIBase = "https://www.traviscistatus.com/api/";
 
-    public static StatusCommandBase instance;
+    private static StatusCommandBase instance;
 
     public TravisStatus () {
         instance = this;

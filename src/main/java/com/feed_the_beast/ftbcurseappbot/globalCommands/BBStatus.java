@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 public class BBStatus extends StatusPageIOBase {
     private static final String bbStatusAPIBase = "http://status.bitbucket.org/api/";
 
-    public static StatusCommandBase instance;
+    private static StatusCommandBase instance;
 
     public BBStatus () {
         instance = this;

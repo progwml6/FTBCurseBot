@@ -16,7 +16,7 @@ import javax.annotation.Nonnull;
 
 @Slf4j
 public class GHStatus extends StatusCommandBase {
-    public static StatusCommandBase instance;
+    private static StatusCommandBase instance;
     private boolean statusChanged = false;
     private boolean messageChanged = false;
 
@@ -49,7 +49,7 @@ public class GHStatus extends StatusCommandBase {
         return "gets GitHub status";
     }
 
-    @Override
+    @Nonnull @Override
     public String getServiceStatus () {
         updateServiceHealth();
         if (message == null || apiStatus == null) {

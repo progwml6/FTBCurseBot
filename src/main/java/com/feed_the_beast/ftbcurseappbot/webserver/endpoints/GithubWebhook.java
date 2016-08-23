@@ -15,9 +15,9 @@ import javax.annotation.Nonnull;
  * Created by progwml6 on 7/16/16.
  */
 public class GithubWebhook {
-    private static String EVENT_HEADER = "X-GitHub-Event";
-    private static String SIGNATURE_HEADER = "X-Hub-Signature";
-    private static String DELIVERY_HEADER = "X-GitHub-Delivery";
+    private static final String EVENT_HEADER = "X-GitHub-Event";
+    private static final String SIGNATURE_HEADER = "X-Hub-Signature";
+    private static final String DELIVERY_HEADER = "X-GitHub-Delivery";
 
     public static Route hook = (Request request, Response response) -> {
         if(!request.userAgent().startsWith("GitHub-Hookshot/")) {
