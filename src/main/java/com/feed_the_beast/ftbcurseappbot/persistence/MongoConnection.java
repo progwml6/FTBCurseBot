@@ -150,7 +150,7 @@ public class MongoConnection {
             }
             commands.close();
             return Optional.of(commandRet);
-        } catch (IOException e) {
+        } catch (IOException | NullPointerException e) {
             log.error("error getting commands for server", e);
             return Optional.empty();
         }

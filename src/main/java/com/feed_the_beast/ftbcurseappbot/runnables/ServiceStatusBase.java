@@ -25,6 +25,7 @@ public class ServiceStatusBase implements Runnable {
 
     @Override
     public void run () {
+        Thread.currentThread().setName(statusCommand.getService()+"statusthread");
         String result = statusCommand.updateServiceHealth();
         if (!initialized) {
             initialized = true;
