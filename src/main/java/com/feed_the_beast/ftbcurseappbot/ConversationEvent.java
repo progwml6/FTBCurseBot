@@ -12,9 +12,6 @@ import java.util.Optional;
 
 import javax.annotation.Nonnull;
 
-/**
- * Created by progwml6 on 5/7/16.
- */
 @Slf4j
 public class ConversationEvent implements Task<ConversationMessageNotification> {
     @Override
