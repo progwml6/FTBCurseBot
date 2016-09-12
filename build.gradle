@@ -38,7 +38,7 @@ repositories {
 configurations.all { exclude group: 'commons-logging' }//we use slf4j and replace this w/ the slf4j bridge
 dependencies {
 
-    compile 'com.feed_the_beast:JavaCurseAPI:0.1.0.+'
+    compile 'com.feed_the_beast:javacurseapi:0.1.0.+'
     compile 'com.beust:jcommander:1.48' //command line argument support
     compile 'ninja.leaping.configurate:configurate-hocon:3.1.1'//configuration
 
@@ -87,6 +87,7 @@ mainClassName = project.mainClass
 group = 'com.feed_the_beast'
 version = "0.0.1-${project.buildNum}"
 description = "FTB moderation bot for CurseApp"
+
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 shadowJar  {
