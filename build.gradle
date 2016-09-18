@@ -37,8 +37,8 @@ repositories {
 
 configurations.all { exclude group: 'commons-logging' }//we use slf4j and replace this w/ the slf4j bridge
 dependencies {
-
     compile 'com.feed_the_beast:javacurseapi:0.1.0.+'
+
     compile 'com.beust:jcommander:1.48' //command line argument support
     compile 'ninja.leaping.configurate:configurate-hocon:3.1.1'//configuration
 
@@ -55,6 +55,7 @@ dependencies {
 
     compile 'org.kohsuke:github-api:1.77'//GH integrations
     compile 'org.slf4j:jcl-over-slf4j:1.7.21'// we don't want commons logging around
+    compile 'ch.qos.logback:logback-classic:1.1.7'
 
     compile 'com.github.ben-manes.caffeine:caffeine:2.3.2'//high performance local cache
     compile 'com.github.ben-manes.caffeine:guava:2.3.2'
@@ -62,7 +63,6 @@ dependencies {
 
     compile 'com.google.inject:guice:4.1.0' //injections
 
-    compile 'org.slf4j:slf4j-jdk14:1.7.21' //send slf4j to java's logger for now
     compile 'org.projectlombok:lombok:1.16.10'
 
     compile 'org.mongodb:mongodb-driver:3.3.0'//nosql storage for commands & ban data
