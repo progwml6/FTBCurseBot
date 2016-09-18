@@ -22,7 +22,7 @@ import javax.annotation.Nonnull;
  */
 @Slf4j
 public class TwitchStatus extends StatusCommandBase {
-    private boolean CHAT_ENABLED = false;
+    private boolean CHAT_ENABLED = true;
     private static String NIGHT_STATUS_URL = "https://twitchstatus.com/api/status/";
     public static StatusCommandBase instance;
     private Map<String, Server> componentStatuses;
