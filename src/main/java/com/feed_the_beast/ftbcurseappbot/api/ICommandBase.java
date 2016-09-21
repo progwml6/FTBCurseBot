@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbcurseappbot.api;
 
 import com.feed_the_beast.ftbcurseappbot.CommandRegistry;
-import com.feed_the_beast.ftbcurseappbot.Main;
+import com.feed_the_beast.ftbcurseappbot.Config;
 import com.feed_the_beast.javacurselib.websocket.WebSocket;
 import com.feed_the_beast.javacurselib.websocket.messages.notifications.ConversationMessageNotification;
 
@@ -23,7 +23,7 @@ public interface ICommandBase {
     Pattern getTriggerRegex ();
 
     default Pattern getSimpleCommand (String name) {
-        return Pattern.compile("(?m)^" + Main.getBotTrigger() + name + "(.*)", Pattern.CASE_INSENSITIVE);
+        return Pattern.compile("(?m)^" + Config.getBotTrigger() + name + "(.*)", Pattern.CASE_INSENSITIVE);
     }
 
     /**

@@ -21,8 +21,8 @@ public class ConversationEvent implements Task<ConversationMessageNotification> 
             Optional<ICommandBase> command = CommandRegistry.getCommand(msg.rootConversationID, msg.body);
             if (command.isPresent() && Main.getSession().isPresent() && msg.senderID != Main.getSession().get().user.userID) {//bot cannot execute commands for security reasons
                 command.get().onMessage(webSocket, msg);
-            } else if (msg.body.startsWith(Main.getBotTrigger() + "api")) {
-                log.info("api " + msg.body.replace(Main.getBotTrigger() + "api", ""));
+            } else if (msg.body.startsWith(Config.getBotTrigger() + "api")) {
+                log.info("api " + msg.body.replace(Config.getBotTrigger() + "api", ""));
                 webSocket.sendMessage(msg.conversationID, "CurseApp api is located at http://api.feed-the-beast.com/curseapiaccess.php");
             } else {//custom server commands
                 if (Main.getSession().isPresent() && msg.senderID != Main.getSession().get().user.userID) {//bot can't execute commands
