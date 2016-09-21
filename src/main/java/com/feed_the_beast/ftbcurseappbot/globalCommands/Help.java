@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbcurseappbot.globalCommands;
 
-import com.feed_the_beast.ftbcurseappbot.Main;
+import com.feed_the_beast.ftbcurseappbot.Config;
 import com.feed_the_beast.javacurselib.websocket.WebSocket;
 import com.feed_the_beast.javacurselib.websocket.messages.notifications.ConversationMessageNotification;
 import lombok.extern.slf4j.Slf4j;
@@ -14,11 +14,12 @@ public class Help extends CommandBase {
     public void onMessage (WebSocket webSocket, ConversationMessageNotification msg) {
         log.info("help " + msg.senderName);
         webSocket.sendMessage(msg.conversationID,
-                "commands are: " + Main.getBotTrigger() + "ban, " + Main.getBotTrigger() + "bbstatus, " + Main.getBotTrigger() + "cfstatus, " + Main.getBotTrigger() + "chatformatting, " + Main
-                        .getBotTrigger() + "customcommands, " + Main.getBotTrigger() + "delcmd, " + Main.getBotTrigger() + "ftbfaq, " + Main.getBotTrigger() + "ghstatus, " + Main.getBotTrigger()
-                        + "ftbbot, " + Main.getBotTrigger() + "help, " + Main.getBotTrigger() + "haspaidmc, " + Main.getBotTrigger() + "ipban, " + Main.getBotTrigger() + "kick, " + Main
-                        .getBotTrigger() + "repeat, " + Main.getBotTrigger() + "mcstatus, " + Main.getBotTrigger() + "mcuuid, " + Main.getBotTrigger() + "shorten, " + Main.getBotTrigger() + "setcmd, "
-                        + Main.getBotTrigger() + "mcdrama, " + Main.getBotTrigger() + "travisstatus, " + Main.getBotTrigger() + "twitchstatus, " + Main.getBotTrigger() + "api");
+                "commands are: " + Config.getBotTrigger() + "ban, " + Config.getBotTrigger() + "bbstatus, " + Config.getBotTrigger() + "cfstatus, " + Config.getBotTrigger() + "chatformatting, "
+                        + Config.getBotTrigger() + "customcommands, " + Config.getBotTrigger() + "delcmd, " + Config.getBotTrigger() + "ftbfaq, " + Config.getBotTrigger() + "ghstatus, " + Config
+                        .getBotTrigger() + "ftbbot, " + Config.getBotTrigger() + "help, " + Config.getBotTrigger() + "haspaidmc, " + Config.getBotTrigger() + "ipban, " + Config.getBotTrigger()
+                        + "kick, " + Config.getBotTrigger() + "repeat, " + Config.getBotTrigger() + "mcstatus, " + Config.getBotTrigger() + "mcuuid, " + Config.getBotTrigger() + "shorten, " + Config
+                        .getBotTrigger() + "setcmd, " + Config.getBotTrigger() + "mcdrama, " + Config.getBotTrigger() + "travisstatus, " + Config.getBotTrigger() + "twitchstatus, " + Config
+                        .getBotTrigger() + "api");
     }
 
     @Override

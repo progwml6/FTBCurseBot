@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbcurseappbot.globalCommands;
 
+import com.feed_the_beast.ftbcurseappbot.Config;
 import com.feed_the_beast.ftbcurseappbot.Main;
 import com.feed_the_beast.ftbcurseappbot.persistence.MongoConnection;
 import com.feed_the_beast.ftbcurseappbot.persistence.data.MongoCommand;
@@ -25,7 +26,7 @@ public class CustomCommands extends CommandBase {
         if (commands.isPresent()) {
             for (MongoCommand c : commands.get()) {
                 if (c.isUsesTrigger()) {
-                    bdr.append(Main.getBotTrigger()).append(c.getRegex()).append(", ");
+                    bdr.append(Config.getBotTrigger()).append(c.getRegex()).append(", ");
                 } else {
                     bdr.append(c.getRegex()).append(", ");
                 }

@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbcurseappbot.globalCommands;
 
-import com.feed_the_beast.ftbcurseappbot.Main;
+import com.feed_the_beast.ftbcurseappbot.Config;
 import com.feed_the_beast.ftbcurseappbot.api.ghstatus.ApiStatus;
 import com.feed_the_beast.ftbcurseappbot.api.ghstatus.StatusApiUrls;
 import com.feed_the_beast.ftbcurseappbot.api.ghstatus.StatusMessage;
@@ -34,7 +34,7 @@ public class GHStatus extends StatusCommandBase {
 
     @Override
     public void onMessage (WebSocket webSocket, ConversationMessageNotification msg) {
-        log.info("ghstatus " + msg.body.replace(Main.getBotTrigger() + "ghstatus", ""));
+        log.info("ghstatus " + msg.body.replace(Config.getBotTrigger() + "ghstatus", ""));
         webSocket.sendMessage(msg.conversationID, getServiceStatus());
 
     }

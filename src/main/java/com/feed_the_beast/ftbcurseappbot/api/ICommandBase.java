@@ -12,24 +12,25 @@ import java.util.regex.Pattern;
  */
 public interface ICommandBase {
 
-    void onMessage(WebSocket webSocket, ConversationMessageNotification msg);
-    default ICommandBase setup() {
+    void onMessage (WebSocket webSocket, ConversationMessageNotification msg);
+
+    default ICommandBase setup () {
         CommandRegistry.register(this);
 
         return this;
     }
 
-    Pattern getTriggerRegex();
+    Pattern getTriggerRegex ();
 
-    default Pattern getSimpleCommand(String name) {
-        return Pattern.compile("(?m)^" + Main.getBotTrigger() + name+"(.*)", Pattern.CASE_INSENSITIVE);
+    default Pattern getSimpleCommand (String name) {
+        return Pattern.compile("(?m)^" + Main.getBotTrigger() + name + "(.*)", Pattern.CASE_INSENSITIVE);
     }
 
     /**
      *
      * @return The help message for this command
      */
-    default String getHelp() {
+    default String getHelp () {
         return "no help for command " + getTriggerRegex();
     }
 
@@ -37,7 +38,7 @@ public interface ICommandBase {
      *
      * @return if this command can be executed in a private message or other context w/o a channel
      */
-    default boolean canExecuteInPM() {
+    default boolean canExecuteInPM () {
         return true;
     }
 

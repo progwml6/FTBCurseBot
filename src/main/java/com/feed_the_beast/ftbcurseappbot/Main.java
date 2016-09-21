@@ -25,19 +25,12 @@ import com.feed_the_beast.javacurselib.utils.CurseGUID;
 import com.feed_the_beast.javacurselib.websocket.WebSocket;
 import com.feed_the_beast.javacurselib.websocket.messages.notifications.NotificationsServiceContractType;
 import com.google.common.eventbus.EventBus;
-import com.google.common.reflect.TypeToken;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import ninja.leaping.configurate.commented.CommentedConfigurationNode;
-import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
-import ninja.leaping.configurate.loader.ConfigurationLoader;
-import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import retrofit2.adapter.java8.HttpException;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URI;
-import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
@@ -53,10 +46,6 @@ public class Main {
     public static final String VERSION = "0.0.1";
     public static EventBus eventBus = new EventBus();
     @Getter
-    private static boolean debug;
-    @Getter
-    private static String username = null;
-    @Getter
     private static Optional<String> token = Optional.empty();
     @Getter
     private static Optional<CreateSessionResponse> session = Optional.empty();
@@ -64,22 +53,6 @@ public class Main {
     private static CacheService cacheService;
     @Getter
     private static RestUserEndpoints restUserEndpoints;
-    @Getter
-    private static CommentedConfigurationNode config = null;
-    @Getter
-    private static String botTrigger;
-    @Getter
-    private static Optional<List<String>> bBStatusChangeNotificationsEnabled = Optional.empty();
-    @Getter
-    private static Optional<List<String>> cFStatusChangeNotificationsEnabled = Optional.empty();
-    @Getter
-    private static Optional<List<String>> mcStatusChangeNotificationsEnabled = Optional.empty();
-    @Getter
-    private static Optional<List<String>> gHStatusChangeNotificationsEnabled = Optional.empty();
-    @Getter
-    private static Optional<List<String>> travisStatusChangeNotificationsEnabled = Optional.empty();
-    @Getter
-    private static Optional<List<String>> twitchStatusChangeNotificationsEnabled = Optional.empty();
 
     @Getter
     private static CommonMarkUtils commonMarkUtils;
@@ -113,19 +86,12 @@ public class Main {
             log.error("no config file found");
             System.exit(1);
         }
-
-        try {
-            ConfigurationLoader<CommentedConfigurationNode> loader = HoconConfigurationLoader.builder().setFile(configFl).build(); // Create the loader
-            config = loader.load(); // Load the configuration into memory
-        } catch (IOException e) {
-            log.error("error with config loading", e);
-        }
+        Config.load(configFl);
         restUserEndpoints = new RestUserEndpoints();
         restUserEndpoints.setupEndpoints();
         LoginResponse lr = null;
 
-        username = config.getNode("credentials", "CurseAppLogin", "username").getString();
-        lr = restUserEndpoints.doLogin(new LoginRequest(username, config.getNode("credentials", "CurseAppLogin", "password").getString()));
+        lr = restUserEndpoints.doLogin(new LoginRequest(Config.getUsername(), Config.getPassword()));
         log.info("Synchronous login done: for user " + lr.session.username);
 
         CountDownLatch sessionLatch = new CountDownLatch(1);
@@ -165,41 +131,6 @@ public class Main {
 
         token = Optional.of(lr.session.token);
 
-        botTrigger = config.getNode("botSettings", "triggerKey").getString("!");
-        try {
-            bBStatusChangeNotificationsEnabled = Optional.ofNullable(config.getNode("botSettings", "BBStatusChangeNotificationsEnabled").getList(TypeToken.of(String.class)));
-        } catch (ObjectMappingException e) {
-            log.error("couldn't map bot settings - bb", e);
-        }
-        try {
-            cFStatusChangeNotificationsEnabled = Optional.ofNullable(config.getNode("botSettings", "CFStatusChangeNotificationsEnabled").getList(TypeToken.of(String.class)));
-        } catch (ObjectMappingException e) {
-            log.error("couldn't map bot settings - cf", e);
-        }
-        try {
-            gHStatusChangeNotificationsEnabled = Optional.ofNullable(config.getNode("botSettings", "GHStatusChangeNotificationsEnabled").getList(TypeToken.of(String.class)));
-        } catch (ObjectMappingException e) {
-            log.error("couldn't map bot settings - gh", e);
-        }
-
-        try {
-            mcStatusChangeNotificationsEnabled = Optional.ofNullable(config.getNode("botSettings", "MCStatusChangeNotificationsEnabled").getList(TypeToken.of(String.class)));
-        } catch (ObjectMappingException e) {
-            log.error("couldn't map bot settings - mc", e);
-        }
-
-        try {
-            travisStatusChangeNotificationsEnabled = Optional.ofNullable(config.getNode("botSettings", "TravisStatusChangeNotificationsEnabled").getList(TypeToken.of(String.class)));
-        } catch (ObjectMappingException e) {
-            log.error("couldn't map bot settings - travis", e);
-        }
-        try {
-            twitchStatusChangeNotificationsEnabled = Optional.ofNullable(config.getNode("botSettings", "TwitchStatusChangeNotificationsEnabled").getList(TypeToken.of(String.class)));
-        } catch (ObjectMappingException e) {
-            log.error("couldn't map bot settings - twitch", e);
-        }
-
-        log.info("bot trigger is " + botTrigger);
         // startup persistance engine
         MongoConnection.start();
         // websocket testing code starts here
@@ -215,19 +146,18 @@ public class Main {
         scheduledTasks.scheduleAtFixedRate(new GHStatusChecker(webSocket), 0, CHECKER_POLL_TIME, TimeUnit.SECONDS);
         scheduledTasks.scheduleAtFixedRate(new McStatusChecker(webSocket), 0, CHECKER_POLL_TIME, TimeUnit.SECONDS);
         scheduledTasks.scheduleAtFixedRate(new TravisStatusChecker(webSocket), 0, CHECKER_POLL_TIME, TimeUnit.SECONDS);
-        scheduledTasks.scheduleAtFixedRate(new TwitchStatusChecker(webSocket), 0, CHECKER_POLL_TIME * 2, TimeUnit.SECONDS);
+        scheduledTasks.scheduleAtFixedRate(new TwitchStatusChecker(webSocket), 0, CHECKER_POLL_TIME * 4, TimeUnit.SECONDS);
 
         cacheService = new CacheService();
 
         webSocket.addTask(new ConversationEvent(), NotificationsServiceContractType.CONVERSATION_MESSAGE_NOTIFICATION);
-        debug = config.getNode("botSettings", "debug").getBoolean(false);
-        if (debug) {
+        if (Config.isDebugEnabled()) {
             webSocket.addTask(new TraceResponseTask(), NotificationsServiceContractType.CONVERSATION_MESSAGE_NOTIFICATION);
             webSocket.addTask(new DefaultResponseTask(), NotificationsServiceContractType.CONVERSATION_READ_NOTIFICATION);
             webSocket.addTask(new TraceResponseTask(), NotificationsServiceContractType.UNKNOWN);
         }
         commonMarkUtils = new CommonMarkUtils();
-        if (config.getNode("botSettings", "webEnabled").getBoolean(true)) {
+        if (Config.isWebEnabled()) {
             new WebService();
         }
         // to add your own handlers call ws.getResponseHandler() and configure it

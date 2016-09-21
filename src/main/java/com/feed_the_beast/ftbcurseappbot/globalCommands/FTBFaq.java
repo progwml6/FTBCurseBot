@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbcurseappbot.globalCommands;
 
-import com.feed_the_beast.ftbcurseappbot.Main;
+import com.feed_the_beast.ftbcurseappbot.Config;
 import com.feed_the_beast.ftbcurseappbot.api.ftbsupportfaq.FaqData;
 import com.feed_the_beast.ftbcurseappbot.api.ftbsupportfaq.Sitejson;
 import com.feed_the_beast.ftbcurseappbot.utils.JsonFactory;
@@ -21,7 +21,7 @@ public class FTBFaq extends CommandBase {
     private static final String SUPPORT_FAQ_JSON = "http://support.feed-the-beast.com/faq/sitejson.json";
 
     @Override public void onMessage (WebSocket webSocket, ConversationMessageNotification msg) {
-        log.info("ftbfaq " + msg.body.replace(Main.getBotTrigger() + "ftbfaq", ""));
+        log.info("ftbfaq " + msg.body.replace(Config.getBotTrigger() + "ftbfaq", ""));
         String[] params = StringUtils.split(msg.body, " ");
         if (params.length > 1) {
             boolean list = false;

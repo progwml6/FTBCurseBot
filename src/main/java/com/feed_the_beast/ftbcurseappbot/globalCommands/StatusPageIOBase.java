@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbcurseappbot.globalCommands;
 
-import com.feed_the_beast.ftbcurseappbot.Main;
+import com.feed_the_beast.ftbcurseappbot.Config;
 import com.feed_the_beast.ftbcurseappbot.api.statuspageio.Component;
 import com.feed_the_beast.ftbcurseappbot.api.statuspageio.Status;
 import com.feed_the_beast.ftbcurseappbot.api.statuspageio.StatusSummary;
@@ -29,7 +29,7 @@ public abstract class StatusPageIOBase extends StatusCommandBase {
 
     @Override
     public void onMessage (WebSocket webSocket, ConversationMessageNotification msg) {
-        log.info(getService() + "status " + msg.body.replace(Main.getBotTrigger() + getService() + "status", ""));
+        log.info(getService() + "status " + msg.body.replace(Config.getBotTrigger() + getService() + "status", ""));
         webSocket.sendMessage(msg.conversationID, getServiceStatus());
     }
 

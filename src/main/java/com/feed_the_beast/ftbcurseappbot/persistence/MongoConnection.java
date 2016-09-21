@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbcurseappbot.persistence;
 
+import com.feed_the_beast.ftbcurseappbot.Config;
 import com.feed_the_beast.ftbcurseappbot.Main;
 import com.feed_the_beast.ftbcurseappbot.persistence.data.ModerationLog;
 import com.feed_the_beast.ftbcurseappbot.persistence.data.MongoCommand;
@@ -43,7 +44,7 @@ public class MongoConnection {
     private static String MONGO_MODERATION_LOGGING_COLLECTION = "moderation_logs";
 
     public static void start () {
-        CommentedConfigurationNode config = Main.getConfig().getNode("mongo");
+        CommentedConfigurationNode config = Config.getConfig().getNode("mongo");
         if (config.getNode("enabled").getBoolean()) {
             persistanceEnabled = true;
             log.info("starting up mongo client");

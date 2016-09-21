@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbcurseappbot.webserver.endpoints;
 
+import com.feed_the_beast.ftbcurseappbot.Config;
 import com.feed_the_beast.ftbcurseappbot.Main;
 
 /**
@@ -23,7 +24,7 @@ public class HealthEndpoint {
         gitCommit = System.getenv("GIT_COMMIT");
         jenkinsJobName = System.getenv("JOB_NAME");
         jenkinsTag = System.getenv("BUILD_TAG");
-        userName = Main.getUsername();
+        userName = Config.getUsername();
         version = Main.VERSION;
     }
 

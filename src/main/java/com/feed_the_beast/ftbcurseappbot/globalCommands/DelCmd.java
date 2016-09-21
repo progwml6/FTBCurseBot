@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbcurseappbot.globalCommands;
 
+import com.feed_the_beast.ftbcurseappbot.Config;
 import com.feed_the_beast.ftbcurseappbot.Main;
 import com.feed_the_beast.ftbcurseappbot.persistence.MongoConnection;
 import com.feed_the_beast.ftbcurseappbot.persistence.data.MongoCommand;
@@ -17,13 +18,13 @@ public class DelCmd extends CommandBase {
             if (MongoConnection.isPersistanceEnabled()) {
                 String[] parts = msg.body.split(" ", 2);
                 if (parts.length < 2) {
-                    webSocket.sendMessage(msg.conversationID, "usage: " + Main.getBotTrigger() + "delcmd <command>");
+                    webSocket.sendMessage(msg.conversationID, "usage: " + Config.getBotTrigger() + "delcmd <command>");
 
                 } else {
                     String commandRegex = parts[1];
                     boolean botTrigger = false;
                     String regex = commandRegex;
-                    if (commandRegex.startsWith(Main.getBotTrigger())) {
+                    if (commandRegex.startsWith(Config.getBotTrigger())) {
                         botTrigger = true;
                         regex = regex.substring(1);
                     }

@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbcurseappbot.runnables;
 
-import com.feed_the_beast.ftbcurseappbot.Main;
+import com.feed_the_beast.ftbcurseappbot.Config;
 import com.feed_the_beast.ftbcurseappbot.globalCommands.TwitchStatus;
 import com.feed_the_beast.javacurselib.websocket.WebSocket;
 
@@ -9,7 +9,7 @@ import com.feed_the_beast.javacurselib.websocket.WebSocket;
  */
 public class TwitchStatusChecker extends ServiceStatusBase {
     public TwitchStatusChecker (WebSocket webSocket) {
-        super(webSocket, TwitchStatus.instance, Main.getTwitchStatusChangeNotificationsEnabled());
+        super(webSocket, TwitchStatus.instance, Config.getTwitchStatusChangeNotificationsEnabled());
     }
 
 }

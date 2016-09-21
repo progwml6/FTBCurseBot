@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbcurseappbot.globalCommands;
 
+import com.feed_the_beast.ftbcurseappbot.Config;
 import com.feed_the_beast.ftbcurseappbot.Main;
 import com.feed_the_beast.ftbcurseappbot.persistence.MongoConnection;
 import com.feed_the_beast.ftbcurseappbot.persistence.data.MongoCommand;
@@ -20,14 +21,14 @@ public class Setcmd extends CommandBase {
             if (MongoConnection.isPersistanceEnabled()) {
                 String[] parts = msg.body.split(" ", 3);
                 if (parts.length < 3) {
-                    webSocket.sendMessage(msg.conversationID, "usage: " + Main.getBotTrigger() + "setcmd <command> <content>");
+                    webSocket.sendMessage(msg.conversationID, "usage: " + Config.getBotTrigger() + "setcmd <command> <content>");
 
                 } else {
                     String commandRegex = parts[1];
                     String content = parts[2];
                     boolean botTrigger = false;
                     String regex = commandRegex;
-                    if (commandRegex.startsWith(Main.getBotTrigger())) {
+                    if (commandRegex.startsWith(Config.getBotTrigger())) {
                         botTrigger = true;
                         regex = regex.substring(1);
                     }

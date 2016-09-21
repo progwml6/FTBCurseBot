@@ -5,6 +5,7 @@ import static spark.Spark.port;
 import static spark.Spark.post;
 import static spark.debug.DebugScreen.enableDebugScreen;
 
+import com.feed_the_beast.ftbcurseappbot.Config;
 import com.feed_the_beast.ftbcurseappbot.Main;
 import com.feed_the_beast.ftbcurseappbot.webserver.endpoints.GithubWebhook;
 import com.feed_the_beast.ftbcurseappbot.webserver.endpoints.HealthEndpoint;
@@ -21,8 +22,8 @@ public class WebService {
     public static final String API_POST_SUCCESS = "POST SUCCESSFUL";
 
     public WebService () {
-        port(Main.getConfig().getNode("botSettings", "webPort").getInt(4567));
-        if (Main.isDebug()) {
+        port(Config.getWebPort());
+        if (Config.isDebugEnabled()) {
             enableDebugScreen();
         }
         get("/health", "application/json", (request, response) -> {

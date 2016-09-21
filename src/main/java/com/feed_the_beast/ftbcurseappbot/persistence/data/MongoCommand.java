@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbcurseappbot.persistence.data;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.feed_the_beast.ftbcurseappbot.Main;
+import com.feed_the_beast.ftbcurseappbot.Config;
 import com.feed_the_beast.javacurselib.common.enums.GroupPermissions;
 import com.feed_the_beast.javacurselib.utils.CurseGUID;
 import com.feed_the_beast.javacurselib.utils.EnumSetHelpers;
@@ -55,15 +55,17 @@ public class MongoCommand {
     @JsonIgnore
     public Pattern getPattern () {
         if (usesTrigger) {//if it uses triggers follow same rules as simple commands
-            return Pattern.compile("(?m)^" + Main.getBotTrigger() + regex + "(.*)", Pattern.CASE_INSENSITIVE);
+            return Pattern.compile("(?m)^" + Config.getBotTrigger() + regex + "(.*)", Pattern.CASE_INSENSITIVE);
         } else {
             return Pattern.compile(regex);
         }
     }
+
     @JsonIgnore
     public Set<GroupPermissions> getGroupPermissions () {
         return EnumSetHelpers.deserialize(permissions, GroupPermissions.class);
     }
+
     public MongoCommand () {
         //needed for Jackson
     }
