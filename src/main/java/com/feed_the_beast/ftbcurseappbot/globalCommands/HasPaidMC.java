@@ -13,16 +13,28 @@ import java.util.regex.Pattern;
 
 @Slf4j
 public class HasPaidMC extends CommandBase {
+    private static boolean getHasPaid (String user) throws IOException {
+        try {
+            String json = NetworkingUtils.getSynchronous("https://api.mojang.com/users/profiles/minecraft/" + user);
+            JsonParser p = new JsonParser();
+            JsonElement report = p.parse(json);
+            return !(report == null || !report.isJsonObject());
+        } catch (JsonParseException e) {
+            return false;//TODO is this always the case
+        }
+
+    }
+
     @Override
     public void onMessage (WebSocket webSocket, ConversationMessageNotification msg) {
         String[] msplit = msg.body.split(" ");
         if (msplit.length > 1) {
             log.info("haspaidmc " + msplit[1]);
             try {
-                if(getHasPaid(msplit[1])) {
-                    webSocket.sendMessage(msg.conversationID, msplit[1] +  " has paid for minecraft :white_check_mark:");
+                if (getHasPaid(msplit[1])) {
+                    webSocket.sendMessage(msg.conversationID, msplit[1] + " has paid for minecraft :white_check_mark:");
                 } else {
-                    webSocket.sendMessage(msg.conversationID, msplit[1] +  " has NOT paid for minecraft :negative_squared_cross_mark:");
+                    webSocket.sendMessage(msg.conversationID, msplit[1] + " has NOT paid for minecraft :negative_squared_cross_mark:");
                 }
             } catch (IOException e) {
                 webSocket.sendMessage(msg.conversationID, "Was unable to check with mojang if " + msplit[1] + " has paid!");
@@ -40,17 +52,5 @@ public class HasPaidMC extends CommandBase {
     @Override
     public String getHelp () {
         return "haspaidmc <USERNAME>";
-    }
-
-    private static boolean getHasPaid (String user) throws IOException {
-        try {
-            String json = NetworkingUtils.getSynchronous("https://api.mojang.com/users/profiles/minecraft/" + user);
-            JsonParser p = new JsonParser();
-            JsonElement report = p.parse(json);
-            return !(report == null || !report.isJsonObject());
-        } catch (JsonParseException e) {
-            return false;//TODO is this always the case
-        }
-
     }
 }

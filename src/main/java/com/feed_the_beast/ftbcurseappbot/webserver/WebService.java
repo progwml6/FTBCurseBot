@@ -6,7 +6,6 @@ import static spark.Spark.post;
 import static spark.debug.DebugScreen.enableDebugScreen;
 
 import com.feed_the_beast.ftbcurseappbot.Config;
-import com.feed_the_beast.ftbcurseappbot.Main;
 import com.feed_the_beast.ftbcurseappbot.webserver.endpoints.GithubWebhook;
 import com.feed_the_beast.ftbcurseappbot.webserver.endpoints.HealthEndpoint;
 import com.feed_the_beast.ftbcurseappbot.webserver.endpoints.Md;

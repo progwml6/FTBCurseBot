@@ -8,9 +8,8 @@ import spark.ResponseTransformer;
  */
 public class JsonTransformer implements ResponseTransformer {
 
-
     @Override
-    public String render(Object model) {
+    public String render (Object model) {
         return JsonFactory.GSON.toJson(model);
     }
 }

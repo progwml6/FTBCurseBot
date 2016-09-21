@@ -140,7 +140,8 @@ public class CacheService {
             members = getServerMembers(serverId);
             Optional<GroupMemberContract> gc = Optional.empty();
             if (members.isPresent()) {
-                gc = members.get().stream().filter(g -> g != null && ((g.nickName != null && g.nickName.equalsIgnoreCase(name)) || (g.username == null ? false : g.username.equalsIgnoreCase(name)))).findFirst();
+                gc = members.get().stream().filter(g -> g != null && ((g.nickName != null && g.nickName.equalsIgnoreCase(name)) || (g.username != null && g.username.equalsIgnoreCase(name))))
+                        .findFirst();
             }
             if (!gc.isPresent()) {
                 if (canTryCacheClear) {
@@ -156,13 +157,11 @@ public class CacheService {
         }
         if (!members.isPresent() || members.get().size() == 0) {
             return Optional.empty();
-        } else if(hasCleared) {
+        } else if (hasCleared) {
             members = getServerMembers(serverId);
             Optional<GroupMemberContract> gc = Optional.empty();
             if (members.isPresent()) {
-                gc = members.get().stream().filter(g -> g != null && ((g.nickName == null ? false : g.nickName.equalsIgnoreCase(name)) || (g.username == null
-                                                                                                                                                   ? false
-                                                                                                                                                   : g.username.equalsIgnoreCase(name))))
+                gc = members.get().stream().filter(g -> g != null && ((g.nickName != null && g.nickName.equalsIgnoreCase(name)) || (g.username != null && g.username.equalsIgnoreCase(name))))
                         .findFirst();
             }
             if (!gc.isPresent()) {

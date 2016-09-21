@@ -22,10 +22,17 @@ public abstract class StatusPageIOBase extends StatusCommandBase {
     private Map<String, Component> componentStatuses;
     private Status mainStatus;
     private boolean changed = false;
+    private String serviceName;
+
+    private static String getStatusUpdate (Component c) {
+        return c.getName() + ": " + c.getStatus();
+    }
+
+    private static String removeLastTwoChars (String str) {
+        return str.substring(0, str.length() - 2);
+    }
 
     public abstract String getBaseURL ();
-
-    private String serviceName;
 
     @Override
     public void onMessage (WebSocket webSocket, ConversationMessageNotification msg) {
@@ -95,14 +102,6 @@ public abstract class StatusPageIOBase extends StatusCommandBase {
         return ret.replace("critical", ":negative_squared_cross_mark:").replace("minor", ":construction:").replace("major", ":construction:")
                 .replace("none", ":white_check_mark:").replace("major_outage", ":negative_squared_cross_mark:").replace("degraded_performance", ":construction:")
                 .replace("partial_outage", ":construction:").replace("operational", ":white_check_mark:");
-    }
-
-    private static String getStatusUpdate (Component c) {
-        return c.getName() + ": " + c.getStatus();
-    }
-
-    private static String removeLastTwoChars (String str) {
-        return str.substring(0, str.length() - 2);
     }
 
     @Override

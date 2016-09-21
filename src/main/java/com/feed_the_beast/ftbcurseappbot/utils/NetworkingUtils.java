@@ -11,13 +11,12 @@ import java.io.IOException;
  * Created by progwml6 on 8/16/16.
  */
 public class NetworkingUtils {
-    private NetworkingUtils () {
-
-    }
-
     @Getter
     private static final OkHttpClient okHttpClient = new OkHttpClient();
     private static final String USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36";
+    private NetworkingUtils () {
+
+    }
 
     public static String getSynchronous (String url) throws IOException {
         Request request = new Request.Builder()

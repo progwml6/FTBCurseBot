@@ -45,6 +45,19 @@ public class MongoCommand {
     @Setter
     private ObjectId _id;
 
+    public MongoCommand () {
+        //needed for Jackson
+    }
+
+    //TODO channel level, folder level, multi channel commands, role based stuff
+    public MongoCommand (@Nonnull String regex, @Nonnull String content, @Nullable Set<GroupPermissions> requiredPermissions, @Nonnull CurseGUID serverID, boolean usesTrigger) {
+        this.regex = regex;
+        this.content = content;
+        this.serverID = serverID.serialize();
+        this.usesTrigger = usesTrigger;
+        this.permissions = EnumSetHelpers.serialize(requiredPermissions, GroupPermissions.class);
+    }
+
     //TODO make sure this isn't serialized to mongo
     @JsonIgnore
     public CurseGUID getServerIDAsGUID () {
@@ -64,19 +77,6 @@ public class MongoCommand {
     @JsonIgnore
     public Set<GroupPermissions> getGroupPermissions () {
         return EnumSetHelpers.deserialize(permissions, GroupPermissions.class);
-    }
-
-    public MongoCommand () {
-        //needed for Jackson
-    }
-
-    //TODO channel level, folder level, multi channel commands, role based stuff
-    public MongoCommand (@Nonnull String regex, @Nonnull String content, @Nullable Set<GroupPermissions> requiredPermissions, @Nonnull CurseGUID serverID, boolean usesTrigger) {
-        this.regex = regex;
-        this.content = content;
-        this.serverID = serverID.serialize();
-        this.usesTrigger = usesTrigger;
-        this.permissions = EnumSetHelpers.serialize(requiredPermissions, GroupPermissions.class);
     }
 
 }

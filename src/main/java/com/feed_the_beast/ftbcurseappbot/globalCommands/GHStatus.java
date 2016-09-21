@@ -17,9 +17,11 @@ import javax.annotation.Nonnull;
 @Slf4j
 public class GHStatus extends StatusCommandBase {
     private static StatusCommandBase instance;
+    private static StatusApiUrls urls;
+    private static ApiStatus apiStatus;
+    private static StatusMessage message;
     private boolean statusChanged = false;
     private boolean messageChanged = false;
-
     public GHStatus () {
         instance = this;
     }
@@ -27,10 +29,6 @@ public class GHStatus extends StatusCommandBase {
     public static StatusCommandBase getInstance () {
         return instance;
     }
-
-    private static StatusApiUrls urls;
-    private static ApiStatus apiStatus;
-    private static StatusMessage message;
 
     @Override
     public void onMessage (WebSocket webSocket, ConversationMessageNotification msg) {

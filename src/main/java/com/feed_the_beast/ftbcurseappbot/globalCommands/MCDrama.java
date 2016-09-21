@@ -9,6 +9,16 @@ import java.util.regex.Pattern;
 
 @Slf4j
 public class MCDrama extends CommandBase {
+    private static String getDrama () {
+        String drama = null;
+        try {
+            drama = NetworkingUtils.getSynchronous("http://mc-drama.herokuapp.com/raw");
+        } catch (Exception e) {
+            log.error("error getting mc drama ", e);
+        }
+        return drama;
+    }
+
     @Override
     public void onMessage (WebSocket webSocket, ConversationMessageNotification msg) {
         webSocket.sendMessage(msg.conversationID, getDrama());
@@ -23,16 +33,6 @@ public class MCDrama extends CommandBase {
     @Override
     public String getHelp () {
         return "gets mc drama";
-    }
-
-    private static String getDrama () {
-        String drama = null;
-        try {
-            drama = NetworkingUtils.getSynchronous("http://mc-drama.herokuapp.com/raw");
-        } catch (Exception e) {
-            log.error("error getting mc drama ", e);
-        }
-        return drama;
     }
 
 }

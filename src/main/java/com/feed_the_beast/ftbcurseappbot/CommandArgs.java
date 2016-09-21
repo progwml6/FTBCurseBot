@@ -12,10 +12,10 @@ public class CommandArgs {
     @Getter
     private static CommandArgs settings;
 
-
     static {
         settings = new CommandArgs();
     }
+
     @Parameter(names = { "--help", "-h" }, help = true, description = "Shows help")
     @Getter
     private boolean help = false;
@@ -23,8 +23,6 @@ public class CommandArgs {
     @Parameter(names = { "--config", "-c" }, description = "Config file location", arity = 1, validateWith = ValidateRequiredValue.class)
     @Getter
     private String configFile;
-
-
 
     public static class ValidateRequiredValue implements IParameterValidator {
         @Override
@@ -38,7 +36,5 @@ public class CommandArgs {
             }
         }
     }
-
-
 
 }

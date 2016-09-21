@@ -23,7 +23,7 @@ public class MCUUID extends CommandBase {
                 String json = NetworkingUtils.getSynchronous("https://api.mojang.com/users/profiles/minecraft/" + msplit[1]);
                 JsonParser p = new JsonParser();
                 JsonElement report = p.parse(json);
-                if(report != null && report.isJsonObject()) {
+                if (report != null && report.isJsonObject()) {
                     webSocket.sendMessage(msg.conversationID, "Username: " + report.getAsJsonObject().get("name").getAsString() + " UUID: " + report.getAsJsonObject().get("id").getAsString());
                 } else {
                     webSocket.sendMessage(msg.conversationID, "Could not find UUID for " + msplit[1]);

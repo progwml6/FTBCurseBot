@@ -13,7 +13,7 @@ public class CFStatus extends StatusPageIOBase {
         instance = this;
     }
 
-    public static StatusCommandBase getInstance(){
+    public static StatusCommandBase getInstance () {
         return instance;
     }
 
@@ -21,7 +21,6 @@ public class CFStatus extends StatusPageIOBase {
     public String getBaseURL () {
         return cfStatusAPIBase;
     }
-
 
     @Override
     public String getService () {

@@ -36,7 +36,7 @@ public class Ban extends CommandBase {
                     webSocket.sendMessage(msg.conversationID, "You can ban " + msplit[1] + "!");
                     MongoConnection.logEvent(PersistanceEventType.BAN, msg.rootConversationID, msg.conversationID, msg.senderID, msg.senderName, member.get().userID, msplit[1], desc, true);
                 } else {
-                    webSocket.sendMessage(msg.conversationID, "can not find " +msplit[1] + " in this server to ban!");
+                    webSocket.sendMessage(msg.conversationID, "can not find " + msplit[1] + " in this server to ban!");
                 }
             } else {
                 webSocket.sendMessage(msg.conversationID, "You do not have permission to use the ban command!");

@@ -22,15 +22,30 @@ import javax.annotation.Nonnull;
  */
 @Slf4j
 public class TwitchStatus extends StatusCommandBase {
-    private boolean CHAT_ENABLED = true;
-    private static String NIGHT_STATUS_URL = "https://twitchstatus.com/api/status/";
     public static StatusCommandBase instance;
+    private static String NIGHT_STATUS_URL = "https://twitchstatus.com/api/status/";
+    private boolean CHAT_ENABLED = true;
     private Map<String, Server> componentStatuses;
     private Map<String, String> types;
     private boolean changed = false;
 
     public TwitchStatus () {
         instance = this;
+    }
+
+    private static String getStatusUpdate (Server c, String type) {
+        if (type.equalsIgnoreCase("ingest")) {
+            return c.description.replace(":", "-") + ": " + c.status;
+        } else if (type.equalsIgnoreCase("web")) {
+            return (c.host != null ? c.host : c.server.toLowerCase()) + ": " + c.status;
+        } else if (type.equalsIgnoreCase("chat")) {
+            return (c.host != null ? c.host : c.server.toLowerCase()) + ": " + c.status;
+        }
+        return "UNKNOWN_TYPE " + type;
+    }
+
+    private static String removeLastTwoChars (String str) {
+        return str.substring(0, str.length() - 2);
     }
 
     @Override
@@ -144,21 +159,6 @@ public class TwitchStatus extends StatusCommandBase {
     @Override
     public String getHelp () {
         return "gets the health status of MC services from https://twitchstatus.com/";
-    }
-
-    private static String getStatusUpdate (Server c, String type) {
-        if (type.equalsIgnoreCase("ingest")) {
-            return c.description.replace(":", "-") + ": " + c.status;
-        } else if (type.equalsIgnoreCase("web")) {
-            return (c.host != null ? c.host : c.server.toLowerCase()) + ": " + c.status;
-        } else if (type.equalsIgnoreCase("chat")) {
-            return (c.host != null ? c.host : c.server.toLowerCase()) + ": " + c.status;
-        }
-        return "UNKNOWN_TYPE " + type;
-    }
-
-    private static String removeLastTwoChars (String str) {
-        return str.substring(0, str.length() - 2);
     }
 
 }

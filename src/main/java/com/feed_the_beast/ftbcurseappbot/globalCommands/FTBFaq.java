@@ -20,6 +20,22 @@ import javax.annotation.Nullable;
 public class FTBFaq extends CommandBase {
     private static final String SUPPORT_FAQ_JSON = "http://support.feed-the-beast.com/faq/sitejson.json";
 
+    private static String removeLastTwoChars (String str) {
+        return str.substring(0, str.length() - 2);
+    }
+
+    @Nullable
+    private static Sitejson getFaqData () {
+        String faq = null;
+        try {
+            faq = NetworkingUtils.getSynchronous(SUPPORT_FAQ_JSON);
+            return JsonFactory.GSON.fromJson(faq, Sitejson.class);
+        } catch (Exception e) {
+            log.error("error getting support faq ", e);
+        }
+        return null;
+    }
+
     @Override public void onMessage (WebSocket webSocket, ConversationMessageNotification msg) {
         log.info("ftbfaq " + msg.body.replace(Config.getBotTrigger() + "ftbfaq", ""));
         String[] params = StringUtils.split(msg.body, " ");
@@ -56,10 +72,6 @@ public class FTBFaq extends CommandBase {
 
     }
 
-    private static String removeLastTwoChars (String str) {
-        return str.substring(0, str.length() - 2);
-    }
-
     @Override
     public Pattern getTriggerRegex () {
         return getSimpleCommand("ftbfaq");
@@ -68,18 +80,6 @@ public class FTBFaq extends CommandBase {
     @Override
     public String getHelp () {
         return "ftbfaq <command> to link to a FAQ topic or ftbfaq list to list the FAQ topics";
-    }
-
-    @Nullable
-    private static Sitejson getFaqData () {
-        String faq = null;
-        try {
-            faq = NetworkingUtils.getSynchronous(SUPPORT_FAQ_JSON);
-            return JsonFactory.GSON.fromJson(faq, Sitejson.class);
-        } catch (Exception e) {
-            log.error("error getting support faq ", e);
-        }
-        return null;
     }
 
 }

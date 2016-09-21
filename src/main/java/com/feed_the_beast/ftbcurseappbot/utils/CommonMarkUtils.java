@@ -13,12 +13,14 @@ import java.util.List;
 public class CommonMarkUtils {
     private Parser parser;
     private HtmlRenderer renderer;
-    public CommonMarkUtils() {
+
+    public CommonMarkUtils () {
         List<Extension> extensions = Arrays.asList(TablesExtension.create(), StrikethroughExtension.create());
         parser = Parser.builder().extensions(extensions).build();
         renderer = HtmlRenderer.builder().extensions(extensions).build();
 
     }
+
     public String renderToHTML (String md) {
         Node document = parser.parse(md);
         return renderer.render(document);

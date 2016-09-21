@@ -18,6 +18,8 @@ import javax.annotation.Nonnull;
 @Slf4j
 public class MCStatus extends StatusCommandBase {
     private static StatusCommandBase instance;
+    private static Map<String, String> mcstatusmappings = null;
+    private static Map<String, String> mcstatushealth = null;
     private boolean changed = false;
 
     public MCStatus () {
@@ -26,83 +28,6 @@ public class MCStatus extends StatusCommandBase {
 
     public static StatusCommandBase getInstance () {
         return instance;
-    }
-
-    @Override
-    public void onMessage (WebSocket webSocket, ConversationMessageNotification msg) {
-        log.info("mcstatus " + msg.body.replace(Config.getBotTrigger() + "mcstatus", ""));
-        webSocket.sendMessage(msg.conversationID, getServiceStatus());
-    }
-
-    @Override public String getService () {
-        return "mc";
-    }
-
-    @Override
-    public String getHelp () {
-        return "gets the health status of MC services from mojang";
-    }
-
-    @Nonnull
-    @Override
-    public String getServiceStatus () {
-        updateServiceHealth();
-        if (mcstatushealth == null || mcstatushealth.isEmpty()) {
-            return "ERROR getting mc status";
-        }
-        StringBuilder buf = new StringBuilder();
-        for (Map.Entry<String, String> me : mcstatushealth.entrySet()) {
-            buf.append(getPrettyStatus(me.getKey(), true));
-        }
-        String ret = buf.toString();
-        if (ret.endsWith("|")) {
-            ret = removeLastChar(ret);
-        }
-        return ret;
-    }
-
-    private static Map<String, String> mcstatusmappings = null;
-    private static Map<String, String> mcstatushealth = null;
-
-    @Override
-    public @Nonnull String updateServiceHealth () {
-        try {
-            String json = NetworkingUtils.getSynchronous("http://status.mojang.com/check");
-            JsonParser p = new JsonParser();
-            JsonArray report = p.parse(json).getAsJsonArray();
-            if (mcstatusmappings == null) {
-                initMappings();
-            }
-            if (mcstatushealth == null) {
-                mcstatushealth = Maps.newHashMap();
-            }
-            StringBuilder buf = new StringBuilder();
-            for (int i = 0; i < report.size(); i++) {
-                for (Map.Entry<String, JsonElement> a : report.get(i).getAsJsonObject().entrySet()) {
-                    //log.info(a.getKey() + " " + mcstatusmappings.get(a.getKey()) + " " + a.getValue().getAsString());
-                    String cstatus = mcstatushealth.get(mcstatusmappings.get(a.getKey()));
-                    mcstatushealth.put(mcstatusmappings.get(a.getKey()), a.getValue().getAsString());
-                    if (cstatus != null && !cstatus.isEmpty() && !cstatus.equals(a.getValue().getAsString())) {
-                        buf.append(getPrettyStatus(a.getKey(), true));
-                        changed = true;
-                    }
-                }
-            }
-            String changelist = buf.toString();
-            if (!changelist.isEmpty()) {
-                if (changelist.endsWith("|")) {
-                    changelist = removeLastChar(changelist);
-                }
-                return "MC Status Has Changed to: " + changelist;
-            }
-        } catch (IOException e) {
-            log.error("error getting mc status", e);
-        }
-        return "";
-    }
-
-    @Override public boolean hasChanged () {
-        return changed;
     }
 
     private static String getPrettyStatus (String item, boolean needPipe) {
@@ -146,6 +71,80 @@ public class MCStatus extends StatusCommandBase {
 
     private static String removeLastChar (String str) {
         return str.substring(0, str.length() - 1);
+    }
+
+    @Override
+    public void onMessage (WebSocket webSocket, ConversationMessageNotification msg) {
+        log.info("mcstatus " + msg.body.replace(Config.getBotTrigger() + "mcstatus", ""));
+        webSocket.sendMessage(msg.conversationID, getServiceStatus());
+    }
+
+    @Override public String getService () {
+        return "mc";
+    }
+
+    @Override
+    public String getHelp () {
+        return "gets the health status of MC services from mojang";
+    }
+
+    @Nonnull
+    @Override
+    public String getServiceStatus () {
+        updateServiceHealth();
+        if (mcstatushealth == null || mcstatushealth.isEmpty()) {
+            return "ERROR getting mc status";
+        }
+        StringBuilder buf = new StringBuilder();
+        for (Map.Entry<String, String> me : mcstatushealth.entrySet()) {
+            buf.append(getPrettyStatus(me.getKey(), true));
+        }
+        String ret = buf.toString();
+        if (ret.endsWith("|")) {
+            ret = removeLastChar(ret);
+        }
+        return ret;
+    }
+
+    @Override
+    public @Nonnull String updateServiceHealth () {
+        try {
+            String json = NetworkingUtils.getSynchronous("http://status.mojang.com/check");
+            JsonParser p = new JsonParser();
+            JsonArray report = p.parse(json).getAsJsonArray();
+            if (mcstatusmappings == null) {
+                initMappings();
+            }
+            if (mcstatushealth == null) {
+                mcstatushealth = Maps.newHashMap();
+            }
+            StringBuilder buf = new StringBuilder();
+            for (int i = 0; i < report.size(); i++) {
+                for (Map.Entry<String, JsonElement> a : report.get(i).getAsJsonObject().entrySet()) {
+                    //log.info(a.getKey() + " " + mcstatusmappings.get(a.getKey()) + " " + a.getValue().getAsString());
+                    String cstatus = mcstatushealth.get(mcstatusmappings.get(a.getKey()));
+                    mcstatushealth.put(mcstatusmappings.get(a.getKey()), a.getValue().getAsString());
+                    if (cstatus != null && !cstatus.isEmpty() && !cstatus.equals(a.getValue().getAsString())) {
+                        buf.append(getPrettyStatus(a.getKey(), true));
+                        changed = true;
+                    }
+                }
+            }
+            String changelist = buf.toString();
+            if (!changelist.isEmpty()) {
+                if (changelist.endsWith("|")) {
+                    changelist = removeLastChar(changelist);
+                }
+                return "MC Status Has Changed to: " + changelist;
+            }
+        } catch (IOException e) {
+            log.error("error getting mc status", e);
+        }
+        return "";
+    }
+
+    @Override public boolean hasChanged () {
+        return changed;
     }
 
 }

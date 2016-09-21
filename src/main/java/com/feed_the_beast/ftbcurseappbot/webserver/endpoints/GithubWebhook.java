@@ -20,7 +20,7 @@ public class GithubWebhook {
     private static final String DELIVERY_HEADER = "X-GitHub-Delivery";
 
     public static Route hook = (Request request, Response response) -> {
-        if(!request.userAgent().startsWith("GitHub-Hookshot/")) {
+        if (!request.userAgent().startsWith("GitHub-Hookshot/")) {
             //TODO throw security error
         }
         String signature = request.headers(SIGNATURE_HEADER);

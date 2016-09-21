@@ -44,6 +44,7 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class Main {
     public static final String VERSION = "0.0.1";
+    private static final int CHECKER_POLL_TIME = 120;
     public static EventBus eventBus = new EventBus();
     @Getter
     private static Optional<String> token = Optional.empty();
@@ -53,14 +54,12 @@ public class Main {
     private static CacheService cacheService;
     @Getter
     private static RestUserEndpoints restUserEndpoints;
-
     @Getter
     private static CommonMarkUtils commonMarkUtils;
     @Getter
     private static WebSocket webSocket;
     @Getter
     private static ScheduledExecutorService scheduledTasks = Executors.newScheduledThreadPool(5);
-    private static final int CHECKER_POLL_TIME = 120;
 
     public static void main (String args[]) {
         log.info("FTB CurseApp bot V " + VERSION);

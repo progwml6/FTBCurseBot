@@ -12,6 +12,7 @@ import java.util.Date;
 public class JsonFactory {
     public static final Gson GSON;
     public static final boolean DEBUG = true;
+
     static {
         GsonBuilder builder = new GsonBuilder();
         builder.registerTypeAdapter(Date.class, new DateAdapter());
