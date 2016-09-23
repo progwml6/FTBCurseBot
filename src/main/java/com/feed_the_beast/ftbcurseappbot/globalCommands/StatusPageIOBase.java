@@ -56,7 +56,7 @@ public abstract class StatusPageIOBase extends StatusCommandBase {
         }
         return ret.replace("critical", ":negative_squared_cross_mark:").replace("minor", ":construction:").replace("none", ":white_check_mark:")
                 .replace("major_outage", ":negative_squared_cross_mark:").replace("degraded_performance", ":construction:").replace("partial_outage", ":construction:")
-                .replace("operational", ":white_check_mark:").replace("major", ":construction:");
+                .replace("operational", ":white_check_mark:").replace("major", ":construction:").replace("under_maintenance", ":construction:");
     }
 
     public @Nonnull String updateServiceHealth () {
@@ -101,7 +101,7 @@ public abstract class StatusPageIOBase extends StatusCommandBase {
         }
         return ret.replace("critical", ":negative_squared_cross_mark:").replace("minor", ":construction:").replace("none", ":white_check_mark:")
                 .replace("major_outage", ":negative_squared_cross_mark:").replace("degraded_performance", ":construction:").replace("partial_outage", ":construction:")
-                .replace("operational", ":white_check_mark:").replace("major", ":construction:");
+                .replace("operational", ":white_check_mark:").replace("major", ":construction:").replace("under_maintenance", ":construction:");
     }
 
     @Override
