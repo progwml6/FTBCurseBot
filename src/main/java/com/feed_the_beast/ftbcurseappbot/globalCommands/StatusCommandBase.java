@@ -43,14 +43,14 @@ public abstract class StatusCommandBase extends CommandBase {
                     if (ci.isPresent()) {
                         ws.sendMessage(ci.get(), message);
                     } else {
-                        log.error("no channel id exists for " + g[0] + " " + g[1]);
+                        log.error("no channel id exists for {} {}", g[0], g[1]);
                     }
                 } else {
                     Optional<CurseGUID> ci = Main.getCacheService().getContacts().get().getGroupIdByName(s, String::equalsIgnoreCase);
                     if (ci.isPresent()) {
                         ws.sendMessage(ci.get(), message);
                     } else {
-                        log.error("no channel id exists for " + s);
+                        log.error("no channel id exists for {}", s);
                     }
 
                 }
