@@ -17,7 +17,9 @@ import lombok.extern.slf4j.Slf4j;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import org.jongo.Jongo;
 import org.jongo.MongoCursor;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import ch.qos.logback.classic.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -76,6 +78,10 @@ public class MongoConnection {
                 log.info("database needs to be migrated from version {} to {}", info.getVersion(), current.getVersion());
                 migrate(info, current);
             }
+            log.info("setting mogno cluster logger to info level");
+            ch.qos.logback.classic.Logger mcluster =
+                    (ch.qos.logback.classic.Logger) LoggerFactory.getLogger("org.mongodb.driver.cluster");
+            mcluster.setLevel(Level.INFO);
         }
     }
 

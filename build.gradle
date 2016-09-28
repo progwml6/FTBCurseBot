@@ -6,6 +6,8 @@ plugins {
     id 'eclipse'
     id 'application'
     id 'com.github.johnrengelman.shadow' version '1.2.3'
+    id 'com.github.ben-manes.versions' version '0.13.0'
+
 }
 
 
@@ -15,7 +17,7 @@ configurations {
 }
 
 repositories {
-	mavenCentral()
+    mavenCentral()
     maven {
         name = 'FTB'
         url = 'http://ftb.cursecdn.com/FTB2/maven'
@@ -39,7 +41,7 @@ configurations.all { exclude group: 'commons-logging' }//we use slf4j and replac
 dependencies {
     compile 'com.feed_the_beast:javacurseapi:0.1.0.+'
 
-    compile 'com.beust:jcommander:1.48' //command line argument support
+    compile 'com.beust:jcommander:1.56' //command line argument support
     compile 'ninja.leaping.configurate:configurate-hocon:3.1.1'//configuration
 
     //compile 'org.jsoup:jsoup:1.9.2' //scraping from html pages as needed
@@ -49,16 +51,18 @@ dependencies {
     compile 'com.sparkjava:spark-debug-tools:0.5' //debugging errors w/ endpoints
     compile 'com.sparkjava:spark-template-mustache:2.3' //webpage templates
 
-    compile 'com.atlassian.commonmark:commonmark:0.6.0'//commonmark markdown lib for java
-    compile 'com.atlassian.commonmark:commonmark-ext-gfm-tables:0.6.0'//tables from GitHub Flavored Markdown
-    compile 'com.atlassian.commonmark:commonmark-ext-gfm-strikethrough:0.6.0'//strikethrough of text
+    compile 'com.atlassian.commonmark:commonmark:0.7.0'//commonmark markdown lib for java
+    compile 'com.atlassian.commonmark:commonmark-ext-gfm-tables:0.7.0'//tables from GitHub Flavored Markdown
+    compile 'com.atlassian.commonmark:commonmark-ext-gfm-strikethrough:0.7.0'//strikethrough of text
+    compile 'com.atlassian.commonmark:commonmark-ext-heading-anchor:0.7.0'//headings have id's
+    compile 'com.atlassian.commonmark:commonmark-ext-ins:0.7.0'//underlining
 
     compile 'org.kohsuke:github-api:1.77'//GH integrations
     compile 'org.slf4j:jcl-over-slf4j:1.7.21'// we don't want commons logging around
     compile 'ch.qos.logback:logback-classic:1.1.7'
 
-    compile 'com.github.ben-manes.caffeine:caffeine:2.3.2'//high performance local cache
-    compile 'com.github.ben-manes.caffeine:guava:2.3.2'
+    compile 'com.github.ben-manes.caffeine:caffeine:2.3.3'//high performance local cache
+    compile 'com.github.ben-manes.caffeine:guava:2.3.3'
 
 
     compile 'com.google.inject:guice:4.1.0' //injections
@@ -70,7 +74,7 @@ dependencies {
 
     compile 'commons-codec:commons-codec:1.10'
 
-    deployerJars 'org.apache.maven.wagon:wagon-ssh:2.2'
+    deployerJars 'org.apache.maven.wagon:wagon-ssh:2.10'
 }
 
 project.ext {
@@ -90,10 +94,10 @@ description = "FTB moderation bot for CurseApp"
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
-shadowJar  {
-  exclude 'META-INF/*.DSA'
-  exclude 'META-INF/*.RSA'
-  classifier = 'all'
+shadowJar {
+    exclude 'META-INF/*.DSA'
+    exclude 'META-INF/*.RSA'
+    classifier = 'all'
 }
 build.dependsOn(shadowJar)
 
@@ -121,28 +125,29 @@ artifacts {
     archives sourceJar
     archives javadocJar
 }
+
 def gitSha() {
     return 'git rev-parse HEAD'.execute().text.trim()
 }
 
 if (project.hasProperty("local_maven")) {
-	apply plugin: 'maven'
-        uploadArchives {
-            repositories {
-                mavenDeployer {
-                    repository(url: "file://${local_maven}")
+    apply plugin: 'maven'
+    uploadArchives {
+        repositories {
+            mavenDeployer {
+                repository(url: "file://${local_maven}")
             }
         }
     }
 }
 if (project.hasProperty("remote_maven") && project.hasProperty("sftp_pass")) {
-        apply plugin: 'maven'
-        uploadArchives {
-            repositories.mavenDeployer {
-                configuration = configurations.deployerJars
-                repository(url: "sftp://${remote_maven}") {
-                    authentication(userName: "${ftp_username}", password: "${sftp_pass}")
-                }
+    apply plugin: 'maven'
+    uploadArchives {
+        repositories.mavenDeployer {
+            configuration = configurations.deployerJars
+            repository(url: "sftp://${remote_maven}") {
+                authentication(userName: "${ftp_username}", password: "${sftp_pass}")
             }
         }
     }
+}
