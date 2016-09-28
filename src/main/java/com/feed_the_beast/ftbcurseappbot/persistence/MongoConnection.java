@@ -80,9 +80,7 @@ public class MongoConnection {
             }
             ch.qos.logback.classic.Logger mcluster =
                     (ch.qos.logback.classic.Logger) LoggerFactory.getLogger("org.mongodb.driver.cluster");
-            log.info("setting mogno cluster logger to info level, currently {}", mcluster.getLevel().toString());
             mcluster.setLevel(Level.INFO);
-            log.info("mogno cluster logger debug is now", LoggerFactory.getLogger("org.mongodb.driver.cluster").isDebugEnabled());
 
         }
     }
