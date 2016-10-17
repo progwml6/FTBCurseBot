@@ -20,4 +20,8 @@
         <appender-ref ref="STDOUT" />
         <appender-ref ref="FILE" />
     </root>
+    <logger name="org.mongodb.driver.cluster" level="INFO" />
+    <logger name="org.eclipse.jetty.server.session.HashSessionManager" level="INFO" />
+
+
 </configuration>

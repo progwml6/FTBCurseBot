@@ -22,6 +22,7 @@ public class GHStatus extends StatusCommandBase {
     private static StatusMessage message;
     private boolean statusChanged = false;
     private boolean messageChanged = false;
+
     public GHStatus () {
         instance = this;
     }
@@ -80,14 +81,18 @@ public class GHStatus extends StatusCommandBase {
                 message = lastMessage;
             }
             if (apiStatus.equals(status)) {
-                log.debug("gh status hasn't changed");
+                if (Config.isDebugEnabled()) {
+                    log.debug("gh status hasn't changed");
+                }
                 statusChanged = false;
             } else {
                 log.info("ghstatus changed");
                 statusChanged = true;
             }
             if (message.equals(lastMessage)) {
-                log.debug("lastMessage is the same from GH");
+                if (Config.isDebugEnabled()) {
+                    log.debug("lastMessage is the same from GH");
+                }
                 messageChanged = false;
             } else {
                 log.info("ghMessage changed");

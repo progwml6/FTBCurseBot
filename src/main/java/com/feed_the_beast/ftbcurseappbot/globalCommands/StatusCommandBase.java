@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbcurseappbot.globalCommands;
 
+import com.feed_the_beast.ftbcurseappbot.Config;
 import com.feed_the_beast.ftbcurseappbot.Main;
 import com.feed_the_beast.javacurselib.service.contacts.contacts.ContactsResponse;
 import com.feed_the_beast.javacurselib.utils.CurseGUID;
@@ -30,7 +31,9 @@ public abstract class StatusCommandBase extends CommandBase {
 
     public void sendServiceStatusNotifications (@Nonnull ContactsResponse cr, @Nonnull WebSocket ws, @Nonnull String message, @Nonnull java.util.Optional<List<String>> channelsEnabled) {
         if (message.isEmpty()) {
-            log.info("no change in {} health status", getService());
+            if (Config.isDebugEnabled()) {
+                log.debug("no change in {} health status", getService());
+            }
             return;
         }
         if (channelsEnabled.isPresent()) {
@@ -41,6 +44,7 @@ public abstract class StatusCommandBase extends CommandBase {
                     String[] g = s.split("\\.");
                     Optional<CurseGUID> ci = Main.getCacheService().getContacts().get().getChannelIdbyNames(g[0], g[1], true);
                     if (ci.isPresent()) {
+                        log.debug("sending status change for {} to {} guid: {}", getService(), s, ci.get().serialize());
                         ws.sendMessage(ci.get(), message);
                     } else {
                         log.error("no channel id exists for {} {}", g[0], g[1]);

@@ -78,10 +78,6 @@ public class MongoConnection {
                 log.info("database needs to be migrated from version {} to {}", info.getVersion(), current.getVersion());
                 migrate(info, current);
             }
-            ch.qos.logback.classic.Logger mcluster =
-                    (ch.qos.logback.classic.Logger) LoggerFactory.getLogger("org.mongodb.driver.cluster");
-            mcluster.setLevel(Level.INFO);
-
         }
     }
 
