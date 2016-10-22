@@ -24,6 +24,8 @@ public class Config {
     @Getter
     private static Optional<List<String>> cFStatusChangeNotificationsEnabled = Optional.empty();
     @Getter
+    private static Optional<List<String>> dynStatusChangeNotificationsEnabled = Optional.empty();
+    @Getter
     private static Optional<List<String>> mcStatusChangeNotificationsEnabled = Optional.empty();
     @Getter
     private static Optional<List<String>> gHStatusChangeNotificationsEnabled = Optional.empty();
@@ -49,6 +51,11 @@ public class Config {
             cFStatusChangeNotificationsEnabled = Optional.ofNullable(config.getNode("botSettings", "CFStatusChangeNotificationsEnabled").getList(TypeToken.of(String.class)));
         } catch (ObjectMappingException e) {
             log.error("couldn't map bot settings - cf", e);
+        }
+        try {
+            dynStatusChangeNotificationsEnabled = Optional.ofNullable(config.getNode("botSettings", "DynStatusChangeNotificationsEnabled").getList(TypeToken.of(String.class)));
+        } catch (ObjectMappingException e) {
+            log.error("couldn't map bot settings - dyn", e);
         }
         try {
             gHStatusChangeNotificationsEnabled = Optional.ofNullable(config.getNode("botSettings", "GHStatusChangeNotificationsEnabled").getList(TypeToken.of(String.class)));

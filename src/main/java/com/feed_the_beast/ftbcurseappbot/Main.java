@@ -6,6 +6,7 @@ import com.feed_the_beast.ftbcurseappbot.persistence.CacheService;
 import com.feed_the_beast.ftbcurseappbot.persistence.MongoConnection;
 import com.feed_the_beast.ftbcurseappbot.runnables.BBStatusChecker;
 import com.feed_the_beast.ftbcurseappbot.runnables.CFStatusChecker;
+import com.feed_the_beast.ftbcurseappbot.runnables.DynStatusChecker;
 import com.feed_the_beast.ftbcurseappbot.runnables.GHStatusChecker;
 import com.feed_the_beast.ftbcurseappbot.runnables.McStatusChecker;
 import com.feed_the_beast.ftbcurseappbot.runnables.TravisStatusChecker;
@@ -142,6 +143,7 @@ public class Main {
         CommandRegistry.registerBaseCommands();
         scheduledTasks.scheduleAtFixedRate(new BBStatusChecker(webSocket), 0, CHECKER_POLL_TIME, TimeUnit.SECONDS);
         scheduledTasks.scheduleAtFixedRate(new CFStatusChecker(webSocket), 0, CHECKER_POLL_TIME, TimeUnit.SECONDS);
+        scheduledTasks.scheduleAtFixedRate(new DynStatusChecker(webSocket), 0, CHECKER_POLL_TIME * 4, TimeUnit.SECONDS);
         scheduledTasks.scheduleAtFixedRate(new GHStatusChecker(webSocket), 0, CHECKER_POLL_TIME, TimeUnit.SECONDS);
         scheduledTasks.scheduleAtFixedRate(new McStatusChecker(webSocket), 0, CHECKER_POLL_TIME, TimeUnit.SECONDS);
         scheduledTasks.scheduleAtFixedRate(new TravisStatusChecker(webSocket), 0, CHECKER_POLL_TIME, TimeUnit.SECONDS);

@@ -12,7 +12,8 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 
 public class CustomCommands extends CommandBase {
-    @Override public void onMessage (WebSocket webSocket, ConversationMessageNotification msg) {
+    @Override
+    public void onMessage (WebSocket webSocket, ConversationMessageNotification msg) {
         Optional<List<MongoCommand>> commands = Main.getCacheService().getCustomCommandsForServer(msg.rootConversationID);
         String ret;
         if (!commands.isPresent()) {//check mongo if nothing exists for the server
@@ -42,11 +43,13 @@ public class CustomCommands extends CommandBase {
         webSocket.sendMessage(msg.conversationID, ret);
     }
 
-    @Override public Pattern getTriggerRegex () {
+    @Override
+    public Pattern getTriggerRegex () {
         return getSimpleCommand("customcommands");
     }
 
-    @Override public String getHelp () {
+    @Override
+    public String getHelp () {
         return "lists custom commands on the server";
     }
 }
