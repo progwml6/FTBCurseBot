@@ -15,11 +15,11 @@ public class Help extends CommandBase {
         log.info("help " + msg.senderName);
         webSocket.sendMessage(msg.conversationID,
                 "commands are: " + Config.getBotTrigger() + "ban, " + Config.getBotTrigger() + "bbstatus, " + Config.getBotTrigger() + "cfstatus, " + Config.getBotTrigger() + "chatformatting, "
-                        + Config.getBotTrigger() + "customcommands, " + Config.getBotTrigger() + "delcmd, " + Config.getBotTrigger() + "ftbfaq, " + Config.getBotTrigger() + "ghstatus, " + Config
-                        .getBotTrigger() + "ftbbot, " + Config.getBotTrigger() + "help, " + Config.getBotTrigger() + "haspaidmc, " + Config.getBotTrigger() + "ipban, " + Config.getBotTrigger()
-                        + "kick, " + Config.getBotTrigger() + "repeat, " + Config.getBotTrigger() + "mcstatus, " + Config.getBotTrigger() + "mcuuid, " + Config.getBotTrigger() + "shorten, " + Config
-                        .getBotTrigger() + "setcmd, " + Config.getBotTrigger() + "mcdrama, " + Config.getBotTrigger() + "travisstatus, " + Config.getBotTrigger() + "twitchstatus, " + Config
-                        .getBotTrigger() + "api");
+                        + Config.getBotTrigger() + "cfstatus, " + Config.getBotTrigger() + "customcommands, " + Config.getBotTrigger() + "delcmd, " + Config.getBotTrigger() + "dynstatus, " + Config
+                        .getBotTrigger() + "ftbbot, " + Config.getBotTrigger() + "ftbfaq, " + Config.getBotTrigger() + "ghstatus, " + Config.getBotTrigger() + "help, " + Config.getBotTrigger()
+                        + "haspaidmc, " + Config.getBotTrigger() + "ipban, " + Config.getBotTrigger() + "kick, " + Config.getBotTrigger() + "repeat, " + Config.getBotTrigger() + "mcstatus, " + Config
+                        .getBotTrigger() + "mcuuid, " + Config.getBotTrigger() + "shorten, " + Config.getBotTrigger() + "setcmd, " + Config.getBotTrigger() + "mcdrama, " + Config.getBotTrigger()
+                        + "travisstatus, " + Config.getBotTrigger() + "twitchstatus, " + Config.getBotTrigger() + "api");
     }
 
     @Override

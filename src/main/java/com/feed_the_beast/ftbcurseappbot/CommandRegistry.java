@@ -6,6 +6,7 @@ import com.feed_the_beast.ftbcurseappbot.globalCommands.Ban;
 import com.feed_the_beast.ftbcurseappbot.globalCommands.CFStatus;
 import com.feed_the_beast.ftbcurseappbot.globalCommands.ChatFormatting;
 import com.feed_the_beast.ftbcurseappbot.globalCommands.Commands;
+import com.feed_the_beast.ftbcurseappbot.globalCommands.Curseuuid;
 import com.feed_the_beast.ftbcurseappbot.globalCommands.CustomCommands;
 import com.feed_the_beast.ftbcurseappbot.globalCommands.DelCmd;
 import com.feed_the_beast.ftbcurseappbot.globalCommands.DynStatus;
@@ -112,6 +113,7 @@ public class CommandRegistry {
         new Ban();
         new BBStatus();
         new CFStatus();
+        new Curseuuid();
         new DynStatus();
         new ChatFormatting();
         new Commands();
