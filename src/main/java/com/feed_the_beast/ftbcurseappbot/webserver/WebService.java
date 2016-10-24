@@ -25,9 +25,7 @@ public class WebService {
         if (Config.isDebugEnabled()) {
             enableDebugScreen();
         }
-        get("/health", "application/json", (request, response) -> {
-            return new HealthEndpoint();
-        }, new JsonTransformer());
+        get("/health", "application/json", (request, response) -> new HealthEndpoint(), new JsonTransformer());
         String cmtest = "## Commonmark Parser > Web :D\n"
                 + "### It will probably be used for help pages\n"
                 + "This is rendered into html from commonmark inside FTBBot.  This is powered by\n"

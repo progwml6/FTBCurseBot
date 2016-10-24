@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbcurseappbot.persistence;
 
-import ch.qos.logback.classic.Level;
 import com.feed_the_beast.ftbcurseappbot.Config;
 import com.feed_the_beast.ftbcurseappbot.Main;
 import com.feed_the_beast.ftbcurseappbot.persistence.data.ModerationLog;
@@ -18,7 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import org.jongo.Jongo;
 import org.jongo.MongoCursor;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;

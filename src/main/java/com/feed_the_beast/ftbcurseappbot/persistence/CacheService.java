@@ -47,62 +47,50 @@ public class CacheService {
         grouproledetails = Caffeine.newBuilder()
                 .maximumSize(1000)
                 .expireAfterWrite(5, TimeUnit.MINUTES)
-                .build(new CacheLoader<CurseGUID, List<GroupRoleDetails>>() { // build the cacheloader
-
-                    @Override
-                    public List<GroupRoleDetails> load (@Nonnull CurseGUID serverId) throws Exception {
-                        List<GroupRoleDetails> server = null;
-                        try {
-                            server = Main.getRestUserEndpoints().servers.getServerRoles(serverId).get();
-                        } catch (InterruptedException | ExecutionException e) {
-                            log.error("error getting server roles from curse for server: " + serverId, e);
-                        }
-                        return server;
+                .build(serverId -> {
+                    List<GroupRoleDetails> server = null;
+                    try {
+                        server = Main.getRestUserEndpoints().servers.getServerRoles(serverId).get();
+                    } catch (InterruptedException | ExecutionException e) {
+                        log.error("error getting server roles from curse for server: " + serverId, e);
                     }
+                    return server;
                 });
         groupnotifications = Caffeine.newBuilder()
                 .maximumSize(1000)
                 .expireAfterWrite(5, TimeUnit.MINUTES)
-                .build(new CacheLoader<CurseGUID, GroupNotification>() { // build the cacheloader
-
-                    @Override
-                    public GroupNotification load (@Nonnull CurseGUID serverId) throws Exception {
-                        GroupNotification server = null;
-                        try {
-                            server = Main.getRestUserEndpoints().groups.get(serverId, false).get();
-                        } catch (InterruptedException | ExecutionException e) {
-                            log.error("error getting groupNotification from curse for server: " + serverId, e);
-                        }
-                        return server;
+                .build(serverId -> {
+                    GroupNotification server = null;
+                    try {
+                        server = Main.getRestUserEndpoints().groups.get(serverId, false).get();
+                    } catch (InterruptedException | ExecutionException e) {
+                        log.error("error getting groupNotification from curse for server: " + serverId, e);
                     }
+                    return server;
                 });
         groupmembers = Caffeine.newBuilder()
                 .maximumSize(1000)
                 .expireAfterWrite(5, TimeUnit.MINUTES)
-                .build(new CacheLoader<CurseGUID, List<GroupMemberContract>>() { // build the cacheloader
+                .build(serverId -> {
+                    try {
+                        int page = 1;
+                        GroupMemberSearchRequest request = new GroupMemberSearchRequest(page);
 
-                    @Override
-                    public List<GroupMemberContract> load (@Nonnull CurseGUID serverId) throws Exception {
-                        try {
-                            int page = 1;
-                            GroupMemberSearchRequest request = new GroupMemberSearchRequest(page);
+                        List<GroupMemberContract> members = Main.getRestUserEndpoints().groups.searchMembers(serverId, request).get();
+                        List<GroupMemberContract> allMembers = Lists.newArrayList();
+                        do {
+                            allMembers.addAll(members);
+                            page = page + 1;
+                            request.page = page;
+                            members = Main.getRestUserEndpoints().groups.searchMembers(serverId, request).get();
+                        } while (members.size() > 0);
 
-                            List<GroupMemberContract> members = Main.getRestUserEndpoints().groups.searchMembers(serverId, request).get();
-                            List<GroupMemberContract> allMembers = Lists.newArrayList();
-                            do {
-                                allMembers.addAll(members);
-                                page = page + 1;
-                                request.page = page;
-                                members = Main.getRestUserEndpoints().groups.searchMembers(serverId, request).get();
-                            } while (members.size() > 0);
+                        return allMembers;
 
-                            return allMembers;
-
-                        } catch (InterruptedException | ExecutionException e) {
-                            log.error("error getting server roles from curse for server: " + serverId, e);
-                        }
-                        return null;
+                    } catch (InterruptedException | ExecutionException e) {
+                        log.error("error getting server roles from curse for server: " + serverId, e);
                     }
+                    return null;
                 });
     }
 

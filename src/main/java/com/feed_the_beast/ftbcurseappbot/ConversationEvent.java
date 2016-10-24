@@ -16,7 +16,9 @@ import javax.annotation.Nonnull;
 public class ConversationEvent implements Task<ConversationMessageNotification> {
     @Override
     public void execute (@Nonnull WebSocket webSocket, @Nonnull ConversationMessageNotification msg) {
-        log.info(new Date(msg.timestamp).toString() + " " + msg.body + " " + new Date().toString());
+        if (Config.isDebugEnabled()) {
+            log.debug(new Date(msg.timestamp).toString() + " " + msg.body + " " + new Date().toString());
+        }
         if (msg.notificationType == ConversationNotificationType.NORMAL || msg.notificationType == ConversationNotificationType.EDITED) {
             Optional<ICommandBase> command = CommandRegistry.getCommand(msg.rootConversationID, msg.body);
             if (command.isPresent() && Main.getSession().isPresent() && msg.senderID != Main.getSession().get().user.userID) {//bot cannot execute commands for security reasons
