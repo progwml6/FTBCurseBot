@@ -51,11 +51,13 @@ dependencies {
     compile 'com.sparkjava:spark-debug-tools:0.5' //debugging errors w/ endpoints
     compile 'com.sparkjava:spark-template-mustache:2.3' //webpage templates
 
-    compile 'com.atlassian.commonmark:commonmark:0.7.0'//commonmark markdown lib for java
-    compile 'com.atlassian.commonmark:commonmark-ext-gfm-tables:0.7.0'//tables from GitHub Flavored Markdown
-    compile 'com.atlassian.commonmark:commonmark-ext-gfm-strikethrough:0.7.0'//strikethrough of text
-    compile 'com.atlassian.commonmark:commonmark-ext-heading-anchor:0.7.0'//headings have id's
-    compile 'com.atlassian.commonmark:commonmark-ext-ins:0.7.0'//underlining
+    compile 'com.atlassian.commonmark:commonmark:0.7.1'//commonmark markdown lib for java
+    compile 'com.atlassian.commonmark:commonmark-ext-gfm-tables:0.7.1'//tables from GitHub Flavored Markdown
+    compile 'com.atlassian.commonmark:commonmark-ext-gfm-strikethrough:0.7.1'//strikethrough of text
+    compile 'com.atlassian.commonmark:commonmark-ext-heading-anchor:0.7.1'//headings have id's
+    compile 'com.atlassian.commonmark:commonmark-ext-ins:0.7.1'//underlining
+
+    compile 'rome:rome:1.0' // rss & atom feeds
 
     compile 'org.kohsuke:github-api:1.77'//GH integrations
     compile 'org.slf4j:jcl-over-slf4j:1.7.21'// we don't want commons logging around
