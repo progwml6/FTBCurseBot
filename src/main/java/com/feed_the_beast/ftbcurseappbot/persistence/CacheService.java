@@ -3,6 +3,7 @@ package com.feed_the_beast.ftbcurseappbot.persistence;
 import com.beust.jcommander.internal.Maps;
 import com.feed_the_beast.ftbcurseappbot.Main;
 import com.feed_the_beast.ftbcurseappbot.persistence.data.MongoCommand;
+import com.feed_the_beast.javacurselib.addondumps.AddonDatabase;
 import com.feed_the_beast.javacurselib.common.classes.GroupMemberContract;
 import com.feed_the_beast.javacurselib.service.contacts.contacts.ContactsResponse;
 import com.feed_the_beast.javacurselib.service.contacts.contacts.GroupNotification;
@@ -16,6 +17,7 @@ import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
 import com.google.common.collect.Lists;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
@@ -41,7 +43,10 @@ public class CacheService {
     @Getter
     private Supplier<ContactsResponse> contacts = Suppliers.memoizeWithExpiration(this::getContactsFromURL,
             5, TimeUnit.MINUTES);
-
+    @Getter
+    @Setter
+    @Nullable
+    private AddonDatabase addonDatabase;
     public CacheService () {
         customServerCommands = Maps.newHashMap();
         grouproledetails = Caffeine.newBuilder()

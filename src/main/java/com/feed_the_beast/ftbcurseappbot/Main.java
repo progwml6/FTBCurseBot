@@ -6,6 +6,7 @@ import com.feed_the_beast.ftbcurseappbot.persistence.CacheService;
 import com.feed_the_beast.ftbcurseappbot.persistence.MongoConnection;
 import com.feed_the_beast.ftbcurseappbot.runnables.BBStatusChecker;
 import com.feed_the_beast.ftbcurseappbot.runnables.CFStatusChecker;
+import com.feed_the_beast.ftbcurseappbot.runnables.CurseforgeChecker;
 import com.feed_the_beast.ftbcurseappbot.runnables.DynStatusChecker;
 import com.feed_the_beast.ftbcurseappbot.runnables.GHStatusChecker;
 import com.feed_the_beast.ftbcurseappbot.runnables.McStatusChecker;
@@ -148,7 +149,7 @@ public class Main {
         scheduledTasks.scheduleAtFixedRate(new McStatusChecker(webSocket), 0, CHECKER_POLL_TIME, TimeUnit.SECONDS);
         scheduledTasks.scheduleAtFixedRate(new TravisStatusChecker(webSocket), 0, CHECKER_POLL_TIME, TimeUnit.SECONDS);
         scheduledTasks.scheduleAtFixedRate(new TwitchStatusChecker(webSocket), 0, CHECKER_POLL_TIME * 4, TimeUnit.SECONDS);
-
+        scheduledTasks.scheduleAtFixedRate(new CurseforgeChecker(webSocket), 0, CHECKER_POLL_TIME * 2, TimeUnit.SECONDS);
         cacheService = new CacheService();
 
         webSocket.addTask(new ConversationEvent(), NotificationsServiceContractType.CONVERSATION_MESSAGE_NOTIFICATION);
