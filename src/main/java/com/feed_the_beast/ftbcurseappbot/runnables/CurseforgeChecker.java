@@ -39,7 +39,7 @@ public class CurseforgeChecker implements Runnable {
             String result = "";
             if (!initialized) {
                 initialized = true;
-                Main.getCacheService().setAddonDatabase(Bz2Data.getDatabase(Bz2Data.MC_GAME_ID, DatabaseType.COMPLETE));
+                Main.getCacheService().setAddonDatabase(Bz2Data.getInitialDatabase(Bz2Data.MC_GAME_ID));
                 String size = "";
                 long timestamp = -1;
                 if (Main.getCacheService().getAddonDatabase() == null || Main.getCacheService().getAddonDatabase().data == null) {
@@ -55,6 +55,11 @@ public class CurseforgeChecker implements Runnable {
             } else {
                 MergedDatabase db = Bz2Data.updateCompleteDatabaseIfNeeded(Main.getCacheService().getAddonDatabase(), Bz2Data.MC_GAME_ID);
                 if (db.changes != null) {
+                    String dbt = "";
+                    for (DatabaseType d : db.newDBTypes) {
+                        dbt += d.getStringForUrl() + " ";
+                    }
+                    log.debug(db.changes.data.size() + "curseforge changes detected " + dbt);
                     changed = true;
                     result = "Curse Updates: ";
                     String mods = "";
@@ -111,10 +116,11 @@ public class CurseforgeChecker implements Runnable {
                 }
             }
             if (changed) {
-                log.debug("curseforge changes detected");
                 sendServiceStatusNotifications(Main.getCacheService().getContacts().get(), webSocket, result, this.channelsEnabled);
             } else {
-                log.debug("No curseforge change detected db_timestamp: " + Main.getCacheService().getAddonDatabase().timestamp + " Now: " + new Date().getTime());
+                long now = new Date().getTime();
+                log.debug("No curseforge change detected db_timestamp: " + Main.getCacheService().getAddonDatabase().timestamp + " Now: " + now + "Diff: " + (now - Main.getCacheService()
+                        .getAddonDatabase().timestamp));
             }
         } catch (Exception e) {
             log.error("curseforge checker exception", e);
