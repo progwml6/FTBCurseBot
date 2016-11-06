@@ -118,7 +118,7 @@ public class CurseforgeChecker implements Runnable {
                     for (DatabaseType d : db.newDBTypes) {
                         dbt += d.getStringForUrl() + " ";
                     }
-                    log.debug(db.changes.data.size() + "curseforge changes detected " + dbt);
+                    log.debug(db.changes.data.size() + " curseforge changes detected " + dbt);
                     changed = true;
                     result = base;
                     result += getTextForType("Mods", db.changes);
@@ -131,14 +131,16 @@ public class CurseforgeChecker implements Runnable {
                                 String toSend = base + getTextForType(m.getType(), ret);
                                 webSocket.sendMessage(m.getChannelIDAsGUID(), toSend);
                             } else {
-                                log.debug(m.get_id().toString());
-                                List<Addon> ret = Filtering.byAuthor(m.getAuthor(), db.changes);
-                                AddonDatabase d = new AddonDatabase();
-                                d.data = ret;
-                                d.timestamp = db.changes.timestamp;
-                                String toSend = base + getTextForType("Mods", d) + getTextForType("Modpacks", d) + getTextForType("Texture Packs", d);
-                                webSocket.sendMessage(m.getChannelIDAsGUID(), toSend);
-
+                                if (m.getAuthor() == null) {
+                                    log.debug(m.get_id().toString());
+                                } else {
+                                    List<Addon> ret = Filtering.byAuthor(m.getAuthor(), db.changes);
+                                    AddonDatabase d = new AddonDatabase();
+                                    d.data = ret;
+                                    d.timestamp = db.changes.timestamp;
+                                    String toSend = base + getTextForType("Mods", d) + getTextForType("Modpacks", d) + getTextForType("Texture Packs", d);
+                                    webSocket.sendMessage(m.getChannelIDAsGUID(), toSend);
+                                }
                             }
                         }
                     }
