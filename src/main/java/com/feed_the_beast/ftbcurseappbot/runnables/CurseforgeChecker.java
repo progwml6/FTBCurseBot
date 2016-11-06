@@ -7,11 +7,13 @@ import com.feed_the_beast.javacurselib.addondumps.Addon;
 import com.feed_the_beast.javacurselib.addondumps.Bz2Data;
 import com.feed_the_beast.javacurselib.addondumps.DatabaseType;
 import com.feed_the_beast.javacurselib.addondumps.MergedDatabase;
+import com.feed_the_beast.javacurselib.addondumps.ReleaseType;
 import com.feed_the_beast.javacurselib.service.contacts.contacts.ContactsResponse;
 import com.feed_the_beast.javacurselib.utils.CurseGUID;
 import com.feed_the_beast.javacurselib.websocket.WebSocket;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -52,7 +54,7 @@ public class CurseforgeChecker implements Runnable {
                         if (mods.isEmpty()) {
                             mods += "Mods: ";
                         }
-                        mods += a.name + " for minecraft: ";
+                        mods += a.name + getFeed(a.latestFiles.get(0).releaseType) + " for minecraft: ";
                         for (String s : a.latestFiles.get(0).gameVersion) {
                             if (!mods.endsWith(", ") || mods.endsWith(": ")) {
                                 mods += ", ";
@@ -63,7 +65,7 @@ public class CurseforgeChecker implements Runnable {
                         if (tps.isEmpty()) {
                             tps += "Resource Packs: ";
                         }
-                        tps += a.name + " for minecraft: ";
+                        tps += a.name + getFeed(a.latestFiles.get(0).releaseType) + " for minecraft: ";
                         for (String s : a.latestFiles.get(0).gameVersion) {
                             if (!tps.endsWith(", ") || tps.endsWith(": ")) {
                                 tps += ", ";
@@ -75,7 +77,7 @@ public class CurseforgeChecker implements Runnable {
                         if (packs.isEmpty()) {
                             packs += "ModPacks: ";
                         }
-                        packs += a.name + " for minecraft: ";
+                        packs += a.name + getFeed(a.latestFiles.get(0).releaseType) + " for minecraft: ";
                         for (String s : a.latestFiles.get(0).gameVersion) {
                             if (!packs.endsWith(", ") || packs.endsWith(": ")) {
                                 packs += ", ";
@@ -86,11 +88,11 @@ public class CurseforgeChecker implements Runnable {
                     }
                 }
                 result += mods;
-                if(!result.endsWith(": ")) {
+                if (!result.endsWith(": ")) {
                     result += ", ";
                 }
                 result += packs;
-                if(!result.endsWith(": ") || !result.endsWith(", ")) {
+                if (!result.endsWith(": ") || !result.endsWith(", ")) {
                     result += ", ";
                 }
                 result += tps;
@@ -98,7 +100,23 @@ public class CurseforgeChecker implements Runnable {
             }
         }
         if (changed) {
+            log.debug("curseforge changes detected");
             sendServiceStatusNotifications(Main.getCacheService().getContacts().get(), webSocket, result, this.channelsEnabled);
+        } else {
+            log.debug("No curseforge change detected + db_timestamp: " + Main.getCacheService().getAddonDatabase().timestamp + " Now: " + new Date().getTime());
+        }
+    }
+
+    public static String getFeed (ReleaseType r) {
+        switch (r) {
+        case ALPHA:
+            return " alpha";
+        case BETA:
+            return " beta";
+        case RELEASE:
+            return " release";
+        default:
+            return " UNKNOWN " + r.getValue();
         }
     }
 
