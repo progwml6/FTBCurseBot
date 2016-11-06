@@ -4,6 +4,7 @@ import com.feed_the_beast.ftbcurseappbot.Config;
 import com.feed_the_beast.ftbcurseappbot.Main;
 import com.feed_the_beast.ftbcurseappbot.persistence.data.ModerationLog;
 import com.feed_the_beast.ftbcurseappbot.persistence.data.MongoCommand;
+import com.feed_the_beast.ftbcurseappbot.persistence.data.MongoCurseforgeCheck;
 import com.feed_the_beast.ftbcurseappbot.persistence.data.VersionInfo;
 import com.feed_the_beast.javacurselib.common.enums.GroupPermissions;
 import com.feed_the_beast.javacurselib.utils.CurseGUID;
@@ -128,16 +129,77 @@ public class MongoConnection {
         jongo.getCollection(MONGO_COMMANDS_COLLECTION).save(command);
     }
 
-    /**
-     *
-     * @param regex command regex
-     * @param serverID curse server ID
-     * @param usesTrigger uses the bot's trigger if true like simple commands, if false this is a regex based command
-     */
-    //TODO make sure to setup mongo indexes for some of this to speed up searching
+    public static void createOrModifyCurseCheckForChannel (@Nonnull String author, @Nullable String type, @Nonnull CurseGUID serverID, @Nonnull CurseGUID channelID) {
+        String typesearch = "";
+        if (type != null) {
+            typesearch = ", type: '" + type;
+        }
+        MongoCurseforgeCheck check = jongo.getCollection(MONGO_CURSECHECKS_COLLECTION)
+                .findOne("{author:'" + author + typesearch + ", serverID: '" + serverID.serialize() + "', channelID:" + channelID.serialize() + "'}")
+                .as(MongoCurseforgeCheck.class);
+        if (check == null) {
+            check = new MongoCurseforgeCheck(author, type, serverID, channelID);
+        } else {
+            //good already
+        }
+        String tp2 = type;
+        if (tp2 == null) {
+            tp2 = "";
+        }
+        log.info("setting check '{}' type '{}' on server {} on channel {}", author, tp2, serverID.serialize(), channelID.serialize());
+        jongo.getCollection(MONGO_CURSECHECKS_COLLECTION).save(check);
+    }
+
     public static void removeCommandForServer (@Nonnull String regex, @Nonnull CurseGUID serverID, boolean usesTrigger) {
-        log.info("setting removing command '{}' on server {}  usesTrigger {}", regex, serverID.serialize(), usesTrigger);
+        log.info("removing command '{}' on server {}  usesTrigger {}", regex, serverID.serialize(), usesTrigger);
         jongo.getCollection(MONGO_COMMANDS_COLLECTION).remove("{regex:'" + regex + "', usesTrigger:" + usesTrigger + ", serverID: '" + serverID.serialize() + "'}");
+    }
+
+
+    public static void removeCurseforgeCheckFromServer (@Nonnull String author, @Nullable String type, @Nonnull CurseGUID serverID, @Nonnull CurseGUID channelID) {
+        String tp2 = type;
+        if (tp2 == null) {
+            tp2 = "";
+        }
+        log.info("removing check '{}'  '{}' on server {}  channel {}", author, tp2, serverID.serialize(), channelID.serialize());
+        String typesearch = "";
+        if (type != null) {
+            typesearch = ", type: '" + type;
+        }
+        jongo.getCollection(MONGO_CURSECHECKS_COLLECTION).remove("{author:'" + author + typesearch + ", serverID: '" + serverID.serialize() + "', channelID:" + channelID.serialize() + "'}");
+    }
+
+    public static Optional<List<MongoCurseforgeCheck>> getCurseChecks () {
+        try {
+            List<MongoCurseforgeCheck> commandRet = new ArrayList<>();
+            MongoCursor<MongoCurseforgeCheck> commands = jongo.getCollection(MONGO_COMMANDS_COLLECTION).find()
+                    .as(MongoCurseforgeCheck.class);
+            while (commands.hasNext()) {
+                commandRet.add(commands.next());
+            }
+            commands.close();
+            return Optional.of(commandRet);
+        } catch (IOException | NullPointerException e) {
+            log.error("error getting checks", e);
+            return Optional.empty();
+        }
+    }
+
+    public static Optional<List<MongoCurseforgeCheck>> getCurseChecksForAuthor (@Nonnull String author) {
+        try {
+            List<MongoCurseforgeCheck> commandRet = new ArrayList<>();
+            MongoCursor<MongoCurseforgeCheck> commands = jongo.getCollection(MONGO_COMMANDS_COLLECTION).find("{author: '" + author + "'}")
+                    .as(MongoCurseforgeCheck.class);
+            while (commands.hasNext()) {
+                commandRet.add(commands.next());
+            }
+            commands.close();
+            return Optional.of(commandRet);
+        } catch (IOException | NullPointerException e) {
+            log.error("error getting checks", e);
+            return Optional.empty();
+        }
+
     }
 
     @Nonnull
@@ -167,6 +229,9 @@ public class MongoConnection {
         //mongo supports bulk updates ... they are MUCH faster than iterating through the DB
         if (dbVersion.getVersion() == 0) {
             jongo.getCollection(MONGO_COMMANDS_COLLECTION).ensureIndex("{ serverID: 1 }");
+        }
+        if (dbVersion.getVersion() < 2) {
+            jongo.getCollection(MONGO_CURSECHECKS_COLLECTION).ensureIndex("{author: 1}");
         }
         //do this last
         dbVersion.setVersion(expected.getVersion());

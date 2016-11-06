@@ -14,8 +14,9 @@ public class Help extends CommandBase {
     public void onMessage (WebSocket webSocket, ConversationMessageNotification msg) {
         log.info("help " + msg.senderName);
         webSocket.sendMessage(msg.conversationID,
-                "commands are: " + Config.getBotTrigger() + "ban, " + Config.getBotTrigger() + "bbstatus, " + Config.getBotTrigger() + "cfstatus, " + Config.getBotTrigger() + "chatformatting, "
-                        + Config.getBotTrigger() + "cfstatus, " + Config.getBotTrigger() + "curseuuid, " + Config.getBotTrigger() + "customcommands, " + Config.getBotTrigger() + "delcmd, " + Config
+                "commands are: " + Config.getBotTrigger() + "addcursecheck, " + Config.getBotTrigger() + "ban, " + Config.getBotTrigger() + "bbstatus, " + Config.getBotTrigger() + "cfstatus, "
+                        + Config.getBotTrigger() + "chatformatting, " + Config.getBotTrigger() + "cfstatus, " + Config.getBotTrigger() + "curseuuid, " + Config.getBotTrigger() + "customcommands, "
+                        + Config.getBotTrigger() + "delcmd, " + Config.getBotTrigger() + "delcursecheck, " + Config
                         .getBotTrigger() + "dynstatus, " + Config.getBotTrigger() + "ftbbot, " + Config.getBotTrigger() + "ftbfaq, " + Config.getBotTrigger() + "ghstatus, " + Config.getBotTrigger()
                         + "help, " + Config.getBotTrigger() + "haspaidmc, " + Config.getBotTrigger() + "ipban, " + Config.getBotTrigger() + "kick, " + Config.getBotTrigger() + "repeat, " + Config
                         .getBotTrigger() + "mcstatus, " + Config.getBotTrigger() + "mcuuid, " + Config.getBotTrigger() + "shorten, " + Config.getBotTrigger() + "setcmd, " + Config.getBotTrigger()

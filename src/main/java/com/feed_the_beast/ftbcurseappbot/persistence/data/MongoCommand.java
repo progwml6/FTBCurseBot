@@ -16,9 +16,6 @@ import java.util.regex.Pattern;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-/**
- * Created by progwml6 on 7/2/16.
- */
 public class MongoCommand {
     @Getter
     @Setter

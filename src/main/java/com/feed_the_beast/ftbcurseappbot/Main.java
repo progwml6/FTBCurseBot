@@ -142,6 +142,7 @@ public class Main {
             System.exit(0);
         }
         CommandRegistry.registerBaseCommands();
+        cacheService = new CacheService();
         scheduledTasks.scheduleAtFixedRate(new BBStatusChecker(webSocket), 0, CHECKER_POLL_TIME, TimeUnit.SECONDS);
         scheduledTasks.scheduleAtFixedRate(new CFStatusChecker(webSocket), 0, CHECKER_POLL_TIME, TimeUnit.SECONDS);
         scheduledTasks.scheduleAtFixedRate(new DynStatusChecker(webSocket), 0, CHECKER_POLL_TIME * 4, TimeUnit.SECONDS);
@@ -150,7 +151,6 @@ public class Main {
         scheduledTasks.scheduleAtFixedRate(new TravisStatusChecker(webSocket), 0, CHECKER_POLL_TIME, TimeUnit.SECONDS);
         scheduledTasks.scheduleAtFixedRate(new TwitchStatusChecker(webSocket), 0, CHECKER_POLL_TIME * 4, TimeUnit.SECONDS);
         scheduledTasks.scheduleAtFixedRate(new CurseforgeChecker(webSocket), 0, CHECKER_POLL_TIME * 2, TimeUnit.SECONDS);
-        cacheService = new CacheService();
 
         webSocket.addTask(new ConversationEvent(), NotificationsServiceContractType.CONVERSATION_MESSAGE_NOTIFICATION);
         if (Config.isDebugEnabled()) {

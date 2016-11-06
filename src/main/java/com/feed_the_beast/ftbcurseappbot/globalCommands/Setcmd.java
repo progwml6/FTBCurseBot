@@ -12,9 +12,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
-/**
- * Created by progwml6 on 7/2/16.
- */
 public class Setcmd extends CommandBase {
     @Override public void onMessage (WebSocket webSocket, ConversationMessageNotification msg) {
         if (msg.senderPermissions.contains(GroupPermissions.BAN_USER)) { //for now don't let everyone create commands
@@ -52,6 +49,6 @@ public class Setcmd extends CommandBase {
     }
 
     @Override public String getHelp () {
-        return null;
+        return "setcmd <!name> <text>";
     }
 }

@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbcurseappbot;
 
 import com.feed_the_beast.ftbcurseappbot.api.ICommandBase;
+import com.feed_the_beast.ftbcurseappbot.globalCommands.AddCurseCheck;
 import com.feed_the_beast.ftbcurseappbot.globalCommands.BBStatus;
 import com.feed_the_beast.ftbcurseappbot.globalCommands.Ban;
 import com.feed_the_beast.ftbcurseappbot.globalCommands.CFStatus;
@@ -9,6 +10,7 @@ import com.feed_the_beast.ftbcurseappbot.globalCommands.Commands;
 import com.feed_the_beast.ftbcurseappbot.globalCommands.Curseuuid;
 import com.feed_the_beast.ftbcurseappbot.globalCommands.CustomCommands;
 import com.feed_the_beast.ftbcurseappbot.globalCommands.DelCmd;
+import com.feed_the_beast.ftbcurseappbot.globalCommands.DelCurseCheck;
 import com.feed_the_beast.ftbcurseappbot.globalCommands.DynStatus;
 import com.feed_the_beast.ftbcurseappbot.globalCommands.FTBBot;
 import com.feed_the_beast.ftbcurseappbot.globalCommands.FTBFaq;
@@ -110,6 +112,7 @@ public class CommandRegistry {
 
     public static void registerBaseCommands () {
         log.info("registering base commands");
+        new AddCurseCheck();
         new Ban();
         new BBStatus();
         new CFStatus();
@@ -119,6 +122,7 @@ public class CommandRegistry {
         new Commands();
         new CustomCommands();
         new DelCmd();
+        new DelCurseCheck();
         new FTBBot();
         new FTBFaq();
         new GHStatus();
