@@ -51,9 +51,6 @@ public class CurseforgeChecker implements Runnable {
 
     private static String getChangeTextForAddon (@Nonnull Addon a) {
         String ret = "";
-        if (!ret.endsWith(", ") && !ret.endsWith(": ")) {
-            ret += " ";
-        }
         ret += a.name + getFeed(a.latestFiles.get(0).releaseType) + " for MC: ";
         for (String s : a.latestFiles.get(0).gameVersion) {
             if (!ret.endsWith(", ") && !ret.endsWith(": ")) {
@@ -72,6 +69,9 @@ public class CurseforgeChecker implements Runnable {
         if (!lst.isEmpty()) {
             result += ChatFormatter.bold(type) + ": ";
             for (Addon a : lst) {
+                if(!result.endsWith(": ") && !result.endsWith(", ")) {
+                    result += ", ";
+                }
                 result += getChangeTextForAddon(a);
             }
             if (!result.endsWith(" ")) {
