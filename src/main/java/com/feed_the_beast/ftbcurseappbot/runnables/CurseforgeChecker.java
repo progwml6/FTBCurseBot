@@ -3,12 +3,17 @@ package com.feed_the_beast.ftbcurseappbot.runnables;
 import com.beust.jcommander.internal.Lists;
 import com.feed_the_beast.ftbcurseappbot.Config;
 import com.feed_the_beast.ftbcurseappbot.Main;
+import com.feed_the_beast.ftbcurseappbot.persistence.MongoConnection;
+import com.feed_the_beast.ftbcurseappbot.persistence.data.MongoCurseforgeCheck;
 import com.feed_the_beast.javacurselib.addondumps.Addon;
+import com.feed_the_beast.javacurselib.addondumps.AddonDatabase;
 import com.feed_the_beast.javacurselib.addondumps.Bz2Data;
 import com.feed_the_beast.javacurselib.addondumps.DatabaseType;
+import com.feed_the_beast.javacurselib.addondumps.Filtering;
 import com.feed_the_beast.javacurselib.addondumps.MergedDatabase;
 import com.feed_the_beast.javacurselib.addondumps.ReleaseType;
 import com.feed_the_beast.javacurselib.service.contacts.contacts.ContactsResponse;
+import com.feed_the_beast.javacurselib.utils.ChatFormatter;
 import com.feed_the_beast.javacurselib.utils.CurseGUID;
 import com.feed_the_beast.javacurselib.websocket.WebSocket;
 import lombok.extern.slf4j.Slf4j;
@@ -44,12 +49,48 @@ public class CurseforgeChecker implements Runnable {
         }
     }
 
+    private static String getChangeTextForAddon (@Nonnull Addon a) {
+        String ret = "";
+        ret += a.name + getFeed(a.latestFiles.get(0).releaseType) + " for MC: ";
+        for (String s : a.latestFiles.get(0).gameVersion) {
+            if (!ret.endsWith(", ") && !ret.endsWith(": ")) {
+                ret += ", ";
+            }
+            ret += s;
+        }
+        if (!ret.endsWith(", ") && !ret.endsWith(": ")) {
+            ret += " ";
+        }
+        return ret;
+    }
+
+    private static String getTextForType (@Nonnull String type, @Nonnull List<Addon> lst) {
+        String result = "";
+        if (!lst.isEmpty()) {
+            result += ChatFormatter.bold(type) + ": ";
+            for (Addon a : lst) {
+                result += getChangeTextForAddon(a);
+            }
+            if (!result.endsWith(" ")) {
+                result += " ";
+            }
+        }
+        return result;
+    }
+
+    private static String getTextForType (@Nonnull String type, @Nonnull AddonDatabase db) {
+        List<Addon> lst = Filtering.byCategorySection(type, db);
+        return getTextForType(type, lst);
+    }
+
     @Override
     public void run () {
         try {
             boolean changed = false;
             Thread.currentThread().setName("curseforgecheckthread");
             String result = "";
+            String base = ChatFormatter.underscore(ChatFormatter.bold("Curse Updates")) + ": ";
+
             if (!initialized) {
                 initialized = true;
                 Main.getCacheService().setAddonDatabase(Bz2Data.getInitialDatabase(Bz2Data.MC_GAME_ID));
@@ -68,80 +109,38 @@ public class CurseforgeChecker implements Runnable {
             } else {
                 MergedDatabase db = Bz2Data.updateCompleteDatabaseIfNeeded(Main.getCacheService().getAddonDatabase(), Bz2Data.MC_GAME_ID);
                 if (db.changes != null) {
+                    Main.getCacheService().setAddonDatabase(db.currentDatabase);
+                    Optional<List<MongoCurseforgeCheck>> extraChecksList = Optional.of(Lists.newArrayList());
+                    if (MongoConnection.isPersistanceEnabled()) {
+                        extraChecksList = MongoConnection.getCurseChecks();
+                    }
                     String dbt = "";
                     for (DatabaseType d : db.newDBTypes) {
                         dbt += d.getStringForUrl() + " ";
                     }
                     log.debug(db.changes.data.size() + "curseforge changes detected " + dbt);
                     changed = true;
-                    result = "_*Curse Updates*_: ";
-                    String mods = "";
-                    String packs = "";
-                    String tps = "";
-                    for (Addon a : db.changes.data) {
-                        if (a.categorySection.path.equals("mods")) {
-                            if (mods.isEmpty()) {
-                                mods += "*Mods*: ";
+                    result = base;
+                    result += getTextForType("Mods", db.changes);
+                    result += getTextForType("ModPacks", db.changes);
+                    result += getTextForType("Texture Packs", db.changes);
+                    if (extraChecksList.isPresent()) {
+                        for (MongoCurseforgeCheck m : extraChecksList.get()) {
+                            if (m.getType() != null) {
+                                List<Addon> ret = Filtering.byAuthorAndCategorySection(m.getAuthor(), m.getType(), db.changes);
+                                String toSend = base + getTextForType(m.getType(), ret);
+                                webSocket.sendMessage(m.getChannelIDAsGUID(), toSend);
                             } else {
-                                mods += ", ";
-                            }
-                            mods += a.name + getFeed(a.latestFiles.get(0).releaseType) + " for MC: ";
-                            for (String s : a.latestFiles.get(0).gameVersion) {
-                                if (!mods.endsWith(", ") && !mods.endsWith(": ")) {
-                                    mods += ", ";
-                                }
-                                mods += s;
-                            }
-                            if (!mods.endsWith(", ") && !mods.endsWith(": ")) {
-                                mods += " ";
-                            }
+                                List<Addon> ret = Filtering.byAuthor(m.getAuthor(), db.changes);
+                                AddonDatabase d = new AddonDatabase();
+                                d.data = ret;
+                                d.timestamp = db.changes.timestamp;
+                                String toSend = base + getTextForType("Mods", d) + getTextForType("Modpacks", d) + getTextForType("Texture Packs", d);
+                                webSocket.sendMessage(m.getChannelIDAsGUID(), toSend);
 
-                        } else if (a.categorySection.path.equals("resourcepacks")) {
-                            if (tps.isEmpty()) {
-                                tps += "*Resource Packs*: ";
-                            } else {
-                                tps += ", ";
                             }
-                            tps += a.name + getFeed(a.latestFiles.get(0).releaseType) + " for MC: ";
-                            for (String s : a.latestFiles.get(0).gameVersion) {
-                                if (!tps.endsWith(", ") && !tps.endsWith(": ")) {
-                                    tps += ", ";
-                                }
-                                tps += s;
-                            }
-                            if (!tps.endsWith(", ") && !tps.endsWith(": ")) {
-                                tps += " ";
-                            }
-
-                        } else if (a.categorySection.name.equals("Modpacks")) {
-                            if (packs.isEmpty()) {
-                                packs += "*ModPacks*: ";
-                            } else {
-                                packs += ", ";
-                            }
-                            packs += a.name + getFeed(a.latestFiles.get(0).releaseType) + " for MC: ";
-                            for (String s : a.latestFiles.get(0).gameVersion) {
-                                if (!packs.endsWith(", ") && !packs.endsWith(": ")) {
-                                    packs += ", ";
-                                }
-                                packs += s;
-                            }
-                            if (!packs.endsWith(", ") && !packs.endsWith(": ")) {
-                                packs += " ";
-                            }
-
                         }
                     }
-                    result += mods;
-                    if (!result.endsWith(": ")) {
-                        result += ", ";
-                    }
-                    result += packs;
-                    if (!result.endsWith(": ") || !result.endsWith(", ")) {
-                        result += ", ";
-                    }
-                    result += tps;
-                    Main.getCacheService().setAddonDatabase(db.currentDatabase);
                 }
             }
             if (changed) {
@@ -158,7 +157,7 @@ public class CurseforgeChecker implements Runnable {
         }
     }
 
-    public void sendServiceStatusNotifications (@Nonnull ContactsResponse cr, @Nonnull WebSocket ws, @Nonnull String message, @Nonnull java.util.Optional<List<String>> channelsEnabled) {
+    private void sendServiceStatusNotifications (@Nonnull ContactsResponse cr, @Nonnull WebSocket ws, @Nonnull String message, @Nonnull Optional<List<String>> channelsEnabled) {
         if (message.isEmpty()) {
             if (Config.isDebugEnabled()) {
                 log.debug("no CurseForge Updates");
