@@ -39,7 +39,6 @@ public abstract class StatusCommandBase extends CommandBase {
         if (channelsEnabled.isPresent()) {
             log.info("{} has had a status change", getService());
             for (String s : channelsEnabled.get()) {
-                log.info("sending {} change to {}", getService(), s);
                 if (s.contains(".")) {
                     String[] g = s.split("\\.");
                     Optional<CurseGUID> ci = Main.getCacheService().getContacts().get().getChannelIdbyNames(g[0], g[1], true);
