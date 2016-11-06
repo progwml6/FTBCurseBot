@@ -10,7 +10,6 @@ import com.feed_the_beast.javacurselib.service.contacts.contacts.GroupNotificati
 import com.feed_the_beast.javacurselib.service.groups.groups.GroupMemberSearchRequest;
 import com.feed_the_beast.javacurselib.service.groups.servers.GroupRoleDetails;
 import com.feed_the_beast.javacurselib.utils.CurseGUID;
-import com.github.benmanes.caffeine.cache.CacheLoader;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
 import com.google.common.base.Supplier;
