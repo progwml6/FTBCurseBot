@@ -33,76 +33,80 @@ public class CurseforgeChecker implements Runnable {
 
     @Override
     public void run () {
-        boolean changed = false;
-        Thread.currentThread().setName("curseforgecheckthread");
-        String result = "";
-        if (!initialized) {
-            initialized = true;
-            Main.getCacheService().setAddonDatabase(Bz2Data.getDatabase(Bz2Data.MC_GAME_ID, DatabaseType.COMPLETE));
-            log.info("Curseforge Checker Initialized with " +Main.getCacheService().getAddonDatabase().data.size() + " entries timestamp: " + Main.getCacheService().getAddonDatabase().timestamp);
-        } else {
-            MergedDatabase db = Bz2Data.updateCompleteDatabaseIfNeeded(Main.getCacheService().getAddonDatabase(), Bz2Data.MC_GAME_ID);
-            if (db.changes != null) {
-                changed = true;
-                result = "Curse Updates: ";
-                String mods = "";
-                String packs = "";
-                String tps = "";
-                for (Addon a : db.changes.data) {
-                    if (a.categorySection.path.equals("mods")) {
-                        if (mods.isEmpty()) {
-                            mods += "Mods: ";
-                        }
-                        mods += a.name + getFeed(a.latestFiles.get(0).releaseType) + " for minecraft: ";
-                        for (String s : a.latestFiles.get(0).gameVersion) {
-                            if (!mods.endsWith(", ") || mods.endsWith(": ")) {
-                                mods += ", ";
+        try {
+            boolean changed = false;
+            Thread.currentThread().setName("curseforgecheckthread");
+            String result = "";
+            if (!initialized) {
+                initialized = true;
+                Main.getCacheService().setAddonDatabase(Bz2Data.getDatabase(Bz2Data.MC_GAME_ID, DatabaseType.COMPLETE));
+                log.info("Curseforge Checker Initialized with " + Main.getCacheService().getAddonDatabase().data.size() + " entries timestamp: " + Main.getCacheService().getAddonDatabase().timestamp);
+            } else {
+                MergedDatabase db = Bz2Data.updateCompleteDatabaseIfNeeded(Main.getCacheService().getAddonDatabase(), Bz2Data.MC_GAME_ID);
+                if (db.changes != null) {
+                    changed = true;
+                    result = "Curse Updates: ";
+                    String mods = "";
+                    String packs = "";
+                    String tps = "";
+                    for (Addon a : db.changes.data) {
+                        if (a.categorySection.path.equals("mods")) {
+                            if (mods.isEmpty()) {
+                                mods += "Mods: ";
                             }
-                            mods += s;
-                        }
-                    } else if (a.categorySection.path.equals("resourcepacks")) {
-                        if (tps.isEmpty()) {
-                            tps += "Resource Packs: ";
-                        }
-                        tps += a.name + getFeed(a.latestFiles.get(0).releaseType) + " for minecraft: ";
-                        for (String s : a.latestFiles.get(0).gameVersion) {
-                            if (!tps.endsWith(", ") || tps.endsWith(": ")) {
-                                tps += ", ";
+                            mods += a.name + getFeed(a.latestFiles.get(0).releaseType) + " for minecraft: ";
+                            for (String s : a.latestFiles.get(0).gameVersion) {
+                                if (!mods.endsWith(", ") || mods.endsWith(": ")) {
+                                    mods += ", ";
+                                }
+                                mods += s;
                             }
-                            tps += s;
-                        }
+                        } else if (a.categorySection.path.equals("resourcepacks")) {
+                            if (tps.isEmpty()) {
+                                tps += "Resource Packs: ";
+                            }
+                            tps += a.name + getFeed(a.latestFiles.get(0).releaseType) + " for minecraft: ";
+                            for (String s : a.latestFiles.get(0).gameVersion) {
+                                if (!tps.endsWith(", ") || tps.endsWith(": ")) {
+                                    tps += ", ";
+                                }
+                                tps += s;
+                            }
 
-                    } else if (a.categorySection.name.equals("Modpacks")) {
-                        if (packs.isEmpty()) {
-                            packs += "ModPacks: ";
-                        }
-                        packs += a.name + getFeed(a.latestFiles.get(0).releaseType) + " for minecraft: ";
-                        for (String s : a.latestFiles.get(0).gameVersion) {
-                            if (!packs.endsWith(", ") || packs.endsWith(": ")) {
-                                packs += ", ";
+                        } else if (a.categorySection.name.equals("Modpacks")) {
+                            if (packs.isEmpty()) {
+                                packs += "ModPacks: ";
                             }
-                            packs += s;
-                        }
+                            packs += a.name + getFeed(a.latestFiles.get(0).releaseType) + " for minecraft: ";
+                            for (String s : a.latestFiles.get(0).gameVersion) {
+                                if (!packs.endsWith(", ") || packs.endsWith(": ")) {
+                                    packs += ", ";
+                                }
+                                packs += s;
+                            }
 
+                        }
                     }
+                    result += mods;
+                    if (!result.endsWith(": ")) {
+                        result += ", ";
+                    }
+                    result += packs;
+                    if (!result.endsWith(": ") || !result.endsWith(", ")) {
+                        result += ", ";
+                    }
+                    result += tps;
+                    Main.getCacheService().setAddonDatabase(db.currentDatabase);
                 }
-                result += mods;
-                if (!result.endsWith(": ")) {
-                    result += ", ";
-                }
-                result += packs;
-                if (!result.endsWith(": ") || !result.endsWith(", ")) {
-                    result += ", ";
-                }
-                result += tps;
-                Main.getCacheService().setAddonDatabase(db.currentDatabase);
             }
-        }
-        if (changed) {
-            log.debug("curseforge changes detected");
-            sendServiceStatusNotifications(Main.getCacheService().getContacts().get(), webSocket, result, this.channelsEnabled);
-        } else {
-            log.debug("No curseforge change detected db_timestamp: " + Main.getCacheService().getAddonDatabase().timestamp + " Now: " + new Date().getTime());
+            if (changed) {
+                log.debug("curseforge changes detected");
+                sendServiceStatusNotifications(Main.getCacheService().getContacts().get(), webSocket, result, this.channelsEnabled);
+            } else {
+                log.debug("No curseforge change detected db_timestamp: " + Main.getCacheService().getAddonDatabase().timestamp + " Now: " + new Date().getTime());
+            }
+        } catch (Exception e) {
+            log.error("curseforge checker exception", e);
         }
     }
 
