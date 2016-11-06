@@ -36,6 +36,10 @@ public class MongoCurseforgeCheck {
         this.channelID = channelID.serialize();
     }
 
+    public MongoCurseforgeCheck () {
+        //added for serialization
+    }
+
     @JsonIgnore
     public CurseGUID getServerIDAsGUID () {
         return CurseGUID.newInstance(serverID);
