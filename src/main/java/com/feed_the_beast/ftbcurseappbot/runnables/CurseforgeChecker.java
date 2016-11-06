@@ -131,6 +131,7 @@ public class CurseforgeChecker implements Runnable {
                                 String toSend = base + getTextForType(m.getType(), ret);
                                 webSocket.sendMessage(m.getChannelIDAsGUID(), toSend);
                             } else {
+                                log.debug(m.get_id().toString());
                                 List<Addon> ret = Filtering.byAuthor(m.getAuthor(), db.changes);
                                 AddonDatabase d = new AddonDatabase();
                                 d.data = ret;
