@@ -40,7 +40,18 @@ public class CurseforgeChecker implements Runnable {
             if (!initialized) {
                 initialized = true;
                 Main.getCacheService().setAddonDatabase(Bz2Data.getDatabase(Bz2Data.MC_GAME_ID, DatabaseType.COMPLETE));
-                log.info("Curseforge Checker Initialized with " + Main.getCacheService().getAddonDatabase().data.size() + " entries timestamp: " + Main.getCacheService().getAddonDatabase().timestamp);
+                String size = "";
+                long timestamp = -1;
+                if (Main.getCacheService().getAddonDatabase() == null || Main.getCacheService().getAddonDatabase().data == null) {
+                    size = "null";
+                } else {
+                    size = String.valueOf(Main.getCacheService().getAddonDatabase().data.size());
+                }
+                if (Main.getCacheService().getAddonDatabase() != null) {
+                    timestamp = Main.getCacheService().getAddonDatabase().timestamp;
+                }
+                log.info("Curseforge Checker Initialized with " + size + " entries timestamp: " + timestamp);
+
             } else {
                 MergedDatabase db = Bz2Data.updateCompleteDatabaseIfNeeded(Main.getCacheService().getAddonDatabase(), Bz2Data.MC_GAME_ID);
                 if (db.changes != null) {
