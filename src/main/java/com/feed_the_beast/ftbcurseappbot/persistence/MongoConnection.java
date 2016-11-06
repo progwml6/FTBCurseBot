@@ -42,6 +42,7 @@ public class MongoConnection {
     private static String MONGO_CONFIG_COLLECTION = "dbinfo";
     private static String MONGO_COMMANDS_COLLECTION = "commands";
     private static String MONGO_MODERATION_LOGGING_COLLECTION = "moderation_logs";
+    private static String MONGO_CURSECHECKS_COLLECTION = "cursechecks";
 
     public static void start () {
         CommentedConfigurationNode config = Config.getConfig().getNode("mongo");

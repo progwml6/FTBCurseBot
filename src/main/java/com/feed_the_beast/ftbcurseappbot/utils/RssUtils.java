@@ -50,6 +50,6 @@ public class RssUtils {
         System.out.println("date: " + d.getTime());
         List<SyndEntryImpl> l = getFeedAfter(feed, d.getTime());
         System.out.println("size: " + l.size());
-        l.stream().forEach(System.out::println);
+        l.forEach(System.out::println);
     }
 }

@@ -61,44 +61,60 @@ public class CurseforgeChecker implements Runnable {
                     }
                     log.debug(db.changes.data.size() + "curseforge changes detected " + dbt);
                     changed = true;
-                    result = "Curse Updates: ";
+                    result = "_*Curse Updates*_: ";
                     String mods = "";
                     String packs = "";
                     String tps = "";
                     for (Addon a : db.changes.data) {
                         if (a.categorySection.path.equals("mods")) {
                             if (mods.isEmpty()) {
-                                mods += "Mods: ";
+                                mods += "*Mods*: ";
+                            } else {
+                                mods += ", ";
                             }
-                            mods += a.name + getFeed(a.latestFiles.get(0).releaseType) + " for minecraft: ";
+                            mods += a.name + getFeed(a.latestFiles.get(0).releaseType) + " for MC: ";
                             for (String s : a.latestFiles.get(0).gameVersion) {
-                                if (!mods.endsWith(", ") || mods.endsWith(": ")) {
+                                if (!mods.endsWith(", ") && !mods.endsWith(": ")) {
                                     mods += ", ";
                                 }
                                 mods += s;
                             }
+                            if (!mods.endsWith(", ") && !mods.endsWith(": ")) {
+                                mods += " ";
+                            }
+
                         } else if (a.categorySection.path.equals("resourcepacks")) {
                             if (tps.isEmpty()) {
-                                tps += "Resource Packs: ";
+                                tps += "*Resource Packs*: ";
+                            } else {
+                                tps += ", ";
                             }
-                            tps += a.name + getFeed(a.latestFiles.get(0).releaseType) + " for minecraft: ";
+                            tps += a.name + getFeed(a.latestFiles.get(0).releaseType) + " for MC: ";
                             for (String s : a.latestFiles.get(0).gameVersion) {
-                                if (!tps.endsWith(", ") || tps.endsWith(": ")) {
+                                if (!tps.endsWith(", ") && !tps.endsWith(": ")) {
                                     tps += ", ";
                                 }
                                 tps += s;
                             }
+                            if (!tps.endsWith(", ") && !tps.endsWith(": ")) {
+                                tps += " ";
+                            }
 
                         } else if (a.categorySection.name.equals("Modpacks")) {
                             if (packs.isEmpty()) {
-                                packs += "ModPacks: ";
+                                packs += "*ModPacks*: ";
+                            } else {
+                                packs += ", ";
                             }
-                            packs += a.name + getFeed(a.latestFiles.get(0).releaseType) + " for minecraft: ";
+                            packs += a.name + getFeed(a.latestFiles.get(0).releaseType) + " for MC: ";
                             for (String s : a.latestFiles.get(0).gameVersion) {
-                                if (!packs.endsWith(", ") || packs.endsWith(": ")) {
+                                if (!packs.endsWith(", ") && !packs.endsWith(": ")) {
                                     packs += ", ";
                                 }
                                 packs += s;
+                            }
+                            if (!packs.endsWith(", ") && !packs.endsWith(": ")) {
+                                packs += " ";
                             }
 
                         }
@@ -119,7 +135,7 @@ public class CurseforgeChecker implements Runnable {
                 sendServiceStatusNotifications(Main.getCacheService().getContacts().get(), webSocket, result, this.channelsEnabled);
             } else {
                 long now = new Date().getTime();
-                log.debug("No curseforge change detected db_timestamp: " + Main.getCacheService().getAddonDatabase().timestamp + " Now: " + now + "Diff: " + (now - Main.getCacheService()
+                log.debug("No curseforge change detected db_timestamp: " + Main.getCacheService().getAddonDatabase().timestamp + " Now: " + now + " Diff: " + (now - Main.getCacheService()
                         .getAddonDatabase().timestamp));
             }
         } catch (Exception e) {
