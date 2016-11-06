@@ -31,6 +31,19 @@ public class CurseforgeChecker implements Runnable {
         channelsEnabled.get().add("Progwml6's mods.curseforge-updates");
     }
 
+    public static String getFeed (ReleaseType r) {
+        switch (r) {
+        case ALPHA:
+            return " alpha";
+        case BETA:
+            return " beta";
+        case RELEASE:
+            return " release";
+        default:
+            return " UNKNOWN " + (r == null ? "null" : r.getValue());
+        }
+    }
+
     @Override
     public void run () {
         try {
@@ -134,25 +147,14 @@ public class CurseforgeChecker implements Runnable {
             if (changed) {
                 sendServiceStatusNotifications(Main.getCacheService().getContacts().get(), webSocket, result, this.channelsEnabled);
             } else {
-                long now = new Date().getTime();
-                log.debug("No curseforge change detected db_timestamp: " + Main.getCacheService().getAddonDatabase().timestamp + " Now: " + now + " Diff: " + (now - Main.getCacheService()
-                        .getAddonDatabase().timestamp));
+                if (Config.isDebugEnabled()) {
+                    long now = new Date().getTime();
+                    log.debug("No curseforge change detected db_timestamp: " + Main.getCacheService().getAddonDatabase().timestamp + " Now: " + now + " Diff: " + (now - Main.getCacheService()
+                            .getAddonDatabase().timestamp));
+                }
             }
         } catch (Exception e) {
             log.error("curseforge checker exception", e);
-        }
-    }
-
-    public static String getFeed (ReleaseType r) {
-        switch (r) {
-        case ALPHA:
-            return " alpha";
-        case BETA:
-            return " beta";
-        case RELEASE:
-            return " release";
-        default:
-            return " UNKNOWN " + r.getValue();
         }
     }
 
