@@ -132,10 +132,10 @@ public class MongoConnection {
     public static void createOrModifyCurseCheckForChannel (@Nonnull String author, @Nullable String type, @Nonnull CurseGUID serverID, @Nonnull CurseGUID channelID) {
         String typesearch = "";
         if (type != null) {
-            typesearch = ", type: '" + type;
+            typesearch = "', type: '" + type;
         }
         MongoCurseforgeCheck check = jongo.getCollection(MONGO_CURSECHECKS_COLLECTION)
-                .findOne("{author:'" + author + typesearch + ", serverID: '" + serverID.serialize() + "', channelID:'"
+                .findOne("{author:'" + author + typesearch + "', serverID: '" + serverID.serialize() + "', channelID:'"
                         + channelID.serialize() + "'}")
                 .as(MongoCurseforgeCheck.class);
         if (check == null) {
@@ -164,9 +164,9 @@ public class MongoConnection {
         log.info("removing check '{}'  '{}' on server {}  channel {}", author, tp2, serverID.serialize(), channelID.serialize());
         String typesearch = "";
         if (type != null) {
-            typesearch = ", type: '" + type;
+            typesearch = "', type: '" + type;
         }
-        jongo.getCollection(MONGO_CURSECHECKS_COLLECTION).remove("{author:'" + author + typesearch + ", serverID: '" + serverID.serialize() + "', channelID:'" + channelID.serialize() + "'}");
+        jongo.getCollection(MONGO_CURSECHECKS_COLLECTION).remove("{author:'" + author + typesearch + "', serverID: '" + serverID.serialize() + "', channelID:'" + channelID.serialize() + "'}");
     }
 
     public static Optional<List<MongoCurseforgeCheck>> getCurseChecks () {
