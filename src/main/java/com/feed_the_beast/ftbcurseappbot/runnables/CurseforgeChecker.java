@@ -111,7 +111,7 @@ public class CurseforgeChecker implements Runnable {
 
             } else {
                 MergedDatabase db = Bz2Data.updateCompleteDatabaseIfNeeded(Main.getCacheService().getAddonDatabase(), Bz2Data.MC_GAME_ID);
-                if (db.changes != null) {
+                if (db.changes != null && !db.changes.data.isEmpty()) {
                     Main.getCacheService().setAddonDatabase(db.currentDatabase);
                     Optional<List<MongoCurseforgeCheck>> extraChecksList = Optional.of(Lists.newArrayList());
                     if (MongoConnection.isPersistanceEnabled()) {
