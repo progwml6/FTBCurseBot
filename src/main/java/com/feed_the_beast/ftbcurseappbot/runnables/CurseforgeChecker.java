@@ -116,7 +116,7 @@ public class CurseforgeChecker implements Runnable {
                 }
                 log.info("Curseforge Checker Initialized with " + size + " entries timestamp: " + timestamp);
             } else {
-                Bz2Data.debug = true;//TODO remove when bugs are fixed this produces log spam
+                Bz2Data.debug = false;//when true this produces log spam
                 MergedDatabase db = Bz2Data.updateCompleteDatabaseIfNeeded(Main.getCacheService().getAddonDatabase(), Bz2Data.MC_GAME_ID);
                 if (db.changes != null && !db.changes.data.isEmpty()) {
                     Main.getCacheService().setAddonDatabase(db.currentDatabase);
