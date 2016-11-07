@@ -172,7 +172,7 @@ public class MongoConnection {
     public static Optional<List<MongoCurseforgeCheck>> getCurseChecks () {
         try {
             List<MongoCurseforgeCheck> commandRet = new ArrayList<>();
-            MongoCursor<MongoCurseforgeCheck> commands = jongo.getCollection(MONGO_COMMANDS_COLLECTION).find()
+            MongoCursor<MongoCurseforgeCheck> commands = jongo.getCollection(MONGO_CURSECHECKS_COLLECTION).find()
                     .as(MongoCurseforgeCheck.class);
             while (commands.hasNext()) {
                 commandRet.add(commands.next());

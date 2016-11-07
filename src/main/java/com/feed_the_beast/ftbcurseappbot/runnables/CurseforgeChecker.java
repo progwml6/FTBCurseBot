@@ -29,6 +29,7 @@ public class CurseforgeChecker implements Runnable {
     private WebSocket webSocket;
     private boolean initialized = false;
     private Optional<List<String>> channelsEnabled;//TODO make sure this gets updates!!
+    private String types = "";
 
     public CurseforgeChecker (@Nonnull WebSocket webSocket) {
         this.webSocket = webSocket;
@@ -69,7 +70,7 @@ public class CurseforgeChecker implements Runnable {
         if (!lst.isEmpty()) {
             result += ChatFormatter.bold(type) + ": ";
             for (Addon a : lst) {
-                if(!result.endsWith(": ") && !result.endsWith(", ")) {
+                if (!result.endsWith(": ") && !result.endsWith(", ")) {
                     result += ", ";
                 }
                 result += getChangeTextForAddon(a);
@@ -93,7 +94,6 @@ public class CurseforgeChecker implements Runnable {
             Thread.currentThread().setName("curseforgecheckthread");
             String result = "";
             String base = ChatFormatter.underscore(ChatFormatter.bold("Curse Updates")) + ": ";
-
             if (!initialized) {
                 initialized = true;
                 Main.getCacheService().setAddonDatabase(Bz2Data.getInitialDatabase(Bz2Data.MC_GAME_ID));
@@ -121,6 +121,7 @@ public class CurseforgeChecker implements Runnable {
                     for (DatabaseType d : db.newDBTypes) {
                         dbt += d.getStringForUrl() + " ";
                     }
+                    types = dbt;
                     log.debug(db.changes.data.size() + " curseforge changes detected " + dbt);
                     changed = true;
                     result = base;
@@ -132,16 +133,16 @@ public class CurseforgeChecker implements Runnable {
                             if (m.getType() != null) {
                                 List<Addon> ret = Filtering.byAuthorAndCategorySection(m.getAuthor(), m.getType(), db.changes);
                                 String toSend = base + getTextForType(m.getType(), ret);
+                                log.debug("sending {} {} to {}",m.getAuthor(), m.getType(), m.getChannelID());
                                 webSocket.sendMessage(m.getChannelIDAsGUID(), toSend);
                             } else {
-                                if (m.getAuthor() == null) {
-                                    log.debug(m.get_id().toString());
-                                } else {
+                                if (m.getAuthor() != null) {
                                     List<Addon> ret = Filtering.byAuthor(m.getAuthor(), db.changes);
                                     AddonDatabase d = new AddonDatabase();
                                     d.data = ret;
                                     d.timestamp = db.changes.timestamp;
                                     String toSend = base + getTextForType("Mods", d) + getTextForType("Modpacks", d) + getTextForType("Texture Packs", d);
+                                    log.debug("sending {} to {}",m.getAuthor(), m.getChannelID());
                                     webSocket.sendMessage(m.getChannelIDAsGUID(), toSend);
                                 }
                             }
@@ -171,14 +172,13 @@ public class CurseforgeChecker implements Runnable {
             return;
         }
         if (channelsEnabled.isPresent()) {
-            log.info("{} has had an update change");
+            log.info("curseforge has had an update");
             for (String s : channelsEnabled.get()) {
-                log.info("sending {} change to {}", "CurseForge", s);
                 if (s.contains(".")) {
                     String[] g = s.split("\\.");
                     Optional<CurseGUID> ci = Main.getCacheService().getContacts().get().getChannelIdbyNames(g[0], g[1], true);
                     if (ci.isPresent()) {
-                        log.debug("sending status change for {} to {} guid: {}", "CurseForge", s, ci.get().serialize());
+                        log.debug("sending status change for {} to {} guid: {} types", "CurseForge", s, ci.get().serialize(), types);
                         ws.sendMessage(ci.get(), message);
                     } else {
                         log.error("no channel id exists for {} {}", g[0], g[1]);
