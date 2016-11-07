@@ -51,6 +51,7 @@ public class CurseforgeChecker implements Runnable {
     }
 
     private static String getChangeTextForAddon (@Nonnull Addon a) {
+        log.debug(a.name + " " + a.id + " def_file_id" + a.defaultFileId);
         String ret = "";
         ret += a.name + getFeed(a.latestFiles.get(0).releaseType) + " for MC: ";
         for (String s : a.latestFiles.get(0).gameVersion) {
@@ -93,6 +94,7 @@ public class CurseforgeChecker implements Runnable {
             boolean changed = false;
             Thread.currentThread().setName("curseforgecheckthread");
             String result = "";
+            types = "";
             String base = ChatFormatter.underscore(ChatFormatter.bold("Curse Updates")) + ": ";
             if (!initialized) {
                 initialized = true;
@@ -133,8 +135,10 @@ public class CurseforgeChecker implements Runnable {
                             if (m.getType() != null) {
                                 List<Addon> ret = Filtering.byAuthorAndCategorySection(m.getAuthor(), m.getType(), db.changes);
                                 String toSend = base + getTextForType(m.getType(), ret);
-                                log.debug("sending {} {} to {}",m.getAuthor(), m.getType(), m.getChannelID());
-                                webSocket.sendMessage(m.getChannelIDAsGUID(), toSend);
+                                if (ret.size() > 0) {
+                                    log.debug("sending {} {} to {}", m.getAuthor(), m.getType(), m.getChannelID());
+                                    webSocket.sendMessage(m.getChannelIDAsGUID(), toSend);
+                                }
                             } else {
                                 if (m.getAuthor() != null) {
                                     List<Addon> ret = Filtering.byAuthor(m.getAuthor(), db.changes);
@@ -142,8 +146,10 @@ public class CurseforgeChecker implements Runnable {
                                     d.data = ret;
                                     d.timestamp = db.changes.timestamp;
                                     String toSend = base + getTextForType("Mods", d) + getTextForType("Modpacks", d) + getTextForType("Texture Packs", d);
-                                    log.debug("sending {} to {}",m.getAuthor(), m.getChannelID());
-                                    webSocket.sendMessage(m.getChannelIDAsGUID(), toSend);
+                                    if (ret.size() > 0) {
+                                        log.debug("sending {} to {}", m.getAuthor(), m.getChannelID());
+                                        webSocket.sendMessage(m.getChannelIDAsGUID(), toSend);
+                                    }
                                 }
                             }
                         }
