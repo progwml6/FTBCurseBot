@@ -52,8 +52,14 @@ public class CurseforgeChecker implements Runnable {
 
     private static String getChangeTextForAddon (@Nonnull Addon a) {
         String ret = "";
-        ret += a.name + getFeed(a.latestFiles.get(0).releaseType) + " for MC: ";
-        for (String s : a.latestFiles.get(0).gameVersion) {
+        int i = 0;
+        for (int j = 0; j < a.latestFiles.size(); j++) {
+            if (a.latestFiles.get(j).fileDate.getTime() > a.latestFiles.get(i).fileDate.getTime()) {
+                i = j;
+            }
+        }
+        ret += a.name + getFeed(a.latestFiles.get(i).releaseType) + " for MC: ";
+        for (String s : a.latestFiles.get(i).gameVersion) {
             if (!ret.endsWith(", ") && !ret.endsWith(": ")) {
                 ret += ", ";
             }
@@ -145,7 +151,7 @@ public class CurseforgeChecker implements Runnable {
                                     AddonDatabase d = new AddonDatabase();
                                     d.data = ret;
                                     d.timestamp = db.changes.timestamp;
-                                    String toSend = base + getTextForType("Mods", d) + getTextForType("Addons", d)+ getTextForType("Modpacks", d) + getTextForType("Texture Packs", d);
+                                    String toSend = base + getTextForType("Mods", d) + getTextForType("Addons", d) + getTextForType("Modpacks", d) + getTextForType("Texture Packs", d);
                                     if (ret.size() > 0) {
                                         log.debug("sending {} to {}", m.getAuthor(), m.getChannelID());
                                         webSocket.sendMessage(m.getChannelIDAsGUID(), toSend);
