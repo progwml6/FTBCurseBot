@@ -127,6 +127,7 @@ public class CurseforgeChecker implements Runnable {
                     changed = true;
                     result = base;
                     result += getTextForType("Mods", db.changes);
+                    result += getTextForType("Addons", db.changes);
                     result += getTextForType("ModPacks", db.changes);
                     result += getTextForType("Texture Packs", db.changes);
                     if (extraChecksList.isPresent()) {
@@ -144,7 +145,7 @@ public class CurseforgeChecker implements Runnable {
                                     AddonDatabase d = new AddonDatabase();
                                     d.data = ret;
                                     d.timestamp = db.changes.timestamp;
-                                    String toSend = base + getTextForType("Mods", d) + getTextForType("Modpacks", d) + getTextForType("Texture Packs", d);
+                                    String toSend = base + getTextForType("Mods", d) + getTextForType("Addons", d)+ getTextForType("Modpacks", d) + getTextForType("Texture Packs", d);
                                     if (ret.size() > 0) {
                                         log.debug("sending {} to {}", m.getAuthor(), m.getChannelID());
                                         webSocket.sendMessage(m.getChannelIDAsGUID(), toSend);
