@@ -51,7 +51,6 @@ public class CurseforgeChecker implements Runnable {
     }
 
     private static String getChangeTextForAddon (@Nonnull Addon a) {
-        log.debug(a.name + " " + a.id + " def_file_id" + a.defaultFileId);
         String ret = "";
         ret += a.name + getFeed(a.latestFiles.get(0).releaseType) + " for MC: ";
         for (String s : a.latestFiles.get(0).gameVersion) {
@@ -184,7 +183,7 @@ public class CurseforgeChecker implements Runnable {
                     String[] g = s.split("\\.");
                     Optional<CurseGUID> ci = Main.getCacheService().getContacts().get().getChannelIdbyNames(g[0], g[1], true);
                     if (ci.isPresent()) {
-                        log.debug("sending status change for {} to {} guid: {} types", "CurseForge", s, ci.get().serialize(), types);
+                        log.debug("sending status change for {} to {} guid: {} types {}", "CurseForge", s, ci.get().serialize(), types);
                         ws.sendMessage(ci.get(), message);
                     } else {
                         log.error("no channel id exists for {} {}", g[0], g[1]);
