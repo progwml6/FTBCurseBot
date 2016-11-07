@@ -115,8 +115,8 @@ public class CurseforgeChecker implements Runnable {
                     timestamp = Main.getCacheService().getAddonDatabase().timestamp;
                 }
                 log.info("Curseforge Checker Initialized with " + size + " entries timestamp: " + timestamp);
-
             } else {
+                Bz2Data.debug = true;//TODO remove when bugs are fixed this produces log spam
                 MergedDatabase db = Bz2Data.updateCompleteDatabaseIfNeeded(Main.getCacheService().getAddonDatabase(), Bz2Data.MC_GAME_ID);
                 if (db.changes != null && !db.changes.data.isEmpty()) {
                     Main.getCacheService().setAddonDatabase(db.currentDatabase);
@@ -142,7 +142,7 @@ public class CurseforgeChecker implements Runnable {
                                 List<Addon> ret = Filtering.byAuthorAndCategorySection(m.getAuthor(), m.getType(), db.changes);
                                 String toSend = base + getTextForType(m.getType(), ret);
                                 if (ret.size() > 0) {
-                                    log.debug("sending {} {} to {}", m.getAuthor(), m.getType(), m.getChannelID());
+                                    log.debug("sending {} {} to {} using {}", m.getAuthor(), m.getType(), m.getChannelID(), dbt);
                                     webSocket.sendMessage(m.getChannelIDAsGUID(), toSend);
                                 }
                             } else {
@@ -153,7 +153,7 @@ public class CurseforgeChecker implements Runnable {
                                     d.timestamp = db.changes.timestamp;
                                     String toSend = base + getTextForType("Mods", d) + getTextForType("Addons", d) + getTextForType("Modpacks", d) + getTextForType("Texture Packs", d);
                                     if (ret.size() > 0) {
-                                        log.debug("sending {} to {}", m.getAuthor(), m.getChannelID());
+                                        log.debug("sending {} to {} using {}", m.getAuthor(), m.getChannelID(), dbt);
                                         webSocket.sendMessage(m.getChannelIDAsGUID(), toSend);
                                     }
                                 }

@@ -158,7 +158,7 @@ public class TwitchStatus extends StatusCommandBase {
 
     @Override
     public String getHelp () {
-        return "gets the health status of MC services from https://twitchstatus.com/";
+        return "gets the health status of twitch services from https://twitchstatus.com/";
     }
 
 }
