@@ -158,6 +158,8 @@ public class Main {
             webSocket.addTask(new DefaultResponseTask(), NotificationsServiceContractType.CONVERSATION_READ_NOTIFICATION);
             webSocket.addTask(new TraceResponseTask(), NotificationsServiceContractType.UNKNOWN);
         }
+        //TODO remove or move up to debugging at some point, this is needed to troubleshoot delivery errors
+        webSocket.addTask(new TraceResponseTask(), NotificationsServiceContractType.CONVERSATION_MESSAGE_RESPONSE);
         commonMarkUtils = new CommonMarkUtils();
         if (Config.isWebEnabled()) {
             new WebService();
