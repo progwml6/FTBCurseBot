@@ -129,7 +129,9 @@ public class CurseforgeChecker implements Runnable {
                         dbt += d.getStringForUrl() + " ";
                     }
                     types = dbt;
-                    log.debug(db.changes.data.size() + " curseforge changes detected " + dbt);
+                    if (Config.isDebugEnabled()) {
+                        log.debug(db.changes.data.size() + " curseforge changes detected " + dbt);
+                    }
                     changed = true;
                     result = base;
                     result += getTextForType("Mods", db.changes);
@@ -184,7 +186,6 @@ public class CurseforgeChecker implements Runnable {
             return;
         }
         if (channelsEnabled.isPresent()) {
-            log.info("curseforge has had an update");
             for (String s : channelsEnabled.get()) {
                 if (s.contains(".")) {
                     String[] g = s.split("\\.");
