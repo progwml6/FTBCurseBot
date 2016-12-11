@@ -3,6 +3,8 @@ package com.feed_the_beast.ftbcurseappbot.utils;
 import org.commonmark.Extension;
 import org.commonmark.ext.gfm.strikethrough.StrikethroughExtension;
 import org.commonmark.ext.gfm.tables.TablesExtension;
+import org.commonmark.ext.heading.anchor.HeadingAnchorExtension;
+import org.commonmark.ext.ins.InsExtension;
 import org.commonmark.node.Node;
 import org.commonmark.parser.Parser;
 import org.commonmark.renderer.html.HtmlRenderer;
@@ -15,7 +17,7 @@ public class CommonMarkUtils {
     private HtmlRenderer renderer;
 
     public CommonMarkUtils () {
-        List<Extension> extensions = Arrays.asList(TablesExtension.create(), StrikethroughExtension.create());
+        List<Extension> extensions = Arrays.asList(TablesExtension.create(), StrikethroughExtension.create(), HeadingAnchorExtension.create(), InsExtension.create());
         parser = Parser.builder().extensions(extensions).build();
         renderer = HtmlRenderer.builder().extensions(extensions).build();
 
@@ -81,7 +83,7 @@ public class CommonMarkUtils {
         }
         b.append("\n").append("|");
         for (String s : items) {
-            b.append("-").append("|");
+            b.append("---").append("|");
         }
         b.append("\n");
         return b.toString();
