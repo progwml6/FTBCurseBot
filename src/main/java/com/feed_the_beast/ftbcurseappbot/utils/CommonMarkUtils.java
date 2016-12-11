@@ -26,4 +26,53 @@ public class CommonMarkUtils {
         return renderer.render(document);
 
     }
+
+    public static String Bold (String in) {
+        return "**" + in + "**";
+    }
+
+    public static String Italics (String in) {
+        return "*" + in + "*";
+    }
+
+    public static String h1 (String in) {
+        return "# " + in;
+    }
+
+    public static String h2 (String in) {
+        return "## " + in;
+    }
+
+    public static String h3 (String in) {
+        return "### " + in;
+    }
+
+    public static String link (String title, String link) {
+        return "[" + title + "](" + link + ")";
+    }
+
+    public static String image (String image) {
+        return "!" + link("Image", image);
+    }
+
+    public static String blockquote (String in) {
+        return "> " + in;
+    }
+
+    public static String list (String in) {
+        return "* " + in;
+    }
+
+    public static String horizontalRule () {
+        return "---";
+    }
+
+    public static String inline (String in) {
+        return "`" + in + "`";
+    }
+
+    public static String codeBlock (String in) {
+        return "```\n" + in + "\n```";
+    }
+
 }

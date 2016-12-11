@@ -1,6 +1,8 @@
 package com.feed_the_beast.ftbcurseappbot;
 
 import com.feed_the_beast.ftbcurseappbot.api.ICommandBase;
+import com.feed_the_beast.ftbcurseappbot.persistence.MongoConnection;
+import com.feed_the_beast.ftbcurseappbot.persistence.PersistanceEventType;
 import com.feed_the_beast.javacurselib.common.enums.ConversationNotificationType;
 import com.feed_the_beast.javacurselib.websocket.WebSocket;
 import com.feed_the_beast.javacurselib.websocket.messages.handler.tasks.Task;
@@ -32,6 +34,20 @@ public class ConversationEvent implements Task<ConversationMessageNotification> 
                 }
             }
             webSocket.sendMarkRead(msg.conversationID);
+        } else if (msg.notificationType == ConversationNotificationType.DELETED) {
+            if (MongoConnection.isPersistanceEnabled()) {
+                MongoConnection
+                        .logEvent(PersistanceEventType.getTypeFromConversationNotificationType(msg.notificationType), msg.rootConversationID, msg.conversationID, msg.deletedUserID,
+                                msg.deletedUsername, msg.senderID,
+                                msg.senderName, msg.body, msg.senderName == Config.getUsername(), msg.deletedTimestamp);
+            }
+        } else if (msg.notificationType == ConversationNotificationType.EDITED) {
+            if (MongoConnection.isPersistanceEnabled()) {
+                MongoConnection
+                        .logEvent(PersistanceEventType.getTypeFromConversationNotificationType(msg.notificationType), msg.rootConversationID, msg.conversationID, msg.editedUserID,
+                                msg.editedUsername, msg.senderID,
+                                msg.senderName, msg.body, msg.senderName == Config.getUsername(), msg.editedTimestamp);
+            }
         }
     }
 

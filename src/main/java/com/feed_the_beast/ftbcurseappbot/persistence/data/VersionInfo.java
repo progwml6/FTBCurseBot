@@ -13,5 +13,5 @@ public class VersionInfo {
      */
     @Getter
     @Setter
-    private int version = 2;
+    private int version = 3;
 }

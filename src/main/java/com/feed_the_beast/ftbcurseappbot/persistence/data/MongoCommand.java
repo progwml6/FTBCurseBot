@@ -55,13 +55,11 @@ public class MongoCommand {
         this.permissions = EnumSetHelpers.serialize(requiredPermissions, GroupPermissions.class);
     }
 
-    //TODO make sure this isn't serialized to mongo
     @JsonIgnore
     public CurseGUID getServerIDAsGUID () {
         return CurseGUID.newInstance(serverID);
     }
 
-    //TODO make sure this isn't serialized to mongo
     @JsonIgnore
     public Pattern getPattern () {
         if (usesTrigger) {//if it uses triggers follow same rules as simple commands

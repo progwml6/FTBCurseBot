@@ -9,6 +9,7 @@ import com.feed_the_beast.ftbcurseappbot.Config;
 import com.feed_the_beast.ftbcurseappbot.webserver.endpoints.GithubWebhook;
 import com.feed_the_beast.ftbcurseappbot.webserver.endpoints.HealthEndpoint;
 import com.feed_the_beast.ftbcurseappbot.webserver.endpoints.Md;
+import com.feed_the_beast.ftbcurseappbot.webserver.endpoints.Servers;
 import com.feed_the_beast.ftbcurseappbot.webserver.transformers.JsonTransformer;
 import spark.ModelAndView;
 import spark.template.mustache.MustacheTemplateEngine;
@@ -38,6 +39,7 @@ public class WebService {
                 + "\n";
         //TODO this needs to be able to take a ?raw=true parameter or something for API stuff
         get("/mdtest", (request, response) -> new ModelAndView(Md.render(cmtest, "CM Test Title"), "commonmark.mustache"), new MustacheTemplateEngine());
+        get("/servers", (request, response) -> new ModelAndView(Servers.render(Config.getUsername() + " Servers"), "commonmark.mustache"), new MustacheTemplateEngine());
         post("/webhooks/github/:hookName", GithubWebhook.hook);
         get("/", (request, response) -> "No fancy web config yet check back soon!");
     }

@@ -43,6 +43,8 @@ public class MongoConnection {
     private static String MONGO_CONFIG_COLLECTION = "dbinfo";
     private static String MONGO_COMMANDS_COLLECTION = "commands";
     private static String MONGO_MODERATION_LOGGING_COLLECTION = "moderation_logs";
+    private static String MONGO_SERVER_CONFIG_COLLECTION = "serverconfig";
+    private static String MONGO_CHANNEL_CONFIG_COLLECTION = "channelconfig";
     private static String MONGO_CURSECHECKS_COLLECTION = "cursechecks";
 
     public static void start () {
@@ -81,11 +83,11 @@ public class MongoConnection {
         }
     }
 
-    //TODO make sure to setup mongo indexes for some of this to speed up searching
+    //TODO make sure to setup mongo indexes for more of this to speed up searching
     public static void logEvent (PersistanceEventType event, CurseGUID serverID, @Nullable CurseGUID channel, long performer, String performerName, long affects, String nameAffects, String info,
-            boolean wasDoneByBot) {
+            boolean wasDoneByBot, long actionTime) {
         ModerationLog log = ModerationLog.builder().type(event.getName()).serverID(serverID.serialize()).performer(performer).performerName(performerName).affects(affects).affectsName(nameAffects)
-                .info(info).doneByBot(wasDoneByBot).actionTime(new Date()).build();
+                .info(info).doneByBot(wasDoneByBot).actionTime(new Date(actionTime)).build();
         Optional<String> gpn = Main.getCacheService().getContacts().get().getGroupNamebyId(serverID);
         gpn.ifPresent(log::setServerName);
         if (channel != null) {
@@ -228,6 +230,9 @@ public class MongoConnection {
         }
         if (dbVersion.getVersion() < 2) {
             jongo.getCollection(MONGO_CURSECHECKS_COLLECTION).ensureIndex("{author: 1}");
+        }
+        if (dbVersion.getVersion() < 3) {
+            jongo.getCollection(MONGO_MODERATION_LOGGING_COLLECTION).ensureIndex("{serverID: 1}");
         }
         //do this last
         dbVersion.setVersion(expected.getVersion());
