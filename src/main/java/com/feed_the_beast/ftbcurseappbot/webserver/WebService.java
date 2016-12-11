@@ -40,6 +40,7 @@ public class WebService {
         //TODO this needs to be able to take a ?raw=true parameter or something for API stuff
         get("/mdtest", (request, response) -> new ModelAndView(Md.render(cmtest, "CM Test Title"), "commonmark.mustache"), new MustacheTemplateEngine());
         get("/servers", (request, response) -> new ModelAndView(Servers.render(Config.getUsername() + " Servers"), "commonmark.mustache"), new MustacheTemplateEngine());
+        get("/server/:guid", (request, response) -> new ModelAndView(Servers.renderSpecificServer(request, response), "commonmark.mustache"), new MustacheTemplateEngine());
         post("/webhooks/github/:hookName", GithubWebhook.hook);
         get("/", (request, response) -> "No fancy web config yet check back soon!");
     }
