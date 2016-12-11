@@ -31,35 +31,31 @@ public class Servers {
     //TODO enable caching for this
     public static Map renderSpecificChannel (Request req, Response response) {
         String uuid = req.params(":guid");
-        try {
-            if (uuid != null && !uuid.isEmpty()) {
-                CurseGUID guid = CurseGUID.deserialize(uuid);
-                for (GroupNotification group : Main.getCacheService().getContacts().get().groups) {
-                    if (group.isPublic && !group.hideNoAccess) {
-                        for (ChannelContract c : group.channels) {
-                            if (c.groupID.equals(guid)) {
-                                if (c.isPublic && !c.hideNoAccess) {
-                                    Map map = Maps.newHashMap();
-                                    map.put("commonmark", Main.getCommonMarkUtils().renderToHTML(getMdForChannel(group, c, true, true)));
-                                    map.put("titleText", group.groupTitle);
-                                    return map;
-                                } else if (!c.isPublic && !c.hideNoAccess) {
-                                    Map map = Maps.newHashMap();
-                                    map.put("commonmark", Main.getCommonMarkUtils().renderToHTML(c.groupTitle + " isn't public"));
-                                    map.put("titleText", group.groupTitle);
-                                    return map;
-                                } else {
-                                    //TODO we need to toss a better error here!
-                                    return rendererror(req, response, uuid, 500);
-                                }
-
+        if (uuid != null && !uuid.isEmpty()) {
+            CurseGUID guid = CurseGUID.deserialize(uuid);
+            for (GroupNotification group : Main.getCacheService().getContacts().get().groups) {
+                if (group.isPublic && !group.hideNoAccess) {
+                    for (ChannelContract c : group.channels) {
+                        if (c.groupID.equals(guid)) {
+                            if (c.isPublic && !c.hideNoAccess) {
+                                Map map = Maps.newHashMap();
+                                map.put("commonmark", Main.getCommonMarkUtils().renderToHTML(getMdForChannel(group, c, true, true)));
+                                map.put("titleText", group.groupTitle);
+                                return map;
+                            } else if (!c.isPublic && !c.hideNoAccess) {
+                                Map map = Maps.newHashMap();
+                                map.put("commonmark", Main.getCommonMarkUtils().renderToHTML(c.groupTitle + " isn't public"));
+                                map.put("titleText", group.groupTitle);
+                                return map;
+                            } else {
+                                //TODO we need to toss a better error here!
+                                return rendererror(req, response, uuid, 500);
                             }
+
                         }
                     }
                 }
             }
-        } catch (Exception e) {
-            log.error("error with channel rendering", e);
         }
         return rendererror(req, response, uuid, 500);
 
@@ -105,14 +101,10 @@ public class Servers {
         if (displayData) {
             Optional<List<ModerationLog>> logs = MongoConnection.getModerationLogs(channel.groupID);
             if (logs.isPresent() && logs.get().size() > 0) {
-                try {
-                    builder.append(CommonMarkUtils.tableHeader("Date", "Type", "ActionPerformer", "MessageOwner", "Info"));
-                    logs.get().stream().sorted((e1, e2) -> Long.compare(e1.getActionTime().getTime(), e2.getActionTime().getTime())).forEach(cnl -> {
-                        builder.append(CommonMarkUtils.tableRow(cnl.getActionTime().toString(), cnl.getType(), cnl.getPerformerName(), cnl.getAffectsName(), cnl.getInfo()));
-                    });
-                } catch (Exception e) {
-                    log.error("error with tables", e);
-                }
+                builder.append(CommonMarkUtils.tableHeader("Date", "Type", "ActionPerformer", "MessageOwner", "Info"));
+                logs.get().stream().sorted((e1, e2) -> Long.compare(e1.getActionTime().getTime(), e2.getActionTime().getTime())).forEach(cnl -> {
+                    builder.append(CommonMarkUtils.tableRow(cnl.getActionTime().toString(), cnl.getType(), cnl.getPerformerName(), cnl.getAffectsName(), cnl.getInfo()));
+                });
             }
             //TODO display moderation data -- only in public listed for now
         }

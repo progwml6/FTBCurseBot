@@ -7,9 +7,6 @@ import org.jongo.marshall.jackson.oid.MongoObjectId;
 
 import java.util.Date;
 
-/**
- * Created by progwml6 on 8/16/16.
- */
 @Data
 @Builder
 public class ModerationLog {
@@ -28,4 +25,8 @@ public class ModerationLog {
     private String info;
     private Boolean doneByBot;
     private Date actionTime;
+
+    public ModerationLog () {
+        //json serialization needs constructor
+    }
 }
