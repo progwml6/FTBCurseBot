@@ -33,9 +33,10 @@ public class Servers {
                     builder.append(CommonMarkUtils.h3(channel.groupTitle)).append(CommonMarkUtils.list("Public " + channel.isPublic))
                             .append(CommonMarkUtils.list("hideNoAccess " + channel.hideNoAccess));
                 }
+                builder.append("\n");
             }
             builder.append("\n\n");
         }
-        return "";
+        return builder.toString();
     }
 }
