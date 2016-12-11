@@ -98,24 +98,19 @@ public class Servers {
         return builder.toString();
     }
 
-    public static String getMdForGroup (GroupNotification group) {
+    public static String getMdForGroup (GroupNotification group, boolean displayChannelData) {
         StringBuilder builder = new StringBuilder();
         builder.append(CommonMarkUtils.h2(CommonMarkUtils.link(group.groupTitle, "/server/" + group.groupID.serialize())))
                 .append(CommonMarkUtils.list(group.messageOfTheDay == null ? "MOTD: " : group.messageOfTheDay))
                 .append(CommonMarkUtils.list("Public " + group.isPublic))
                 .append(CommonMarkUtils.list("hideNoAccess " + group.hideNoAccess)).append(CommonMarkUtils.list("displayOrder " + group.displayOrder));
-        for (ChannelContract channel : group.channels) {
-            if (!channel.hideNoAccess) {
-                builder.append(getMdForChannel(group, channel, false, false));
-            }
-        }
+        group.channels.stream().filter(a -> (a.isPublic && displayChannelData)).sorted((e1, e2) -> Integer.compare(e1.displayOrder, e2.displayOrder))
+                .forEach(channel -> builder.append(getMdForChannel(group, channel, false, false)));
         return builder.toString();
     }
 
     public static String getMdForServer (GroupNotification group) {
-        StringBuilder builder = new StringBuilder();
-        builder.append(getMdForGroup(group));
-        return builder.toString();
+        return getMdForGroup(group, true);
     }
 
     //TODO display in order
@@ -126,7 +121,7 @@ public class Servers {
         int nps = 0;
         for (GroupNotification group : Main.getCacheService().getContacts().get().groups) {
             if (group.status == GroupStatus.NORMAL && group.isPublic && !group.hideNoAccess) {
-                builder.append(getMdForGroup(group));
+                builder.append(getMdForGroup(group, false));
             }
             if (!group.isPublic && group.hideNoAccess) {
                 nps++;
