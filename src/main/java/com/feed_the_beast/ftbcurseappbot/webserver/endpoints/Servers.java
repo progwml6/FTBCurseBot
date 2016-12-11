@@ -82,18 +82,19 @@ public class Servers {
         StringBuilder builder = new StringBuilder();
 
         builder.append(CommonMarkUtils.h3(CommonMarkUtils.link(channel.groupTitle, "/channel/" + channel.groupID))).append(CommonMarkUtils.list("Public " + channel.isPublic))
-                .append(CommonMarkUtils.list("hideNoAccess " + channel.hideNoAccess));
+                .append(CommonMarkUtils.list("hideNoAccess " + channel.hideNoAccess)).append(CommonMarkUtils.list("order " + channel.displayOrder))
+                .append(CommonMarkUtils.list("displayCategory " + channel.displayCategory)).append(CommonMarkUtils.list("displayCategoryRank " + channel.displayCategoryRank))
+                .append(CommonMarkUtils.list("Default Channel: " + channel.isDefaultChannel));
         if (channel.isPublic && channel.messageOfTheDay != null) {
             builder.append(CommonMarkUtils.list(channel.messageOfTheDay));
         }
+        //TODO display enabled status alerts to the channel
         if (displayParent) {
             builder.append(CommonMarkUtils.h4("Parent Server " + CommonMarkUtils.link(group.groupTitle, "/server/" + group.groupID.serialize())));
         }
-        if(displayData) {
+        if (displayData) {
             //TODO display moderation data -- only in public listed for now
         }
-        //channel.displayCategory;
-        //channel.displayCategoryRank;
         return builder.toString();
     }
 
@@ -102,8 +103,7 @@ public class Servers {
         builder.append(CommonMarkUtils.h2(CommonMarkUtils.link(group.groupTitle, "/server/" + group.groupID.serialize())))
                 .append(CommonMarkUtils.list(group.messageOfTheDay == null ? "MOTD: " : group.messageOfTheDay))
                 .append(CommonMarkUtils.list("Public " + group.isPublic))
-                .append(CommonMarkUtils.list("hideNoAccess " + group.hideNoAccess));
-        //group.displayOrder;
+                .append(CommonMarkUtils.list("hideNoAccess " + group.hideNoAccess)).append(CommonMarkUtils.list("displayOrder " + group.displayOrder));
         for (ChannelContract channel : group.channels) {
             if (!channel.hideNoAccess) {
                 builder.append(getMdForChannel(group, channel, false, false));
