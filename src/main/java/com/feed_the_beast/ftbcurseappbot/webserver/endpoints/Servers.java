@@ -89,6 +89,9 @@ public class Servers {
         if (displayParent) {
             builder.append(CommonMarkUtils.h4("Parent Server " + CommonMarkUtils.link(group.groupTitle, "/server/" + group.groupID.serialize())));
         }
+        if(displayData) {
+            //TODO display moderation data -- only in public listed for now
+        }
         //channel.displayCategory;
         //channel.displayCategoryRank;
         return builder.toString();
@@ -103,7 +106,7 @@ public class Servers {
         //group.displayOrder;
         for (ChannelContract channel : group.channels) {
             if (!channel.hideNoAccess) {
-                getMdForChannel(group, channel, false, false);
+                builder.append(getMdForChannel(group, channel, false, false));
             }
         }
         return builder.toString();
