@@ -90,7 +90,11 @@ public class CommonMarkUtils {
         StringBuilder b = new StringBuilder();
         b.append("|");
         for (String s : items) {
-            b.append(s).append("|");
+            if (s == null) {
+                b.append("|");
+            } else {
+                b.append(s).append("|");
+            }
         }
         b.append("\n");
         return b.toString();

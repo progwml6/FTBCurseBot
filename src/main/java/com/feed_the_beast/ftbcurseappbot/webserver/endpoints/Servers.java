@@ -31,31 +31,35 @@ public class Servers {
     //TODO enable caching for this
     public static Map renderSpecificChannel (Request req, Response response) {
         String uuid = req.params(":guid");
-        if (uuid != null && !uuid.isEmpty()) {
-            CurseGUID guid = CurseGUID.deserialize(uuid);
-            for (GroupNotification group : Main.getCacheService().getContacts().get().groups) {
-                if (group.isPublic && !group.hideNoAccess) {
-                    for (ChannelContract c : group.channels) {
-                        if (c.groupID.equals(guid)) {
-                            if (c.isPublic && !c.hideNoAccess) {
-                                Map map = Maps.newHashMap();
-                                map.put("commonmark", Main.getCommonMarkUtils().renderToHTML(getMdForChannel(group, c, true, true)));
-                                map.put("titleText", group.groupTitle);
-                                return map;
-                            } else if (!c.isPublic && !c.hideNoAccess) {
-                                Map map = Maps.newHashMap();
-                                map.put("commonmark", Main.getCommonMarkUtils().renderToHTML(c.groupTitle + " isn't public"));
-                                map.put("titleText", group.groupTitle);
-                                return map;
-                            } else {
-                                //TODO we need to toss a better error here!
-                                return rendererror(req, response, uuid, 500);
-                            }
+        try {
+            if (uuid != null && !uuid.isEmpty()) {
+                CurseGUID guid = CurseGUID.deserialize(uuid);
+                for (GroupNotification group : Main.getCacheService().getContacts().get().groups) {
+                    if (group.isPublic && !group.hideNoAccess) {
+                        for (ChannelContract c : group.channels) {
+                            if (c.groupID.equals(guid)) {
+                                if (c.isPublic && !c.hideNoAccess) {
+                                    Map map = Maps.newHashMap();
+                                    map.put("commonmark", Main.getCommonMarkUtils().renderToHTML(getMdForChannel(group, c, true, true)));
+                                    map.put("titleText", group.groupTitle);
+                                    return map;
+                                } else if (!c.isPublic && !c.hideNoAccess) {
+                                    Map map = Maps.newHashMap();
+                                    map.put("commonmark", Main.getCommonMarkUtils().renderToHTML(c.groupTitle + " isn't public"));
+                                    map.put("titleText", group.groupTitle);
+                                    return map;
+                                } else {
+                                    //TODO we need to toss a better error here!
+                                    return rendererror(req, response, uuid, 500);
+                                }
 
+                            }
                         }
                     }
                 }
             }
+        } catch (Exception e) {
+            log.error("error with channel rendering", e);
         }
         return rendererror(req, response, uuid, 500);
 
