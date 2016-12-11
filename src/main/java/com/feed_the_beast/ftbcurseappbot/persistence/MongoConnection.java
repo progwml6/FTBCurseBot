@@ -167,6 +167,23 @@ public class MongoConnection {
         jongo.getCollection(MONGO_CURSECHECKS_COLLECTION).remove("{author:'" + author + typesearch + "', serverID: '" + serverID.serialize() + "', channelID:'" + channelID.serialize() + "'}");
     }
 
+    public static Optional<List<ModerationLog>> getModerationLogs (CurseGUID channelId) {
+        try {
+            List<ModerationLog> commandRet = new ArrayList<>();
+            MongoCursor<ModerationLog> commands = jongo.getCollection(MONGO_MODERATION_LOGGING_COLLECTION).find("{channelID: '" + channelId.serialize() + "'}")
+                    .as(ModerationLog.class);
+            while (commands.hasNext()) {
+                commandRet.add(commands.next());
+            }
+            commands.close();
+            return Optional.of(commandRet);
+        } catch (IOException | NullPointerException e) {
+            log.error("error getting moderation data", e);
+            return Optional.empty();
+        }
+
+    }
+
     public static Optional<List<MongoCurseforgeCheck>> getCurseChecks () {
         try {
             List<MongoCurseforgeCheck> commandRet = new ArrayList<>();
@@ -233,6 +250,9 @@ public class MongoConnection {
         }
         if (dbVersion.getVersion() < 3) {
             jongo.getCollection(MONGO_MODERATION_LOGGING_COLLECTION).ensureIndex("{serverID: 1}");
+        }
+        if (dbVersion.getVersion() < 4) {
+            jongo.getCollection(MONGO_MODERATION_LOGGING_COLLECTION).ensureIndex("{channelID: 1}");
         }
         //do this last
         dbVersion.setVersion(expected.getVersion());

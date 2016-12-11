@@ -73,6 +73,29 @@ public class CommonMarkUtils {
         return "```\n" + in + "\n```";
     }
 
+    public static String tableHeader (String... items) {
+        StringBuilder b = new StringBuilder();
+        b.append("|");
+        for (String s : items) {
+            b.append(s).append("|");
+        }
+        b.append("\n").append("|");
+        for (String s : items) {
+            b.append("-").append("|");
+        }
+        return b.toString();
+    }
+
+    public static String tableRow (String... items) {
+        StringBuilder b = new StringBuilder();
+        b.append("|");
+        for (String s : items) {
+            b.append(s).append("|");
+        }
+        b.append("\n");
+        return b.toString();
+    }
+
     public String renderToHTML (String md) {
         Node document = parser.parse(md);
         return renderer.render(document);

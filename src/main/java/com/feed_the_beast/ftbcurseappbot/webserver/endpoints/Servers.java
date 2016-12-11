@@ -1,6 +1,8 @@
 package com.feed_the_beast.ftbcurseappbot.webserver.endpoints;
 
 import com.feed_the_beast.ftbcurseappbot.Main;
+import com.feed_the_beast.ftbcurseappbot.persistence.MongoConnection;
+import com.feed_the_beast.ftbcurseappbot.persistence.data.ModerationLog;
 import com.feed_the_beast.ftbcurseappbot.utils.CommonMarkUtils;
 import com.feed_the_beast.javacurselib.common.enums.GroupStatus;
 import com.feed_the_beast.javacurselib.service.contacts.contacts.ChannelContract;
@@ -10,7 +12,9 @@ import com.google.common.collect.Maps;
 import spark.Request;
 import spark.Response;
 
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.annotation.Nonnull;
 
@@ -93,6 +97,13 @@ public class Servers {
             builder.append(CommonMarkUtils.h4("Parent Server " + CommonMarkUtils.link(group.groupTitle, "/server/" + group.groupID.serialize())));
         }
         if (displayData) {
+            Optional<List<ModerationLog>> logs = MongoConnection.getModerationLogs(channel.groupID);
+            if (logs.isPresent() && logs.get().size() > 0) {
+                builder.append(CommonMarkUtils.tableHeader("Date", "Type", "ActionPerformer", "MessageOwner", "Info"));
+                logs.get().stream().sorted((e1, e2) -> Long.compare(e1.getActionTime().getTime(), e2.getActionTime().getTime())).forEach(cnl -> {
+                    builder.append(CommonMarkUtils.tableRow(cnl.getActionTime().toString(), cnl.getType(), cnl.getPerformerName(), cnl.getAffectsName(), cnl.getInfo()));
+                });
+            }
             //TODO display moderation data -- only in public listed for now
         }
         return builder.toString();
