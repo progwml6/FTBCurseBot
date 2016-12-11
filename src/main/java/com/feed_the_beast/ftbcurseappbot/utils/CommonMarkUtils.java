@@ -83,6 +83,7 @@ public class CommonMarkUtils {
         for (String s : items) {
             b.append("-").append("|");
         }
+        b.append("\n");
         return b.toString();
     }
 
