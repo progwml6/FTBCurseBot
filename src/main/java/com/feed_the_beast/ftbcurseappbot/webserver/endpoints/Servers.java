@@ -22,21 +22,38 @@ public class Servers {
         return map;
     }
 
+    //TODO display in order
     public static String getMdForServers () {
         StringBuilder builder = new StringBuilder();
         builder.append(CommonMarkUtils.h1("Servers")).append("\n");
+        int nps = 0, npc = 0;
         for (GroupNotification group : Main.getCacheService().getContacts().get().groups) {
-            if (group.status == GroupStatus.NORMAL) {//TODO public visible to outside only
-                builder.append(CommonMarkUtils.h2(group.groupTitle)).append("\n").append(CommonMarkUtils.list(group.messageOfTheDay)).append(CommonMarkUtils.list("Public " + group.isPublic))
+            if (group.status == GroupStatus.NORMAL && group.isPublic && !group.hideNoAccess) {
+                builder.append(CommonMarkUtils.h2(group.groupTitle)).append(CommonMarkUtils.list(group.messageOfTheDay == null ? "MOTD: " : group.messageOfTheDay))
+                        .append(CommonMarkUtils.list("Public " + group.isPublic))
                         .append(CommonMarkUtils.list("hideNoAccess " + group.hideNoAccess));
+                //group.displayOrder;
                 for (ChannelContract channel : group.channels) {
-                    builder.append(CommonMarkUtils.h3(channel.groupTitle)).append(CommonMarkUtils.list("Public " + channel.isPublic))
-                            .append(CommonMarkUtils.list("hideNoAccess " + channel.hideNoAccess));
+                    if (!channel.hideNoAccess) {
+                        builder.append(CommonMarkUtils.h3(channel.groupTitle)).append(CommonMarkUtils.list("Public " + channel.isPublic))
+                                .append(CommonMarkUtils.list("hideNoAccess " + channel.hideNoAccess));
+                        if (channel.isPublic && channel.messageOfTheDay != null) {
+                            builder.append(CommonMarkUtils.list(channel.messageOfTheDay));
+                        }
+                        //channel.displayCategory;
+                        //channel.displayCategoryRank;
+                    } else {
+                        npc++;
+                    }
                 }
-                builder.append("\n");
+                builder.append("\n\n");
             }
-            builder.append("\n\n");
+            if (!group.isPublic && group.hideNoAccess) {
+                nps++;
+            }
         }
+        builder.append(CommonMarkUtils.h4("Additional Info:")).append(CommonMarkUtils.list("In " + nps + " Hidden Servers ")).append(CommonMarkUtils.list("In " + npc + " Hidden Channels "))
+                .append(CommonMarkUtils.list("TODO: List channels in order & by folders"))
         return builder.toString();
     }
 }

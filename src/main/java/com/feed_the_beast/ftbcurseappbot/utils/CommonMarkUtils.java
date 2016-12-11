@@ -21,12 +21,6 @@ public class CommonMarkUtils {
 
     }
 
-    public String renderToHTML (String md) {
-        Node document = parser.parse(md);
-        return renderer.render(document);
-
-    }
-
     public static String Bold (String in) {
         return "**" + in + "**";
     }
@@ -36,15 +30,19 @@ public class CommonMarkUtils {
     }
 
     public static String h1 (String in) {
-        return "# " + in;
+        return "# " + in + "\n";
     }
 
     public static String h2 (String in) {
-        return "## " + in;
+        return "## " + in + "\n";
     }
 
     public static String h3 (String in) {
-        return "### " + in;
+        return "### " + in + "\n";
+    }
+
+    public static String h4 (String in) {
+        return "#### " + in + "\n";
     }
 
     public static String link (String title, String link) {
@@ -60,7 +58,7 @@ public class CommonMarkUtils {
     }
 
     public static String list (String in) {
-        return "* " + in;
+        return "* " + in + "\n";
     }
 
     public static String horizontalRule () {
@@ -73,6 +71,12 @@ public class CommonMarkUtils {
 
     public static String codeBlock (String in) {
         return "```\n" + in + "\n```";
+    }
+
+    public String renderToHTML (String md) {
+        Node document = parser.parse(md);
+        return renderer.render(document);
+
     }
 
 }
