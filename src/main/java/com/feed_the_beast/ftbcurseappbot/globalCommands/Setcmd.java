@@ -31,9 +31,8 @@ public class Setcmd extends CommandBase {
                     }
                     MongoConnection.createOrModifyCommandForServer(regex, content, null, msg.rootConversationID, botTrigger);
                     Optional<List<MongoCommand>> commands = MongoConnection.getCommandsForServer(msg.rootConversationID);
-                    if (commands.isPresent()) {
-                        Main.getCacheService().setServerCommandsEntry(msg.rootConversationID, commands.get());//update cache
-                    }
+                    //update cache
+                    commands.ifPresent(mongoCommands -> Main.getCacheService().setServerCommandsEntry(msg.rootConversationID, mongoCommands));
                 }
             } else {
                 webSocket.sendMessage(msg.conversationID, "can not add command as persistence is disabled");

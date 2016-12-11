@@ -38,7 +38,6 @@ public class MongoCurseforgeCheck {
 
     public MongoCurseforgeCheck (@Nonnull String author, @Nonnull CurseGUID serverID, @Nonnull CurseGUID channelID) {
         this.author = author;
-        this.type = type;
         this.serverID = serverID.serialize();
         this.channelID = channelID.serialize();
     }

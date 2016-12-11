@@ -5,7 +5,7 @@ plugins {
     id 'idea'
     id 'eclipse'
     id 'application'
-    id 'com.github.johnrengelman.shadow' version '1.2.3'
+    id 'com.github.johnrengelman.shadow' version '1.2.4'
     id 'com.github.ben-manes.versions' version '0.13.0'
 
 }
@@ -41,37 +41,37 @@ configurations.all { exclude group: 'commons-logging' }//we use slf4j and replac
 dependencies {
     compile ('com.feed_the_beast:javacurseapi:0.1.0.+') { changing = true }
 
-    compile 'com.beust:jcommander:1.56' //command line argument support
-    compile 'ninja.leaping.configurate:configurate-hocon:3.1.1'//configuration
+    compile 'com.beust:jcommander:1.58' //command line argument support
+    compile 'ninja.leaping.configurate:configurate-hocon:3.2'//configuration
 
     //compile 'org.jsoup:jsoup:1.9.2' //scraping from html pages as needed
     compile 'org.apache-extras.beanshell:bsh:2.0b6' //commands
 
-    compile 'com.sparkjava:spark-core:2.5'  //for creating a web interface and rest endpoints
+    compile 'com.sparkjava:spark-core:2.5.4'  //for creating a web interface and rest endpoints
     compile 'com.sparkjava:spark-debug-tools:0.5' //debugging errors w/ endpoints
     compile 'com.sparkjava:spark-template-mustache:2.3' //webpage templates
 
-    compile 'com.atlassian.commonmark:commonmark:0.7.1'//commonmark markdown lib for java
-    compile 'com.atlassian.commonmark:commonmark-ext-gfm-tables:0.7.1'//tables from GitHub Flavored Markdown
-    compile 'com.atlassian.commonmark:commonmark-ext-gfm-strikethrough:0.7.1'//strikethrough of text
-    compile 'com.atlassian.commonmark:commonmark-ext-heading-anchor:0.7.1'//headings have id's
-    compile 'com.atlassian.commonmark:commonmark-ext-ins:0.7.1'//underlining
+    compile 'com.atlassian.commonmark:commonmark:0.8.0'//commonmark markdown lib for java
+    compile 'com.atlassian.commonmark:commonmark-ext-gfm-tables:0.8.0'//tables from GitHub Flavored Markdown
+    compile 'com.atlassian.commonmark:commonmark-ext-gfm-strikethrough:0.8.0'//strikethrough of text
+    compile 'com.atlassian.commonmark:commonmark-ext-heading-anchor:0.8.0'//headings have id's
+    compile 'com.atlassian.commonmark:commonmark-ext-ins:0.8.0'//underlining
 
     compile 'rome:rome:1.0' // rss & atom feeds
 
-    compile 'org.kohsuke:github-api:1.77'//GH integrations
+    compile 'org.kohsuke:github-api:1.80'//GH integrations
     compile 'org.slf4j:jcl-over-slf4j:1.7.21'// we don't want commons logging around
-    compile 'ch.qos.logback:logback-classic:1.1.7'
+    compile 'ch.qos.logback:logback-classic:1.1.8'
 
-    compile 'com.github.ben-manes.caffeine:caffeine:2.3.3'//high performance local cache
-    compile 'com.github.ben-manes.caffeine:guava:2.3.3'
+    compile 'com.github.ben-manes.caffeine:caffeine:2.3.5'//high performance local cache
+    compile 'com.github.ben-manes.caffeine:guava:2.3.5'
 
 
     compile 'com.google.inject:guice:4.1.0' //injections
 
-    compile 'org.projectlombok:lombok:1.16.10'
+    compile 'org.projectlombok:lombok:1.16.12'
 
-    compile 'org.mongodb:mongodb-driver:3.3.0'//nosql storage for commands & ban data
+    compile 'org.mongodb:mongodb-driver:3.4.0'//nosql storage for commands & ban data
     compile 'org.jongo:jongo:1.4-early-20160606-0118'//mongo helpers & pojo mappings
 
     compile 'commons-codec:commons-codec:1.10'

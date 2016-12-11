@@ -22,9 +22,7 @@ public class Curseuuid extends CommandBase {
             if (serverName.isPresent()) {
                 webSocket.sendMessage(msg.conversationID, "Server: " + serverName + " is " + msg.rootConversationID + " ; Channel: is " + msg.conversationID);
             }
-            if (channelName.isPresent()) {
-                webSocket.sendMessage(msg.conversationID, "Server is " + msg.rootConversationID + " ; Channel: " + channelName.get() + " is " + msg.conversationID);
-            }
+            channelName.ifPresent(s -> webSocket.sendMessage(msg.conversationID, "Server is " + msg.rootConversationID + " ; Channel: " + s + " is " + msg.conversationID));
         }
     }
 

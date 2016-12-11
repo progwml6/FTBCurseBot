@@ -42,9 +42,8 @@ public class DelCmd extends CommandBase {
                         MongoConnection.removeCommandForServer(regex, msg.rootConversationID, botTrigger);
                         webSocket.sendMessage(msg.conversationID, commandRegex + " has been removed");
                         commands = MongoConnection.getCommandsForServer(msg.rootConversationID);
-                        if (commands.isPresent()) {
-                            Main.getCacheService().setServerCommandsEntry(msg.rootConversationID, commands.get());//update cache
-                        }
+                        //update cache
+                        commands.ifPresent(mongoCommands -> Main.getCacheService().setServerCommandsEntry(msg.rootConversationID, mongoCommands));
                     } else {
                         webSocket.sendMessage(msg.conversationID, "command " + regex + " does not exist!");
                     }

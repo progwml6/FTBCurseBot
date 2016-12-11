@@ -191,7 +191,9 @@ public class CurseforgeChecker implements Runnable {
                     String[] g = s.split("\\.");
                     Optional<CurseGUID> ci = Main.getCacheService().getContacts().get().getChannelIdbyNames(g[0], g[1], true);
                     if (ci.isPresent()) {
-                        log.debug("sending status change for {} to {} guid: {} types {}", "CurseForge", s, ci.get().serialize(), types);
+                        if (Config.isDebugEnabled()) {
+                            log.debug("sending status change for {} to {} guid: {} types {}", "CurseForge", s, ci.get().serialize(), types);
+                        }
                         ws.sendMessage(ci.get(), message);
                     } else {
                         log.error("no channel id exists for {} {}", g[0], g[1]);

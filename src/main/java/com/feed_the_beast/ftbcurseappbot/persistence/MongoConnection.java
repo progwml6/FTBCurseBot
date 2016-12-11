@@ -87,15 +87,11 @@ public class MongoConnection {
         ModerationLog log = ModerationLog.builder().type(event.getName()).serverID(serverID.serialize()).performer(performer).performerName(performerName).affects(affects).affectsName(nameAffects)
                 .info(info).doneByBot(wasDoneByBot).actionTime(new Date()).build();
         Optional<String> gpn = Main.getCacheService().getContacts().get().getGroupNamebyId(serverID);
-        if (gpn.isPresent()) {
-            log.setServerName(gpn.get());
-        }
+        gpn.ifPresent(log::setServerName);
         if (channel != null) {
             log.setChannelID(channel.serialize());
             Optional<String> chn = Main.getCacheService().getContacts().get().getChannelNamebyId(channel);
-            if (chn.isPresent()) {
-                log.setChannelName(chn.get());
-            }
+            chn.ifPresent(log::setChannelName);
         }
         jongo.getCollection(MONGO_MODERATION_LOGGING_COLLECTION).save(log);
 

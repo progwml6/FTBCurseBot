@@ -89,9 +89,7 @@ public class CommandRegistry {
         if (!commands.isPresent()) {
             log.info("no commands present for server {} checking cache", msg.rootConversationID);
             commands = MongoConnection.getCommandsForServer(server);
-            if (commands.isPresent()) {
-                Main.getCacheService().setServerCommandsEntry(server, commands.get());
-            }
+            commands.ifPresent(mongoCommands -> Main.getCacheService().setServerCommandsEntry(server, mongoCommands));
         }
         if (commands.isPresent()) {
             for (MongoCommand c : commands.get()) {

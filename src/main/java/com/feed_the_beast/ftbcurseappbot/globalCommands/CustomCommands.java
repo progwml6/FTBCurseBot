@@ -18,9 +18,7 @@ public class CustomCommands extends CommandBase {
         String ret;
         if (!commands.isPresent()) {//check mongo if nothing exists for the server
             commands = MongoConnection.getCommandsForServer(msg.rootConversationID);
-            if (commands.isPresent()) {
-                Main.getCacheService().setServerCommandsEntry(msg.rootConversationID, commands.get());
-            }
+            commands.ifPresent(mongoCommands -> Main.getCacheService().setServerCommandsEntry(msg.rootConversationID, mongoCommands));
         }
         StringBuilder bdr = new StringBuilder();
         bdr.append("Custom Commands for this server:");
