@@ -9,6 +9,7 @@ import com.feed_the_beast.javacurselib.websocket.WebSocket;
 import com.feed_the_beast.javacurselib.websocket.messages.notifications.ConversationMessageNotification;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Date;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
@@ -34,7 +35,8 @@ public class IpBan extends CommandBase {
 
                 if (member.isPresent()) {
                     webSocket.sendMessage(msg.conversationID, "You can ipban " + msplit[1] + "!");
-                    MongoConnection.logEvent(PersistanceEventType.IP_BAN, msg.rootConversationID, msg.conversationID, msg.senderID, msg.senderName, member.get().userID, msplit[1], desc, true);
+                    MongoConnection.logEvent(PersistanceEventType.IP_BAN, msg.rootConversationID, msg.conversationID, msg.senderID, msg.senderName, member.get().userID, msplit[1], desc, true,
+                            new Date().getTime());
                 } else {
                     webSocket.sendMessage(msg.conversationID, "can not find " + msplit[1] + " in this server to ipban!");
                 }

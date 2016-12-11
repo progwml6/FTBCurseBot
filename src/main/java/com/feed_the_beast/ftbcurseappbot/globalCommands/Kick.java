@@ -9,6 +9,7 @@ import com.feed_the_beast.javacurselib.websocket.WebSocket;
 import com.feed_the_beast.javacurselib.websocket.messages.notifications.ConversationMessageNotification;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Date;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
@@ -33,7 +34,8 @@ public class Kick extends CommandBase {
                 Optional<GroupMemberContract> member = Main.getCacheService().getServerMember(msg.rootConversationID, msplit[1], true);
                 if (member.isPresent()) {
                     webSocket.sendMessage(msg.conversationID, "You can kick " + msplit[1] + "!");
-                    MongoConnection.logEvent(PersistanceEventType.KICK, msg.rootConversationID, msg.conversationID, msg.senderID, msg.senderName, member.get().userID, msplit[1], desc, true);
+                    MongoConnection.logEvent(PersistanceEventType.KICK, msg.rootConversationID, msg.conversationID, msg.senderID, msg.senderName, member.get().userID, msplit[1], desc, true,
+                            new Date().getTime());
                 } else {
                     webSocket.sendMessage(msg.conversationID, "can not find " + msplit[1] + " in this server to kick!");
                 }
