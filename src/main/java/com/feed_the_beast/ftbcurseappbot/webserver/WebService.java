@@ -6,6 +6,7 @@ import static spark.Spark.post;
 import static spark.debug.DebugScreen.enableDebugScreen;
 
 import com.feed_the_beast.ftbcurseappbot.Config;
+import com.feed_the_beast.ftbcurseappbot.utils.CommonMarkUtils;
 import com.feed_the_beast.ftbcurseappbot.webserver.endpoints.GithubWebhook;
 import com.feed_the_beast.ftbcurseappbot.webserver.endpoints.HealthEndpoint;
 import com.feed_the_beast.ftbcurseappbot.webserver.endpoints.Md;
@@ -42,7 +43,7 @@ public class WebService {
         get("/servers", (request, response) -> new ModelAndView(Servers.render(Config.getUsername() + " Servers"), "commonmark.mustache"), new MustacheTemplateEngine());
         get("/server/:guid", (request, response) -> new ModelAndView(Servers.renderSpecificServer(request, response), "commonmark.mustache"), new MustacheTemplateEngine());
         post("/webhooks/github/:hookName", GithubWebhook.hook);
-        get("/", (request, response) -> "No fancy web config yet check back soon!");
+        get("/", (request, response) -> new ModelAndView(Md.render(CommonMarkUtils.link("Servers list/moderation data", "/servers"), "Bot Home"), "commonmark.mustache"), new MustacheTemplateEngine());
     }
 
 }

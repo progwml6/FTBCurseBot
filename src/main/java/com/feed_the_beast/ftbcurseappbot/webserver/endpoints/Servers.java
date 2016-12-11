@@ -37,7 +37,7 @@ public class Servers {
                     } else {
                         //TODO we need to toss a better error here!
                         Map map = Maps.newHashMap();
-                        map.put("commonmark", Main.getCommonMarkUtils().renderToHTML("ERROR"));
+                        map.put("commonmark", Main.getCommonMarkUtils().renderToHTML("1ERROR " + uuid));
                         map.put("titleText", "ERROR");
                         response.status(500);
                         return map;
@@ -47,7 +47,7 @@ public class Servers {
         }
         //TODO we need to toss a better error here!
         Map map = Maps.newHashMap();
-        map.put("commonmark", Main.getCommonMarkUtils().renderToHTML("ERROR"));
+        map.put("commonmark", Main.getCommonMarkUtils().renderToHTML("2ERROR "+ uuid));
         map.put("titleText", "ERROR");
         response.status(500);
         return map;
