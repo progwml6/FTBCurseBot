@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbcurseappbot.persistence.data;
 
-import lombok.Builder;
 import lombok.Data;
 import org.bson.types.ObjectId;
 import org.jongo.marshall.jackson.oid.MongoObjectId;
@@ -8,7 +7,6 @@ import org.jongo.marshall.jackson.oid.MongoObjectId;
 import java.util.Date;
 
 @Data
-@Builder
 public class ModerationLog {
     @MongoObjectId
     private ObjectId _id;
@@ -28,5 +26,17 @@ public class ModerationLog {
 
     public ModerationLog () {
         //json serialization needs constructor
+    }
+
+    public ModerationLog (String type, String serverID, long performer, String performerName, long affects, String affectsName, String info, boolean doneByBot, Date actionTime) {
+        this.type = type;
+        this.serverID = serverID;
+        this.performer = performer;
+        this.performerName = performerName;
+        this.affects = affects;
+        this.affectsName = affectsName;
+        this.info = info;
+        this.doneByBot = doneByBot;
+        this.actionTime = actionTime;
     }
 }
