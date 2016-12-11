@@ -9,6 +9,7 @@ import com.feed_the_beast.javacurselib.service.contacts.contacts.ChannelContract
 import com.feed_the_beast.javacurselib.service.contacts.contacts.GroupNotification;
 import com.feed_the_beast.javacurselib.utils.CurseGUID;
 import com.google.common.collect.Maps;
+import lombok.extern.slf4j.Slf4j;
 import spark.Request;
 import spark.Response;
 
@@ -18,6 +19,7 @@ import java.util.Optional;
 
 import javax.annotation.Nonnull;
 
+@Slf4j
 public class Servers {
     public static Map render (@Nonnull String title) {
         Map map = Maps.newHashMap();
@@ -99,10 +101,14 @@ public class Servers {
         if (displayData) {
             Optional<List<ModerationLog>> logs = MongoConnection.getModerationLogs(channel.groupID);
             if (logs.isPresent() && logs.get().size() > 0) {
-                builder.append(CommonMarkUtils.tableHeader("Date", "Type", "ActionPerformer", "MessageOwner", "Info"));
-                logs.get().stream().sorted((e1, e2) -> Long.compare(e1.getActionTime().getTime(), e2.getActionTime().getTime())).forEach(cnl -> {
-                    builder.append(CommonMarkUtils.tableRow(cnl.getActionTime().toString(), cnl.getType(), cnl.getPerformerName(), cnl.getAffectsName(), cnl.getInfo()));
-                });
+                try {
+                    builder.append(CommonMarkUtils.tableHeader("Date", "Type", "ActionPerformer", "MessageOwner", "Info"));
+                    logs.get().stream().sorted((e1, e2) -> Long.compare(e1.getActionTime().getTime(), e2.getActionTime().getTime())).forEach(cnl -> {
+                        builder.append(CommonMarkUtils.tableRow(cnl.getActionTime().toString(), cnl.getType(), cnl.getPerformerName(), cnl.getAffectsName(), cnl.getInfo()));
+                    });
+                } catch (Exception e) {
+                    log.error("error with tables", e);
+                }
             }
             //TODO display moderation data -- only in public listed for now
         }
