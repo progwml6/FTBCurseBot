@@ -45,7 +45,7 @@ import java.util.concurrent.TimeUnit;
  */
 @Slf4j
 public class Main {
-    public static final String VERSION = "0.0.1";
+    public static final String VERSION = "0.1.0";
     private static final int CHECKER_POLL_TIME = 120;
     public static EventBus eventBus = new EventBus();
     @Getter

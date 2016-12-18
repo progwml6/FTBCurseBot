@@ -1,5 +1,7 @@
 package com.feed_the_beast.ftbcurseappbot.utils;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.commonmark.Extension;
 import org.commonmark.ext.gfm.strikethrough.StrikethroughExtension;
 import org.commonmark.ext.gfm.tables.TablesExtension;
@@ -13,6 +15,9 @@ import java.util.Arrays;
 import java.util.List;
 
 public class CommonMarkUtils {
+    @Getter
+    @Setter
+    private static String proxypath = "";
     private Parser parser;
     private HtmlRenderer renderer;
 
@@ -20,7 +25,6 @@ public class CommonMarkUtils {
         List<Extension> extensions = Arrays.asList(TablesExtension.create(), StrikethroughExtension.create(), HeadingAnchorExtension.create(), InsExtension.create());
         parser = Parser.builder().extensions(extensions).build();
         renderer = HtmlRenderer.builder().extensions(extensions).build();
-
     }
 
     public static String Bold (String in) {
@@ -48,6 +52,9 @@ public class CommonMarkUtils {
     }
 
     public static String link (String title, String link) {
+        if (link.startsWith("/")) {
+            link = proxypath + link;
+        }
         return "[" + title + "](" + link + ")";
     }
 

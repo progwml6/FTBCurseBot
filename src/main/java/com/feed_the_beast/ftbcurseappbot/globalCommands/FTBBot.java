@@ -11,8 +11,8 @@ import java.util.regex.Pattern;
 public class FTBBot extends CommandBase {
     @Override
     public void onMessage (WebSocket webSocket, ConversationMessageNotification msg) {
-        webSocket.sendMessage(msg.conversationID, "This is an instance of FTBBot " + Main.VERSION + " which is being built by the FTB Dev team. "
-                + "It will be open sourced when the CurseApp apis are publicly released");
+        webSocket.sendMessage(msg.conversationID, "This is an instance of FTBBot " + Main.VERSION + " which is being built by the FTB Dev team in Java. "
+                + "Source Code: https://github.com/progwml6/ftbcursebot Library:  ");
     }
 
     @Override

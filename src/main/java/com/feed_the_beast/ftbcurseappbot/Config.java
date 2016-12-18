@@ -33,6 +33,8 @@ public class Config {
     private static Optional<List<String>> travisStatusChangeNotificationsEnabled = Optional.empty();
     @Getter
     private static Optional<List<String>> twitchStatusChangeNotificationsEnabled = Optional.empty();
+    @Getter
+    private static Optional<String> proxyPath = Optional.empty();
 
     public static void load (File configFl) {
         try {
@@ -79,6 +81,7 @@ public class Config {
         } catch (ObjectMappingException e) {
             log.error("couldn't map bot settings - twitch", e);
         }
+        proxyPath = Optional.ofNullable(config.getNode("botSettings", "proxypath").getString());
 
         log.info("bot trigger is " + botTrigger);
 

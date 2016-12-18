@@ -43,8 +43,8 @@ public class MongoConnection {
     private static String MONGO_CONFIG_COLLECTION = "dbinfo";
     private static String MONGO_COMMANDS_COLLECTION = "commands";
     private static String MONGO_MODERATION_LOGGING_COLLECTION = "moderation_logs";
-    private static String MONGO_SERVER_CONFIG_COLLECTION = "serverconfig";
-    private static String MONGO_CHANNEL_CONFIG_COLLECTION = "channelconfig";
+    private static String MONGO_SERVER_CONFIG_COLLECTION = "serverconfigs";
+    private static String MONGO_CHANNEL_CONFIG_COLLECTION = "channelconfigs";
     private static String MONGO_CURSECHECKS_COLLECTION = "cursechecks";
 
     public static void start () {

@@ -23,6 +23,9 @@ public class WebService {
     public static final String API_POST_SUCCESS = "POST SUCCESSFUL";
 
     public WebService () {
+        if (Config.getProxyPath().isPresent()) {
+            CommonMarkUtils.setProxypath(Config.getProxyPath().get());
+        }
         port(Config.getWebPort());
         if (Config.isDebugEnabled()) {
             enableDebugScreen();

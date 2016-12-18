@@ -7,9 +7,6 @@ import java.util.Map;
 
 import javax.annotation.Nonnull;
 
-/**
- * Created by progwml6 on 7/16/16.
- */
 public class Md {
     public static Map render (@Nonnull String text, @Nonnull String title) {
         Map map = Maps.newHashMap();
