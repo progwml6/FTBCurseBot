@@ -12,7 +12,7 @@ public class FTBBot extends CommandBase {
     @Override
     public void onMessage (WebSocket webSocket, ConversationMessageNotification msg) {
         webSocket.sendMessage(msg.conversationID, "This is an instance of FTBBot " + Main.VERSION + " which is being built by the FTB Dev team in Java. "
-                + "Source Code: https://github.com/progwml6/ftbcursebot Library:  ");
+                + "Source Code: https://github.com/progwml6/ftbcursebot Library: https://github.com/progwml6/javacurseapi");
     }
 
     @Override
