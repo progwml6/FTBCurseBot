@@ -22,13 +22,14 @@ public class ModerationLog {
     private String affectsName;
     private String info;
     private Boolean doneByBot;
+    private Date messageTime;
     private Date actionTime;
 
     public ModerationLog () {
         //json serialization needs constructor
     }
 
-    public ModerationLog (String type, String serverID, long performer, String performerName, long affects, String affectsName, String info, boolean doneByBot, Date actionTime) {
+    public ModerationLog (String type, String serverID, long performer, String performerName, long affects, String affectsName, String info, boolean doneByBot, Date actionTime, Date messageTime) {
         this.type = type;
         this.serverID = serverID;
         this.performer = performer;
@@ -38,5 +39,6 @@ public class ModerationLog {
         this.info = info;
         this.doneByBot = doneByBot;
         this.actionTime = actionTime;
+        this.messageTime = messageTime;
     }
 }

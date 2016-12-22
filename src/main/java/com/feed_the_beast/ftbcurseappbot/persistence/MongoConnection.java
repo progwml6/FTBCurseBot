@@ -16,6 +16,7 @@ import com.mongodb.client.MongoDatabase;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
+import org.apache.commons.lang3.StringUtils;
 import org.jongo.Jongo;
 import org.jongo.MongoCursor;
 
@@ -83,11 +84,27 @@ public class MongoConnection {
         }
     }
 
-    //TODO make sure to setup mongo indexes for more of this to speed up searching
     public static void logEvent (PersistanceEventType event, CurseGUID serverID, @Nullable CurseGUID channel, long performer, String performerName, long affects, String nameAffects, String info,
-            boolean wasDoneByBot, long actionTime) {
+            boolean wasDoneByBot, long actionTime, long messageTime) {
+        Date orig = null;
+        if (messageTime > 0) {
+            orig = new Date(messageTime);
+        }
+
+        if (StringUtils.isEmpty(info)) {//put the original messages from deletions, etc. in the database for display later
+            Optional<List<ModerationLog>> lgs = Optional.empty();
+            if (orig != null) {
+                lgs = getMessageLog(channel, orig);
+            }
+            if (orig == null || !lgs.isPresent()) {
+                lgs = getMessageLog(channel, new Date(actionTime));
+            }
+            if (lgs.isPresent()) {
+                info = lgs.get().get(0).getInfo();
+            }
+        }
         ModerationLog log = new ModerationLog(event.getName(), serverID.serialize(), performer, performerName, affects, nameAffects,
-                info, wasDoneByBot, new Date(actionTime));
+                info, wasDoneByBot, new Date(actionTime), orig);
         Optional<String> gpn = Main.getCacheService().getContacts().get().getGroupNamebyId(serverID);
         gpn.ifPresent(log::setServerName);
         if (channel != null) {
@@ -107,14 +124,12 @@ public class MongoConnection {
      * @param serverID curse server ID
      * @param usesTrigger uses the bot's trigger if true like simple commands, if false this is a regex based command
      */
-    //TODO make sure to setup mongo indexes for some of this to speed up searching
     public static void createOrModifyCommandForServer (@Nonnull String regex, @Nonnull String content, @Nullable Set<GroupPermissions> requiredPermissions, @Nonnull CurseGUID serverID,
             boolean usesTrigger) {
         Set<GroupPermissions> commandPermissions = requiredPermissions;
         if (commandPermissions == null || commandPermissions.isEmpty()) {
             commandPermissions = GroupPermissions.NONE;
         }
-        //TODO check for existing object, and use/save that
         MongoCommand command = jongo.getCollection(MONGO_COMMANDS_COLLECTION).findOne("{regex:'" + regex + "', usesTrigger:" + usesTrigger + ", serverID: '" + serverID.serialize() + "'}")
                 .as(MongoCommand.class);
         if (command == null) {
@@ -182,6 +197,23 @@ public class MongoConnection {
             return Optional.empty();
         }
 
+    }
+
+    public static Optional<List<ModerationLog>> getMessageLog (CurseGUID channelId, Date eventTime) {
+        try {
+            List<ModerationLog> commandRet = new ArrayList<>();
+            MongoCursor<ModerationLog> commands = jongo.getCollection(MONGO_MODERATION_LOGGING_COLLECTION)
+                    .find("{channelID: '" + channelId.serialize() + ", 'messageTime: ' ISODate(" + eventTime.toString() + ")'}")
+                    .as(ModerationLog.class);
+            while (commands.hasNext()) {
+                commandRet.add(commands.next());
+            }
+            commands.close();
+            return Optional.of(commandRet);
+        } catch (IOException | NullPointerException e) {
+            log.error("error getting moderation data", e);
+            return Optional.empty();
+        }
     }
 
     public static Optional<List<MongoCurseforgeCheck>> getCurseChecks () {
@@ -253,6 +285,9 @@ public class MongoConnection {
         }
         if (dbVersion.getVersion() < 4) {
             jongo.getCollection(MONGO_MODERATION_LOGGING_COLLECTION).ensureIndex("{channelID: 1}");
+        }
+        if (dbVersion.getVersion() < 5) {
+            jongo.getCollection(MONGO_MODERATION_LOGGING_COLLECTION).ensureIndex("{channelID: 1, messageTime: -1}");
         }
         //do this last
         dbVersion.setVersion(expected.getVersion());

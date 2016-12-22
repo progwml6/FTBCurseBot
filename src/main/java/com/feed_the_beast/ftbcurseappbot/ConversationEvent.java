@@ -25,12 +25,24 @@ public class ConversationEvent implements Task<ConversationMessageNotification> 
             Optional<ICommandBase> command = CommandRegistry.getCommand(msg.rootConversationID, msg.body);
             if (command.isPresent() && Main.getSession().isPresent() && msg.senderID != Main.getSession().get().user.userID) {//bot cannot execute commands for security reasons
                 command.get().onMessage(webSocket, msg);
-            } else if (msg.body.startsWith(Config.getBotTrigger() + "api")) {
-                log.info("api " + msg.body.replace(Config.getBotTrigger() + "api", ""));
-                webSocket.sendMessage(msg.conversationID, "CurseApp api is located at http://api.feed-the-beast.com/curseapiaccess.php");
             } else {//custom server commands
                 if (Main.getSession().isPresent() && msg.senderID != Main.getSession().get().user.userID) {//bot can't execute commands
                     CommandRegistry.processServerCommands(msg.rootConversationID, webSocket, msg);
+                }
+            }
+            if (msg.notificationType == ConversationNotificationType.EDITED) {
+                if (MongoConnection.isPersistanceEnabled()) {
+                    MongoConnection
+                            .logEvent(PersistanceEventType.getTypeFromConversationNotificationType(msg.notificationType), msg.rootConversationID, msg.conversationID, msg.editedUserID,
+                                    msg.editedUsername, msg.senderID,
+                                    msg.senderName, msg.body, msg.senderName == Config.getUsername(), msg.editedTimestamp, msg.timestamp);
+                }
+            } else if(msg.notificationType == ConversationNotificationType.NORMAL) {
+                if (MongoConnection.isPersistanceEnabled()) {
+                    MongoConnection
+                            .logEvent(PersistanceEventType.getTypeFromConversationNotificationType(msg.notificationType), msg.rootConversationID, msg.conversationID, -1,
+                                    null, msg.senderID,
+                                    msg.senderName, msg.body, msg.senderName == Config.getUsername(), msg.timestamp, msg.timestamp);
                 }
             }
             webSocket.sendMarkRead(msg.conversationID);
@@ -39,14 +51,7 @@ public class ConversationEvent implements Task<ConversationMessageNotification> 
                 MongoConnection
                         .logEvent(PersistanceEventType.getTypeFromConversationNotificationType(msg.notificationType), msg.rootConversationID, msg.conversationID, msg.deletedUserID,
                                 msg.deletedUsername, msg.senderID,
-                                msg.senderName, msg.body, msg.senderName == Config.getUsername(), msg.deletedTimestamp);
-            }
-        } else if (msg.notificationType == ConversationNotificationType.EDITED) {
-            if (MongoConnection.isPersistanceEnabled()) {
-                MongoConnection
-                        .logEvent(PersistanceEventType.getTypeFromConversationNotificationType(msg.notificationType), msg.rootConversationID, msg.conversationID, msg.editedUserID,
-                                msg.editedUsername, msg.senderID,
-                                msg.senderName, msg.body, msg.senderName == Config.getUsername(), msg.editedTimestamp);
+                                msg.senderName, msg.body, msg.senderName == Config.getUsername(), msg.deletedTimestamp, msg.timestamp);
             }
         }
     }

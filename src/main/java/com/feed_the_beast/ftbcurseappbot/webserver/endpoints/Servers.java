@@ -38,15 +38,9 @@ public class Servers {
                     for (ChannelContract c : group.channels) {
                         if (c.groupID.equals(guid)) {
                             if (c.isPublic && !c.hideNoAccess) {
-                                Map map = Maps.newHashMap();
-                                map.put("commonmark", Main.getCommonMarkUtils().renderToHTML(getMdForChannel(group, c, true, true)));
-                                map.put("titleText", group.groupTitle);
-                                return map;
+                                return Md.render(group.groupTitle, getMdForChannel(group, c, true, true));
                             } else if (!c.isPublic && !c.hideNoAccess) {
-                                Map map = Maps.newHashMap();
-                                map.put("commonmark", Main.getCommonMarkUtils().renderToHTML(c.groupTitle + " isn't public"));
-                                map.put("titleText", group.groupTitle);
-                                return map;
+                                return Md.render(group.groupTitle, c.groupTitle + " isn't public");
                             } else {
                                 //TODO we need to toss a better error here!
                                 return rendererror(req, response, uuid, 500);
@@ -69,10 +63,7 @@ public class Servers {
             for (GroupNotification group : Main.getCacheService().getContacts().get().groups) {
                 if (group.groupID.equals(guid)) {
                     if (group.isPublic && !group.hideNoAccess) {
-                        Map map = Maps.newHashMap();
-                        map.put("commonmark", Main.getCommonMarkUtils().renderToHTML(getMdForServer(group)));
-                        map.put("titleText", group.groupTitle);
-                        return map;
+                        return Md.render(group.groupTitle, getMdForServer(group));
                     } else {
                         //TODO we need to toss a better error here!
                         return rendererror(req, response, uuid, 500);
@@ -147,11 +138,7 @@ public class Servers {
     }
 
     private static Map rendererror (Request req, Response response, String uuid, int code) {
-        Map map = Maps.newHashMap();
-        map.put("commonmark", Main.getCommonMarkUtils().renderToHTML("ERROR " + uuid));
-        map.put("titleText", "ERROR");
         response.status(code);
-        return map;
-
+        return Md.render("ERROR", "ERROR " + uuid);
     }
 }
