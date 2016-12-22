@@ -21,7 +21,7 @@ import javax.annotation.Nonnull;
 @Slf4j
 public class Servers {
     public static Map render (@Nonnull String title) {
-        return Md.render(title, getMdForServers());
+        return Md.render(getMdForServers(), title);
     }
 
     //TODO enable caching for this
@@ -34,9 +34,9 @@ public class Servers {
                     for (ChannelContract c : group.channels) {
                         if (c.groupID.equals(guid)) {
                             if (c.isPublic && !c.hideNoAccess) {
-                                return Md.render(group.groupTitle, getMdForChannel(group, c, true, true));
+                                return Md.render(getMdForChannel(group, c, true, true), group.groupTitle);
                             } else if (!c.isPublic && !c.hideNoAccess) {
-                                return Md.render(group.groupTitle, c.groupTitle + " isn't public");
+                                return Md.render(c.groupTitle + " isn't public", group.groupTitle);
                             } else {
                                 //TODO we need to toss a better error here!
                                 return rendererror(req, response, uuid, 500);
@@ -54,22 +54,18 @@ public class Servers {
     //TODO enable caching for this
     public static Map renderSpecificServer (Request req, Response response) {
         String uuid = req.params(":guid");
-        try {
-            if (uuid != null && !uuid.isEmpty()) {
-                CurseGUID guid = CurseGUID.deserialize(uuid);
-                for (GroupNotification group : Main.getCacheService().getContacts().get().groups) {
-                    if (group.groupID.equals(guid)) {
-                        if (group.isPublic && !group.hideNoAccess) {
-                            return Md.render(group.groupTitle, getMdForServer(group));
-                        } else {
-                            //TODO we need to toss a better error here!
-                            return rendererror(req, response, uuid, 500);
-                        }
+        if (uuid != null && !uuid.isEmpty()) {
+            CurseGUID guid = CurseGUID.deserialize(uuid);
+            for (GroupNotification group : Main.getCacheService().getContacts().get().groups) {
+                if (group.groupID.equals(guid)) {
+                    if (group.isPublic && !group.hideNoAccess) {
+                        return Md.render(getMdForServer(group), group.groupTitle);
+                    } else {
+                        //TODO we need to toss a better error here!
+                        return rendererror(req, response, uuid, 500);
                     }
                 }
             }
-        } catch (NullPointerException e) {
-            log.error("NPE for server", e);
         }
         //TODO we need to toss a better error here!
         return rendererror(req, response, uuid, 500);
