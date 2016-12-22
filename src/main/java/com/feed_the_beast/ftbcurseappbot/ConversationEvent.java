@@ -72,7 +72,11 @@ public class ConversationEvent implements Task<ConversationMessageNotification> 
                                 if (msgsend.length() == 0) {
                                     msgsend += "User(s) can't see message: ";
                                 }
-                                msgsend += member.get().nickName + " ";
+                                if (member.get().nickName != null) {
+                                    msgsend += member.get().nickName + " ";
+                                } else {
+                                    msgsend += member.get().username + " ";
+                                }
                             }
                         } else {
                             //TODO implement
