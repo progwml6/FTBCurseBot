@@ -46,6 +46,7 @@ public class CacheService {
     @Setter
     @Nullable
     private AddonDatabase addonDatabase;
+
     public CacheService () {
         customServerCommands = Maps.newHashMap();
         grouproledetails = Caffeine.newBuilder()
@@ -115,6 +116,57 @@ public class CacheService {
     @Nonnull
     public Optional<List<GroupMemberContract>> getServerMembers (@Nonnull CurseGUID serverId) {
         return Optional.of(groupmembers.get(serverId));
+    }
+
+    @Nonnull
+    public Optional<GroupNotification> getGroupNotification(@Nonnull CurseGUID serverID) {
+        return Optional.of(groupnotifications.get(serverID));
+    }
+    @Nonnull//TODO clean up filter statements
+    public Optional<GroupMemberContract> getServerMember (@Nonnull CurseGUID serverId, long id, boolean canTryCacheClear) {
+        Optional<List<GroupMemberContract>> members = getServerMembers(serverId);
+        boolean hasCleared = false;
+        if (!members.isPresent() || members.get().size() == 0) {
+            if (canTryCacheClear) {
+                groupmembers.refresh(serverId);
+                hasCleared = true;
+            } else {
+                return Optional.empty();
+            }
+        } else {
+            members = getServerMembers(serverId);
+            Optional<GroupMemberContract> gc = Optional.empty();
+            if (members.isPresent()) {
+                gc = members.get().stream().filter(g -> g != null && g.userID == id).findFirst();
+            }
+            if (!gc.isPresent()) {
+                if (canTryCacheClear) {
+                    groupmembers.refresh(serverId);
+                    members = getServerMembers(serverId);
+                    hasCleared = true;
+                } else {
+                    return Optional.empty();
+                }
+            } else {
+                return gc;
+            }
+        }
+        if (!members.isPresent() || members.get().size() == 0) {
+            return Optional.empty();
+        } else if (hasCleared) {
+            members = getServerMembers(serverId);
+            Optional<GroupMemberContract> gc = Optional.empty();
+            if (members.isPresent()) {
+                gc = members.get().stream().filter(g -> g != null && g.userID == id).findFirst();
+            }
+            if (!gc.isPresent()) {
+                return Optional.empty();
+
+            } else {
+                return gc;
+            }
+        }
+        return Optional.empty();
     }
 
     @Nonnull//TODO clean up filter statements
