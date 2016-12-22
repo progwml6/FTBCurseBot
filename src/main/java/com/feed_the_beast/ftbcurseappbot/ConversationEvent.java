@@ -62,10 +62,8 @@ public class ConversationEvent implements Task<ConversationMessageNotification> 
                                 for (GroupRoleNotification role : gn.get().roles) {
                                     if (role.roleID == j) {
                                         Set<GroupPermissions> perms = gn.get().rolePermissions.get(msg.conversationID);
-                                        if (perms.contains(GroupPermissions.ACCESS)) {
-                                            if (!canView) {
-                                                canView = true;
-                                            }
+                                        if (perms != null && perms.contains(GroupPermissions.ACCESS)) {
+                                            canView = true;
                                         }
                                     }
                                 }
@@ -80,7 +78,7 @@ public class ConversationEvent implements Task<ConversationMessageNotification> 
                             //TODO implement
                         }
                     }
-                    if(msgsend.length() > 0) {
+                    if (msgsend.length() > 0) {
                         webSocket.sendMessage(msg.conversationID, msgsend);
                     }
                 } else {
