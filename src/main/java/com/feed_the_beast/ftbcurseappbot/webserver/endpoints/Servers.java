@@ -114,7 +114,12 @@ public class Servers {
     }
 
     public static String getMdForServer (GroupNotification group) {
-        return getMdForGroup(group, true);
+        try {
+            return getMdForGroup(group, true);
+        } catch (NullPointerException e) {
+            log.error("NPE for server", e);
+            return "ERROR";
+        }
     }
 
     //TODO display in order
