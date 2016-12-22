@@ -21,7 +21,7 @@ import spark.template.mustache.MustacheTemplateEngine;
 public class WebService {
 
     public static final String API_POST_SUCCESS = "POST SUCCESSFUL";
-
+    private static final String COMMONMARK_TEMPLATE = "commonmark.mustache";
     public WebService () {
         if (Config.getProxyPath().isPresent()) {
             CommonMarkUtils.setProxypath(Config.getProxyPath().get());
@@ -42,12 +42,12 @@ public class WebService {
                 + "   - sublist\n"
                 + "\n";
         //TODO this needs to be able to take a ?raw=true parameter or something for API stuff
-        get("/mdtest", (request, response) -> new ModelAndView(Md.render(cmtest, "CM Test Title"), "commonmark.mustache"), new MustacheTemplateEngine());
-        get("/servers", (request, response) -> new ModelAndView(Servers.render(Config.getUsername() + " Servers"), "commonmark.mustache"), new MustacheTemplateEngine());
-        get("/server/:guid", (request, response) -> new ModelAndView(Servers.renderSpecificServer(request, response), "commonmark.mustache"), new MustacheTemplateEngine());
-        get("/channel/:guid", (request, response) -> new ModelAndView(Servers.renderSpecificChannel(request, response), "commonmark.mustache"), new MustacheTemplateEngine());
+        get("/mdtest", (request, response) -> new ModelAndView(Md.render(cmtest, "CM Test Title"), COMMONMARK_TEMPLATE), new MustacheTemplateEngine());
+        get("/servers", (request, response) -> new ModelAndView(Servers.render(Config.getUsername() + " Servers"), COMMONMARK_TEMPLATE), new MustacheTemplateEngine());
+        get("/server/:guid", (request, response) -> new ModelAndView(Servers.renderSpecificServer(request, response), COMMONMARK_TEMPLATE), new MustacheTemplateEngine());
+        get("/channel/:guid", (request, response) -> new ModelAndView(Servers.renderSpecificChannel(request, response), COMMONMARK_TEMPLATE), new MustacheTemplateEngine());
         post("/webhooks/github/:hookName", GithubWebhook.hook);
-        get("/", (request, response) -> new ModelAndView(Md.render(CommonMarkUtils.link("Servers list/moderation data", "/servers"), "Bot Home"), "commonmark.mustache"), new MustacheTemplateEngine());
+        get("/", (request, response) -> new ModelAndView(Md.render(CommonMarkUtils.link("Servers list/moderation data", "/servers"), "Bot Home"), COMMONMARK_TEMPLATE), new MustacheTemplateEngine());
     }
 
 }
