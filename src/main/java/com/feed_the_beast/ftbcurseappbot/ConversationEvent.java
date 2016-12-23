@@ -83,7 +83,7 @@ public class ConversationEvent implements Task<ConversationMessageNotification> 
                         }
                     }
                     if (msgsend.length() > 0) {
-                        webSocket.sendMessage(msg.conversationID, msgsend);
+                        //webSocket.sendMessage(msg.conversationID, msgsend);
                     }
                 } else {
                     //TODO implement
