@@ -29,6 +29,7 @@ import com.feed_the_beast.javacurselib.websocket.WebSocket;
 import com.feed_the_beast.javacurselib.websocket.messages.notifications.NotificationsServiceContractType;
 import com.google.common.eventbus.EventBus;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import retrofit2.adapter.java8.HttpException;
 
@@ -63,7 +64,8 @@ public class Main {
     private static WebSocket webSocket;
     @Getter
     private static ScheduledExecutorService scheduledTasks = Executors.newScheduledThreadPool(5);
-
+    @Getter @Setter
+    private static CurseGUID machineKey;//TODO this should be cached & in database
     public static void main (String args[]) {
         log.info("FTB CurseApp bot V " + VERSION);
         JCommander jc = null;
@@ -97,7 +99,8 @@ public class Main {
         log.info("Synchronous login done: for user " + lr.session.username);
 
         CountDownLatch sessionLatch = new CountDownLatch(1);
-        CompletableFuture<CreateSessionResponse> createSessionResponseCompletableFuture = restUserEndpoints.session.create(new CreateSessionRequest(CurseGUID.newRandomUUID(), DevicePlatform.UNKNOWN));
+        setMachineKey(CurseGUID.newRandomUUID());
+        CompletableFuture<CreateSessionResponse> createSessionResponseCompletableFuture = restUserEndpoints.session.create(new CreateSessionRequest(getMachineKey(), DevicePlatform.UNKNOWN));
 
         createSessionResponseCompletableFuture.whenComplete((r, e) -> {
             if (e != null) {
@@ -172,10 +175,7 @@ public class Main {
             log.error("latch await error", e);
         }
     }
-    public static CurseGUID getMachineKey() {
-        //TODO cache this in the database/caching service each bot should have a permanent key
-        return CurseGUID.newRandomUUID();
-    }
+
     public static void sendMessage(CurseGUID id, String message) {
         ConversationCreateMessageRequest req = new ConversationCreateMessageRequest();
         req.body = message;
