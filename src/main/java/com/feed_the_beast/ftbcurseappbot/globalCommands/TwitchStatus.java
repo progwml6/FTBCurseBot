@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbcurseappbot.globalCommands;
 
 import com.feed_the_beast.ftbcurseappbot.Config;
+import com.feed_the_beast.ftbcurseappbot.Main;
 import com.feed_the_beast.ftbcurseappbot.api.nighttwitchstatus.Server;
 import com.feed_the_beast.ftbcurseappbot.api.nighttwitchstatus.Status;
 import com.feed_the_beast.ftbcurseappbot.utils.JsonFactory;
@@ -153,7 +154,7 @@ public class TwitchStatus extends StatusCommandBase {
     @Override
     public void onMessage (WebSocket webSocket, ConversationMessageNotification msg) {
         log.info(getService() + "status " + msg.body.replace(Config.getBotTrigger() + "twitchstatus", ""));
-        webSocket.sendMessage(msg.conversationID, getServiceStatus());
+        Main.sendMessage(msg.conversationID, getServiceStatus());
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbcurseappbot.globalCommands;
 
+import com.feed_the_beast.ftbcurseappbot.Main;
 import com.feed_the_beast.javacurselib.websocket.WebSocket;
 import com.feed_the_beast.javacurselib.websocket.messages.notifications.ConversationMessageNotification;
 
@@ -9,7 +10,7 @@ public class ChatFormatting extends CommandBase {
     private static final String CURSE_SUPPORT_CHAT_FORMATTING = "https://support.curse.com/hc/en-us/articles/210356803-Text-Chat-Message-Formatting";
 
     @Override public void onMessage (WebSocket webSocket, ConversationMessageNotification msg) {
-        webSocket.sendMessage(msg.conversationID, CURSE_SUPPORT_CHAT_FORMATTING);
+        Main.sendMessage(msg.conversationID, CURSE_SUPPORT_CHAT_FORMATTING);
     }
 
     @Override public Pattern getTriggerRegex () {

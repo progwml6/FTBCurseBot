@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbcurseappbot.globalCommands;
 
+import com.feed_the_beast.ftbcurseappbot.Main;
 import com.feed_the_beast.ftbcurseappbot.utils.NetworkingUtils;
 import com.feed_the_beast.javacurselib.websocket.WebSocket;
 import com.feed_the_beast.javacurselib.websocket.messages.notifications.ConversationMessageNotification;
@@ -32,15 +33,15 @@ public class HasPaidMC extends CommandBase {
             log.info("haspaidmc " + msplit[1]);
             try {
                 if (getHasPaid(msplit[1])) {
-                    webSocket.sendMessage(msg.conversationID, msplit[1] + " has paid for minecraft :white_check_mark:");
+                    Main.sendMessage(msg.conversationID, msplit[1] + " has paid for minecraft :white_check_mark:");
                 } else {
-                    webSocket.sendMessage(msg.conversationID, msplit[1] + " has NOT paid for minecraft :negative_squared_cross_mark:");
+                    Main.sendMessage(msg.conversationID, msplit[1] + " has NOT paid for minecraft :negative_squared_cross_mark:");
                 }
             } catch (IOException e) {
-                webSocket.sendMessage(msg.conversationID, "Was unable to check with mojang if " + msplit[1] + " has paid!");
+                Main.sendMessage(msg.conversationID, "Was unable to check with mojang if " + msplit[1] + " has paid!");
             }
         } else {
-            webSocket.sendMessage(msg.conversationID, "You need to enter a username!");
+            Main.sendMessage(msg.conversationID, "You need to enter a username!");
         }
     }
 

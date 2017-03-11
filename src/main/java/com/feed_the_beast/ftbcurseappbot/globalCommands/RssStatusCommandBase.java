@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbcurseappbot.globalCommands;
 
 import com.feed_the_beast.ftbcurseappbot.Config;
+import com.feed_the_beast.ftbcurseappbot.Main;
 import com.feed_the_beast.ftbcurseappbot.utils.RssUtils;
 import com.feed_the_beast.javacurselib.websocket.WebSocket;
 import com.feed_the_beast.javacurselib.websocket.messages.notifications.ConversationMessageNotification;
@@ -20,7 +21,7 @@ public abstract class RssStatusCommandBase extends StatusCommandBase {
     @Override
     public void onMessage (WebSocket webSocket, ConversationMessageNotification msg) {
         log.info(getService() + "status " + msg.body.replace(Config.getBotTrigger() + getService() + "status", ""));
-        webSocket.sendMessage(msg.conversationID, getServiceStatus());
+        Main.sendMessage(msg.conversationID, getServiceStatus());
 
     }
 

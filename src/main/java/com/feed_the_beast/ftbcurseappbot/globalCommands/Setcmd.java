@@ -18,7 +18,7 @@ public class Setcmd extends CommandBase {
             if (MongoConnection.isPersistanceEnabled()) {
                 String[] parts = msg.body.split(" ", 3);
                 if (parts.length < 3) {
-                    webSocket.sendMessage(msg.conversationID, "usage: " + Config.getBotTrigger() + "setcmd <command> <content>");
+                    Main.sendMessage(msg.conversationID, "usage: " + Config.getBotTrigger() + "setcmd <command> <content>");
 
                 } else {
                     String commandRegex = parts[1];
@@ -35,11 +35,11 @@ public class Setcmd extends CommandBase {
                     commands.ifPresent(mongoCommands -> Main.getCacheService().setServerCommandsEntry(msg.rootConversationID, mongoCommands));
                 }
             } else {
-                webSocket.sendMessage(msg.conversationID, "can not add command as persistence is disabled");
+                Main.sendMessage(msg.conversationID, "can not add command as persistence is disabled");
 
             }
         } else {
-            webSocket.sendMessage(msg.conversationID, "can not add command as you don't have the necessary permissions");
+            Main.sendMessage(msg.conversationID, "can not add command as you don't have the necessary permissions");
         }
     }
 

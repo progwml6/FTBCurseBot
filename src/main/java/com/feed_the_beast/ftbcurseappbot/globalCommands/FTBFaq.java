@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbcurseappbot.globalCommands;
 
 import com.feed_the_beast.ftbcurseappbot.Config;
+import com.feed_the_beast.ftbcurseappbot.Main;
 import com.feed_the_beast.ftbcurseappbot.api.ftbsupportfaq.FaqData;
 import com.feed_the_beast.ftbcurseappbot.api.ftbsupportfaq.Sitejson;
 import com.feed_the_beast.ftbcurseappbot.utils.JsonFactory;
@@ -53,21 +54,21 @@ public class FTBFaq extends CommandBase {
                     for (FaqData entry : data) {
                         bdr.append(entry.name).append(", ");
                     }
-                    webSocket.sendMessage(msg.conversationID, removeLastTwoChars(bdr.toString()));
+                    Main.sendMessage(msg.conversationID, removeLastTwoChars(bdr.toString()));
 
                 } else {
                     Optional<FaqData> res = data.stream().filter(entry -> entry.name.equalsIgnoreCase(param)).findFirst();
                     if (res.isPresent()) {
-                        webSocket.sendMessage(msg.conversationID, res.get().title + ": " + res.get().url);
+                        Main.sendMessage(msg.conversationID, res.get().title + ": " + res.get().url);
                     } else {
-                        webSocket.sendMessage(msg.conversationID, "topic " + param + " doesn't exist");
+                        Main.sendMessage(msg.conversationID, "topic " + param + " doesn't exist");
                     }
                 }
             } else {
                 log.error("faqdata was null");
             }
         } else {
-            webSocket.sendMessage(msg.conversationID, getHelp());
+            Main.sendMessage(msg.conversationID, getHelp());
         }
 
     }

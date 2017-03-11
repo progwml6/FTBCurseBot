@@ -90,7 +90,6 @@ public class ConversationEvent implements Task<ConversationMessageNotification> 
                 }
             }
 
-            webSocket.sendMarkRead(msg.conversationID);
         } else if (msg.notificationType == ConversationNotificationType.DELETED) {
             if (MongoConnection.isPersistanceEnabled()) {
                 MongoConnection

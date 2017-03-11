@@ -38,7 +38,7 @@ public class CustomCommands extends CommandBase {
             ret = ret.substring(0, ret.length() - 2);
         }
 
-        webSocket.sendMessage(msg.conversationID, ret);
+        Main.sendMessage(msg.conversationID, ret);
     }
 
     @Override

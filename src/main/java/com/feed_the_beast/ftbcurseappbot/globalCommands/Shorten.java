@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbcurseappbot.globalCommands;
 
+import com.feed_the_beast.ftbcurseappbot.Main;
 import com.feed_the_beast.ftbcurseappbot.utils.NetworkingUtils;
 import com.feed_the_beast.javacurselib.websocket.WebSocket;
 import com.feed_the_beast.javacurselib.websocket.messages.notifications.ConversationMessageNotification;
@@ -30,7 +31,7 @@ public class Shorten extends CommandBase {
         String[] args = msg.body.split(" ");
         if (args.length == 2) {
             log.debug("shorten url " + args[1]);
-            webSocket.sendMessage(msg.conversationID, shortenURL(args[1]));
+            Main.sendMessage(msg.conversationID, shortenURL(args[1]));
         }
 
     }

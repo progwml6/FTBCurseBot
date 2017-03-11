@@ -25,7 +25,7 @@ public class CustomCommandExecutor {
      */
     public static boolean execute (@Nonnull MongoCommand cmd, @Nonnull WebSocket webSocket, @Nonnull ConversationMessageNotification msg) {
         if (msg.senderPermissions.containsAll(cmd.getGroupPermissions())) {
-            webSocket.sendMessage(msg.conversationID, cmd.getContent());
+            Main.sendMessage(msg.conversationID, cmd.getContent());
             log.info("executing command {} on server {}", cmd.getRegex(), msg.serverID);
             return true;
         } else {

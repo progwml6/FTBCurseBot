@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbcurseappbot.globalCommands;
 
 import com.feed_the_beast.ftbcurseappbot.Config;
+import com.feed_the_beast.ftbcurseappbot.Main;
 import com.feed_the_beast.ftbcurseappbot.persistence.MongoConnection;
 import com.feed_the_beast.javacurselib.common.enums.GroupPermissions;
 import com.feed_the_beast.javacurselib.websocket.WebSocket;
@@ -15,7 +16,7 @@ public class AddCurseCheck extends CommandBase {
             if (MongoConnection.isPersistanceEnabled()) {
                 String[] parts = msg.body.split(" ", 3);
                 if (parts.length < 2) {
-                    webSocket.sendMessage(msg.conversationID, "usage: " + Config.getBotTrigger() + "addcursecheck <author> <type(optional)>");
+                    Main.sendMessage(msg.conversationID, "usage: " + Config.getBotTrigger() + "addcursecheck <author> <type(optional)>");
                 } else {
                     String author = parts[1];
                     String type = null;
@@ -25,11 +26,11 @@ public class AddCurseCheck extends CommandBase {
                     MongoConnection.createOrModifyCurseCheckForChannel(author, type, msg.rootConversationID, msg.conversationID);
                 }
             } else {
-                webSocket.sendMessage(msg.conversationID, "can not add check as persistence is disabled");
+                Main.sendMessage(msg.conversationID, "can not add check as persistence is disabled");
 
             }
         } else {
-            webSocket.sendMessage(msg.conversationID, "can not add check as you don't have the necessary permissions");
+            Main.sendMessage(msg.conversationID, "can not add check as you don't have the necessary permissions");
         }
     }
 

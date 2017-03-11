@@ -7,9 +7,6 @@ import com.feed_the_beast.javacurselib.websocket.messages.notifications.Conversa
 import java.util.Optional;
 import java.util.regex.Pattern;
 
-/**
- * Created by progwml6 on 10/24/16.
- */
 public class Curseuuid extends CommandBase {
     @Override
     public void onMessage (WebSocket webSocket, ConversationMessageNotification msg) {
@@ -17,12 +14,12 @@ public class Curseuuid extends CommandBase {
         Optional<String> serverName = Main.getCacheService().getContacts().get().getGroupNamebyId(msg.rootConversationID);
 
         if (serverName.isPresent() && channelName.isPresent()) {
-            webSocket.sendMessage(msg.conversationID, "Server: " + serverName.get() + " is " + msg.rootConversationID + " ; Channel: " + channelName.get() + " is " + msg.conversationID);
+            Main.sendMessage(msg.conversationID, "Server: " + serverName.get() + " is " + msg.rootConversationID + " ; Channel: " + channelName.get() + " is " + msg.conversationID);
         } else {
             if (serverName.isPresent()) {
-                webSocket.sendMessage(msg.conversationID, "Server: " + serverName + " is " + msg.rootConversationID + " ; Channel: is " + msg.conversationID);
+                Main.sendMessage(msg.conversationID, "Server: " + serverName + " is " + msg.rootConversationID + " ; Channel: is " + msg.conversationID);
             }
-            channelName.ifPresent(s -> webSocket.sendMessage(msg.conversationID, "Server is " + msg.rootConversationID + " ; Channel: " + s + " is " + msg.conversationID));
+            channelName.ifPresent(s -> Main.sendMessage(msg.conversationID, "Server is " + msg.rootConversationID + " ; Channel: " + s + " is " + msg.conversationID));
         }
     }
 

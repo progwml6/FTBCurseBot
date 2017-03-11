@@ -34,19 +34,19 @@ public class Ban extends CommandBase {
                 Optional<GroupMemberContract> member = Main.getCacheService().getServerMember(msg.rootConversationID, msplit[1], true);
 
                 if (member.isPresent()) {
-                    webSocket.sendMessage(msg.conversationID, "You can ban " + msplit[1] + "!");
+                    Main.sendMessage(msg.conversationID, "You can ban " + msplit[1] + "!");
                     MongoConnection.logEvent(PersistanceEventType.BAN, msg.rootConversationID, msg.conversationID, msg.senderID, msg.senderName, member.get().userID, msplit[1], desc, true,
                             new Date().getTime(),new Date().getTime());
                 } else {
-                    webSocket.sendMessage(msg.conversationID, "can not find " + msplit[1] + " in this server to ban!");
+                    Main.sendMessage(msg.conversationID, "can not find " + msplit[1] + " in this server to ban!");
                 }
             } else {
-                webSocket.sendMessage(msg.conversationID, "You do not have permission to use the ban command!");
+                Main.sendMessage(msg.conversationID, "You do not have permission to use the ban command!");
             }
         } else
 
         {
-            webSocket.sendMessage(msg.conversationID, "You need to enter a username to ban!");
+            Main.sendMessage(msg.conversationID, "You need to enter a username to ban!");
         }
 
     }

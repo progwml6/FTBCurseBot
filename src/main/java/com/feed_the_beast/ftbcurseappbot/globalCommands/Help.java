@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbcurseappbot.globalCommands;
 
 import com.feed_the_beast.ftbcurseappbot.Config;
+import com.feed_the_beast.ftbcurseappbot.Main;
 import com.feed_the_beast.javacurselib.websocket.WebSocket;
 import com.feed_the_beast.javacurselib.websocket.messages.notifications.ConversationMessageNotification;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +14,7 @@ public class Help extends CommandBase {
     @Override
     public void onMessage (WebSocket webSocket, ConversationMessageNotification msg) {
         log.info("help " + msg.senderName);
-        webSocket.sendMessage(msg.conversationID,
+        Main.sendMessage(msg.conversationID,
                 "commands are: " + Config.getBotTrigger() + "addcursecheck, " + Config.getBotTrigger() + "ban, " + Config.getBotTrigger() + "bbstatus, " + Config.getBotTrigger() + "cfstatus, "
                         + Config.getBotTrigger() + "chatformatting, " + Config.getBotTrigger() + "cfstatus, " + Config.getBotTrigger() + "curseuuid, " + Config.getBotTrigger() + "customcommands, "
                         + Config.getBotTrigger() + "delcmd, " + Config.getBotTrigger() + "delcursecheck, " + Config

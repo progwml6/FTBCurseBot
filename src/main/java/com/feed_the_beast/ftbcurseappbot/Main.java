@@ -19,6 +19,7 @@ import com.feed_the_beast.javacurselib.data.Apis;
 import com.feed_the_beast.javacurselib.examples.app_v1.DefaultResponseTask;
 import com.feed_the_beast.javacurselib.examples.app_v1.TraceResponseTask;
 import com.feed_the_beast.javacurselib.rest.RestUserEndpoints;
+import com.feed_the_beast.javacurselib.service.conversations.conversations.ConversationCreateMessageRequest;
 import com.feed_the_beast.javacurselib.service.logins.login.LoginRequest;
 import com.feed_the_beast.javacurselib.service.logins.login.LoginResponse;
 import com.feed_the_beast.javacurselib.service.sessions.sessions.CreateSessionRequest;
@@ -158,9 +159,7 @@ public class Main {
             webSocket.addTask(new DefaultResponseTask(), NotificationsServiceContractType.CONVERSATION_READ_NOTIFICATION);
             webSocket.addTask(new TraceResponseTask(), NotificationsServiceContractType.UNKNOWN);
         }
-        //TODO remove or move up to debugging at some point, this is needed to troubleshoot delivery errors
-        webSocket.addTask(new TraceResponseTask(), NotificationsServiceContractType.CONVERSATION_MESSAGE_RESPONSE);
-        commonMarkUtils = new CommonMarkUtils();
+            commonMarkUtils = new CommonMarkUtils();
         if (Config.isWebEnabled()) {
             new WebService();
         }
@@ -172,5 +171,16 @@ public class Main {
         } catch (InterruptedException e) {
             log.error("latch await error", e);
         }
+    }
+    public static CurseGUID getMachineKey() {
+        //TODO cache this in the database/caching service each bot should have a permanent key
+        return CurseGUID.newRandomUUID();
+    }
+    public static void sendMessage(CurseGUID id, String message) {
+        ConversationCreateMessageRequest req = new ConversationCreateMessageRequest();
+        req.body = message;
+        req.machineKey=getMachineKey();
+        req.clientID=CurseGUID.newRandomUUID();//TODO figure out if this should actually be random
+        restUserEndpoints.conversations.postMessage(id,req);
     }
 }

@@ -145,7 +145,7 @@ public class CurseforgeChecker implements Runnable {
                                 String toSend = base + getTextForType(m.getType(), ret);
                                 if (ret.size() > 0) {
                                     log.debug("sending {} {} to {} using {}", m.getAuthor(), m.getType(), m.getChannelID(), dbt);
-                                    webSocket.sendMessage(m.getChannelIDAsGUID(), toSend);
+                                    Main.sendMessage(m.getChannelIDAsGUID(), toSend);
                                 }
                             } else {
                                 if (m.getAuthor() != null) {
@@ -156,7 +156,7 @@ public class CurseforgeChecker implements Runnable {
                                     String toSend = base + getTextForType("Mods", d) + getTextForType("Addons", d) + getTextForType("Modpacks", d) + getTextForType("Texture Packs", d);
                                     if (ret.size() > 0) {
                                         log.debug("sending {} to {} using {}", m.getAuthor(), m.getChannelID(), dbt);
-                                        webSocket.sendMessage(m.getChannelIDAsGUID(), toSend);
+                                        Main.sendMessage(m.getChannelIDAsGUID(), toSend);
                                     }
                                 }
                             }
@@ -194,14 +194,14 @@ public class CurseforgeChecker implements Runnable {
                         if (Config.isDebugEnabled()) {
                             log.debug("sending status change for {} to {} guid: {} types {}", "CurseForge", s, ci.get().serialize(), types);
                         }
-                        ws.sendMessage(ci.get(), message);
+                        Main.sendMessage(ci.get(), message);
                     } else {
                         log.error("no channel id exists for {} {}", g[0], g[1]);
                     }
                 } else {
                     Optional<CurseGUID> ci = Main.getCacheService().getContacts().get().getGroupIdByName(s, String::equalsIgnoreCase);
                     if (ci.isPresent()) {
-                        ws.sendMessage(ci.get(), message);
+                        Main.sendMessage(ci.get(), message);
                     } else {
                         log.error("no channel id exists for {}", s);
                     }

@@ -33,18 +33,18 @@ public class Kick extends CommandBase {
                 }
                 Optional<GroupMemberContract> member = Main.getCacheService().getServerMember(msg.rootConversationID, msplit[1], true);
                 if (member.isPresent()) {
-                    webSocket.sendMessage(msg.conversationID, "You can kick " + msplit[1] + "!");
+                    Main.sendMessage(msg.conversationID, "You can kick " + msplit[1] + "!");
                     MongoConnection.logEvent(PersistanceEventType.KICK, msg.rootConversationID, msg.conversationID, msg.senderID, msg.senderName, member.get().userID, msplit[1], desc, true,
                             new Date().getTime(), new Date().getTime());
                 } else {
-                    webSocket.sendMessage(msg.conversationID, "can not find " + msplit[1] + " in this server to kick!");
+                    Main.sendMessage(msg.conversationID, "can not find " + msplit[1] + " in this server to kick!");
                 }
 
             } else {
-                webSocket.sendMessage(msg.conversationID, "You do not have permission to use the kick command!");
+                Main.sendMessage(msg.conversationID, "You do not have permission to use the kick command!");
             }
         } else {
-            webSocket.sendMessage(msg.conversationID, "You need to enter a username to kick!");
+            Main.sendMessage(msg.conversationID, "You need to enter a username to kick!");
         }
 
     }

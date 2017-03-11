@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbcurseappbot.globalCommands;
 
+import com.feed_the_beast.ftbcurseappbot.Main;
 import com.feed_the_beast.ftbcurseappbot.utils.NetworkingUtils;
 import com.feed_the_beast.javacurselib.websocket.WebSocket;
 import com.feed_the_beast.javacurselib.websocket.messages.notifications.ConversationMessageNotification;
@@ -24,16 +25,16 @@ public class MCUUID extends CommandBase {
                 JsonParser p = new JsonParser();
                 JsonElement report = p.parse(json);
                 if (report != null && report.isJsonObject()) {
-                    webSocket.sendMessage(msg.conversationID, "Username: " + report.getAsJsonObject().get("name").getAsString() + " UUID: " + report.getAsJsonObject().get("id").getAsString());
+                    Main.sendMessage(msg.conversationID, "Username: " + report.getAsJsonObject().get("name").getAsString() + " UUID: " + report.getAsJsonObject().get("id").getAsString());
                 } else {
-                    webSocket.sendMessage(msg.conversationID, "Could not find UUID for " + msplit[1]);
+                    Main.sendMessage(msg.conversationID, "Could not find UUID for " + msplit[1]);
 
                 }
             } catch (IOException | JsonParseException e) {
-                webSocket.sendMessage(msg.conversationID, "Was unable to check with mojang for " + msplit[1] + "'s uuid!");
+                Main.sendMessage(msg.conversationID, "Was unable to check with mojang for " + msplit[1] + "'s uuid!");
             }
         } else {
-            webSocket.sendMessage(msg.conversationID, "You need to enter a username!");
+            Main.sendMessage(msg.conversationID, "You need to enter a username!");
         }
     }
 

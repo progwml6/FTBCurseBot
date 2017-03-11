@@ -18,7 +18,7 @@ public class DelCmd extends CommandBase {
             if (MongoConnection.isPersistanceEnabled()) {
                 String[] parts = msg.body.split(" ", 2);
                 if (parts.length < 2) {
-                    webSocket.sendMessage(msg.conversationID, "usage: " + Config.getBotTrigger() + "delcmd <command>");
+                    Main.sendMessage(msg.conversationID, "usage: " + Config.getBotTrigger() + "delcmd <command>");
 
                 } else {
                     String commandRegex = parts[1];
@@ -33,28 +33,28 @@ public class DelCmd extends CommandBase {
                         for (MongoCommand c : commands.get()) {
                             if (c.getPattern().matcher(regex).matches()) {
                                 if (!msg.senderPermissions.containsAll(c.getGroupPermissions())) {
-                                    webSocket.sendMessage(msg.conversationID, "can not remove command as you don't have the necessary permissions");
+                                    Main.sendMessage(msg.conversationID, "can not remove command as you don't have the necessary permissions");
                                     //TODO log permission violation as this command was set to have higher permissions by admins etc.
                                     return;
                                 }
                             }
                         }
                         MongoConnection.removeCommandForServer(regex, msg.rootConversationID, botTrigger);
-                        webSocket.sendMessage(msg.conversationID, commandRegex + " has been removed");
+                        Main.sendMessage(msg.conversationID, commandRegex + " has been removed");
                         commands = MongoConnection.getCommandsForServer(msg.rootConversationID);
                         //update cache
                         commands.ifPresent(mongoCommands -> Main.getCacheService().setServerCommandsEntry(msg.rootConversationID, mongoCommands));
                     } else {
-                        webSocket.sendMessage(msg.conversationID, "command " + regex + " does not exist!");
+                        Main.sendMessage(msg.conversationID, "command " + regex + " does not exist!");
                     }
 
                 }
             } else {
-                webSocket.sendMessage(msg.conversationID, "can not remove command as persistence is disabled");
+                Main.sendMessage(msg.conversationID, "can not remove command as persistence is disabled");
 
             }
         } else {
-            webSocket.sendMessage(msg.conversationID, "can not remove command as you don't have the necessary permissions");
+            Main.sendMessage(msg.conversationID, "can not remove command as you don't have the necessary permissions");
         }
     }
 
