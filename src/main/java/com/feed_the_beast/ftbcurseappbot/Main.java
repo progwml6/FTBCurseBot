@@ -181,6 +181,8 @@ public class Main {
         req.body = message;
         req.machineKey=getMachineKey();
         req.clientID=CurseGUID.newRandomUUID();//TODO figure out if this should actually be random
+        req.attachmentID = CurseGUID.newInstance("00000000-0000-0000-0000-000000000000");
+        req.attachmentRegionID=0;
         restUserEndpoints.conversations.postMessage(id,req);
     }
 }
