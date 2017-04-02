@@ -2,10 +2,7 @@ package com.feed_the_beast.ftbcurseappbot.persistence;
 
 import com.feed_the_beast.ftbcurseappbot.Config;
 import com.feed_the_beast.ftbcurseappbot.Main;
-import com.feed_the_beast.ftbcurseappbot.persistence.data.ModerationLog;
-import com.feed_the_beast.ftbcurseappbot.persistence.data.MongoCommand;
-import com.feed_the_beast.ftbcurseappbot.persistence.data.MongoCurseforgeCheck;
-import com.feed_the_beast.ftbcurseappbot.persistence.data.VersionInfo;
+import com.feed_the_beast.ftbcurseappbot.persistence.data.*;
 import com.feed_the_beast.javacurselib.common.enums.GroupPermissions;
 import com.feed_the_beast.javacurselib.utils.CurseGUID;
 import com.feed_the_beast.javacurselib.utils.EnumSetHelpers;
@@ -47,8 +44,9 @@ public class MongoConnection {
     private static String MONGO_SERVER_CONFIG_COLLECTION = "serverconfigs";
     private static String MONGO_CHANNEL_CONFIG_COLLECTION = "channelconfigs";
     private static String MONGO_CURSECHECKS_COLLECTION = "cursechecks";
+    private static String MONGO_API_COLLECTION = "api";
 
-    public static void start () {
+    public static void start() {
         CommentedConfigurationNode config = Config.getConfig().getNode("mongo");
         if (config.getNode("enabled").getBoolean()) {
             persistanceEnabled = true;
@@ -84,8 +82,8 @@ public class MongoConnection {
         }
     }
 
-    public static void logEvent (PersistanceEventType event, CurseGUID serverID, @Nullable CurseGUID channel, long performer, String performerName, long affects, String nameAffects, String info,
-            boolean wasDoneByBot, long actionTime, long messageTime) {
+    public static void logEvent(PersistanceEventType event, CurseGUID serverID, @Nullable CurseGUID channel, long performer, String performerName, long affects, String nameAffects, String info,
+                                boolean wasDoneByBot, long actionTime, long messageTime) {
         Date orig = null;
         if (messageTime > 0) {
             orig = new Date(messageTime);
@@ -117,15 +115,14 @@ public class MongoConnection {
     }
 
     /**
-     *
-     * @param regex command regex
-     * @param content content of the command when the regex matches
+     * @param regex               command regex
+     * @param content             content of the command when the regex matches
      * @param requiredPermissions required permissions(none when null)
-     * @param serverID curse server ID
-     * @param usesTrigger uses the bot's trigger if true like simple commands, if false this is a regex based command
+     * @param serverID            curse server ID
+     * @param usesTrigger         uses the bot's trigger if true like simple commands, if false this is a regex based command
      */
-    public static void createOrModifyCommandForServer (@Nonnull String regex, @Nonnull String content, @Nullable Set<GroupPermissions> requiredPermissions, @Nonnull CurseGUID serverID,
-            boolean usesTrigger) {
+    public static void createOrModifyCommandForServer(@Nonnull String regex, @Nonnull String content, @Nullable Set<GroupPermissions> requiredPermissions, @Nonnull CurseGUID serverID,
+                                                      boolean usesTrigger) {
         Set<GroupPermissions> commandPermissions = requiredPermissions;
         if (commandPermissions == null || commandPermissions.isEmpty()) {
             commandPermissions = GroupPermissions.NONE;
@@ -142,7 +139,7 @@ public class MongoConnection {
         jongo.getCollection(MONGO_COMMANDS_COLLECTION).save(command);
     }
 
-    public static void createOrModifyCurseCheckForChannel (@Nonnull String author, @Nullable String type, @Nonnull CurseGUID serverID, @Nonnull CurseGUID channelID) {
+    public static void createOrModifyCurseCheckForChannel(@Nonnull String author, @Nullable String type, @Nonnull CurseGUID serverID, @Nonnull CurseGUID channelID) {
         String typesearch = "";
         if (type != null) {
             typesearch = "', type: '" + type;
@@ -164,12 +161,12 @@ public class MongoConnection {
         jongo.getCollection(MONGO_CURSECHECKS_COLLECTION).save(check);
     }
 
-    public static void removeCommandForServer (@Nonnull String regex, @Nonnull CurseGUID serverID, boolean usesTrigger) {
+    public static void removeCommandForServer(@Nonnull String regex, @Nonnull CurseGUID serverID, boolean usesTrigger) {
         log.info("removing command '{}' on server {}  usesTrigger {}", regex, serverID.serialize(), usesTrigger);
         jongo.getCollection(MONGO_COMMANDS_COLLECTION).remove("{regex:'" + regex + "', usesTrigger:" + usesTrigger + ", serverID: '" + serverID.serialize() + "'}");
     }
 
-    public static void removeCurseforgeCheckFromServer (@Nonnull String author, @Nullable String type, @Nonnull CurseGUID serverID, @Nonnull CurseGUID channelID) {
+    public static void removeCurseforgeCheckFromServer(@Nonnull String author, @Nullable String type, @Nonnull CurseGUID serverID, @Nonnull CurseGUID channelID) {
         String tp2 = type;
         if (tp2 == null) {
             tp2 = "";
@@ -182,7 +179,7 @@ public class MongoConnection {
         jongo.getCollection(MONGO_CURSECHECKS_COLLECTION).remove("{author:'" + author + typesearch + "', serverID: '" + serverID.serialize() + "', channelID:'" + channelID.serialize() + "'}");
     }
 
-    public static Optional<List<ModerationLog>> getModerationLogs (CurseGUID channelId) {
+    public static Optional<List<ModerationLog>> getModerationLogs(CurseGUID channelId) {
         try {
             List<ModerationLog> commandRet = new ArrayList<>();
             MongoCursor<ModerationLog> commands = jongo.getCollection(MONGO_MODERATION_LOGGING_COLLECTION).find("{channelID: '" + channelId.serialize() + "'}")
@@ -199,7 +196,7 @@ public class MongoConnection {
 
     }
 
-    public static Optional<List<ModerationLog>> getMessageLog (CurseGUID channelId, Date eventTime) {
+    public static Optional<List<ModerationLog>> getMessageLog(CurseGUID channelId, Date eventTime) {
         try {
             List<ModerationLog> commandRet = new ArrayList<>();
             MongoCursor<ModerationLog> commands = jongo.getCollection(MONGO_MODERATION_LOGGING_COLLECTION)
@@ -216,7 +213,7 @@ public class MongoConnection {
         }
     }
 
-    public static Optional<List<MongoCurseforgeCheck>> getCurseChecks () {
+    public static Optional<List<MongoCurseforgeCheck>> getCurseChecks() {
         try {
             List<MongoCurseforgeCheck> commandRet = new ArrayList<>();
             MongoCursor<MongoCurseforgeCheck> commands = jongo.getCollection(MONGO_CURSECHECKS_COLLECTION).find()
@@ -232,7 +229,7 @@ public class MongoConnection {
         }
     }
 
-    public static Optional<List<MongoCurseforgeCheck>> getCurseChecksForAuthor (@Nonnull String author) {
+    public static Optional<List<MongoCurseforgeCheck>> getCurseChecksForAuthor(@Nonnull String author) {
         try {
             List<MongoCurseforgeCheck> commandRet = new ArrayList<>();
             MongoCursor<MongoCurseforgeCheck> commands = jongo.getCollection(MONGO_COMMANDS_COLLECTION).find("{author: '" + author + "'}")
@@ -251,7 +248,7 @@ public class MongoConnection {
 
     @Nonnull
     //TODO should this use streams?
-    public static Optional<List<MongoCommand>> getCommandsForServer (CurseGUID serverID) {
+    public static Optional<List<MongoCommand>> getCommandsForServer(CurseGUID serverID) {
         try {
             List<MongoCommand> commandRet = new ArrayList<>();
             MongoCursor<MongoCommand> commands = jongo.getCollection(MONGO_COMMANDS_COLLECTION).find("{serverID: '" + serverID.serialize() + "'}")
@@ -267,12 +264,34 @@ public class MongoConnection {
         }
     }
 
+    public static Optional<API> getAPIData(String key) {
+        try {
+            API commandRet = null;
+            MongoCursor<API> commands = jongo.getCollection(MONGO_API_COLLECTION).find("{apikey: '" + key + "'}")
+                    .as(API.class);
+            while (commands.hasNext()) {
+                commandRet = commands.next();
+            }
+            commands.close();
+            return Optional.of(commandRet);
+        } catch (IOException | NullPointerException e) {
+            log.error("error getting api data for key", e);
+            return Optional.empty();
+        }
+    }
+
+    public static void createorModifyAPIData(@Nonnull API data) {
+        log.info("setting data for api key command '{}' for {} channels {}", data.getApikey(), data.getChannels().size());
+        jongo.getCollection(MONGO_COMMANDS_COLLECTION).save(data);
+    }
+
     /**
      * this is where we would handle when DB migrations are needed past creating the main collections
+     *
      * @param dbVersion version in the database
-     * @param expected version the bot is expecting
+     * @param expected  version the bot is expecting
      */
-    private static void migrate (VersionInfo dbVersion, VersionInfo expected) {
+    private static void migrate(VersionInfo dbVersion, VersionInfo expected) {
         //mongo supports bulk updates ... they are MUCH faster than iterating through the DB
         if (dbVersion.getVersion() == 0) {
             jongo.getCollection(MONGO_COMMANDS_COLLECTION).ensureIndex("{ serverID: 1 }");
@@ -288,6 +307,9 @@ public class MongoConnection {
         }
         if (dbVersion.getVersion() < 5) {
             jongo.getCollection(MONGO_MODERATION_LOGGING_COLLECTION).ensureIndex("{channelID: 1, messageTime: -1}");
+        }
+        if (dbVersion.getVersion() < 6) {
+            jongo.getCollection(MONGO_API_COLLECTION).ensureIndex("{apikey: 1}","{unique: true}");
         }
         //do this last
         dbVersion.setVersion(expected.getVersion());

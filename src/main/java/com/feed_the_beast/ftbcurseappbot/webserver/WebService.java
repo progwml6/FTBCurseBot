@@ -7,10 +7,7 @@ import static spark.debug.DebugScreen.enableDebugScreen;
 
 import com.feed_the_beast.ftbcurseappbot.Config;
 import com.feed_the_beast.ftbcurseappbot.utils.CommonMarkUtils;
-import com.feed_the_beast.ftbcurseappbot.webserver.endpoints.GithubWebhook;
-import com.feed_the_beast.ftbcurseappbot.webserver.endpoints.HealthEndpoint;
-import com.feed_the_beast.ftbcurseappbot.webserver.endpoints.Md;
-import com.feed_the_beast.ftbcurseappbot.webserver.endpoints.Servers;
+import com.feed_the_beast.ftbcurseappbot.webserver.endpoints.*;
 import com.feed_the_beast.ftbcurseappbot.webserver.transformers.JsonTransformer;
 import spark.ModelAndView;
 import spark.template.mustache.MustacheTemplateEngine;
@@ -21,6 +18,8 @@ import spark.template.mustache.MustacheTemplateEngine;
 public class WebService {
 
     public static final String API_POST_SUCCESS = "POST SUCCESSFUL";
+    public static final String API_POST_BUST= "POST BUSTED";
+
     private static final String COMMONMARK_TEMPLATE = "commonmark.mustache";
     public WebService () {
         if (Config.getProxyPath().isPresent()) {
@@ -47,6 +46,7 @@ public class WebService {
         get("/server/:guid", (request, response) -> new ModelAndView(Servers.renderSpecificServer(request, response), COMMONMARK_TEMPLATE), new MustacheTemplateEngine());
         get("/channel/:guid", (request, response) -> new ModelAndView(Servers.renderSpecificChannel(request, response), COMMONMARK_TEMPLATE), new MustacheTemplateEngine());
         post("/webhooks/github/:hookName", GithubWebhook.hook);
+        post("/SendMessage", SendMessage.send);
         get("/", (request, response) -> new ModelAndView(Md.render(CommonMarkUtils.link("Servers list/moderation data", "/servers"), "Bot Home"), COMMONMARK_TEMPLATE), new MustacheTemplateEngine());
     }
 
