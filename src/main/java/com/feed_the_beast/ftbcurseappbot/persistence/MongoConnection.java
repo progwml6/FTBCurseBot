@@ -200,7 +200,7 @@ public class MongoConnection {
         try {
             List<ModerationLog> commandRet = new ArrayList<>();
             MongoCursor<ModerationLog> commands = jongo.getCollection(MONGO_MODERATION_LOGGING_COLLECTION)
-                    .find("{channelID: '" + channelId.serialize() + ", 'messageTime: ' ISODate(" + eventTime.toString() + ")'}")
+                    .find("{channelID: '" + channelId.serialize() + "' , 'messageTime: ' ISODate(" + eventTime.toString() + ")'}")
                     .as(ModerationLog.class);
             while (commands.hasNext()) {
                 commandRet.add(commands.next());
