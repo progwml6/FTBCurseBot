@@ -46,7 +46,7 @@ public class WebService {
         get("/server/:guid", (request, response) -> new ModelAndView(Servers.renderSpecificServer(request, response), COMMONMARK_TEMPLATE), new MustacheTemplateEngine());
         get("/channel/:guid", (request, response) -> new ModelAndView(Servers.renderSpecificChannel(request, response), COMMONMARK_TEMPLATE), new MustacheTemplateEngine());
         post("/webhooks/github/:hookName", GithubWebhook.hook);
-        post("/SendMessage", SendMessage.send);
+        post("/sendmessage", SendMessage.send);
         get("/", (request, response) -> new ModelAndView(Md.render(CommonMarkUtils.link("Servers list/moderation data", "/servers"), "Bot Home"), COMMONMARK_TEMPLATE), new MustacheTemplateEngine());
     }
 
