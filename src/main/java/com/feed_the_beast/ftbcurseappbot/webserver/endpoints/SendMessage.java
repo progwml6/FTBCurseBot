@@ -29,9 +29,12 @@ public class SendMessage {
             if (MongoConnection.isPersistanceEnabled()) {
                 Optional<API> data = MongoConnection.getAPIData(keyheader);
                 if(data.isPresent()) {
+                    log.debug("found key in database, checking before sending");
                     MessageData md = JsonFactory.GSON.fromJson(request.body(), MessageData.class);
                     for(APIServer s : data.get().getChannels()) {
+                        log.debug("s server {} channel {} md server {} channel {} ", s.getServerName(), s.getChannelName(), md.serverName, md.channelName);
                         if(s.getServerName().equalsIgnoreCase(md.serverName) && s.getChannelName().equalsIgnoreCase(md.channelName)) {
+                            log.debug("found server, sending");
                             Main.sendMessage(CurseGUID.newInstance(s.getChannelID()), md.message);
                             return WebService.API_POST_SUCCESS;
                         }
