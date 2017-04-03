@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import spark.Request;
 import spark.Response;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -89,9 +90,7 @@ public class Servers {
             Optional<List<ModerationLog>> logs = MongoConnection.getModerationLogs(channel.groupID);
             if (logs.isPresent() && logs.get().size() > 0) {
                 builder.append(CommonMarkUtils.tableHeader("Date", "Type", "ActionPerformer", "MessageOwner", "Info"));
-                logs.get().stream().sorted((e1, e2) -> Long.compare(e1.getActionTime().getTime(), e2.getActionTime().getTime())).forEach(cnl -> {
-                    builder.append(CommonMarkUtils.tableRow(cnl.getActionTime().toString(), cnl.getType(), cnl.getPerformerName(), cnl.getAffectsName(), cnl.getInfo()));
-                });
+                logs.get().stream().sorted(Comparator.comparingLong(e -> e.getActionTime().getTime())).forEach(cnl -> builder.append(CommonMarkUtils.tableRow(cnl.getActionTime().toString(), cnl.getType(), cnl.getPerformerName(), cnl.getAffectsName(), cnl.getInfo())));
             }
             //TODO display moderation data -- only in public listed for now
         }
@@ -104,7 +103,7 @@ public class Servers {
                 .append(CommonMarkUtils.list(group.messageOfTheDay == null ? "MOTD: " : group.messageOfTheDay))
                 .append(CommonMarkUtils.list("Public " + group.isPublic))
                 .append(CommonMarkUtils.list("hideNoAccess " + group.hideNoAccess)).append(CommonMarkUtils.list("displayOrder " + group.displayOrder));
-        group.channels.stream().filter(a -> (a.isPublic && displayChannelData)).sorted((e1, e2) -> Integer.compare(e1.displayOrder, e2.displayOrder))
+        group.channels.stream().filter(a -> (a.isPublic && displayChannelData)).sorted(Comparator.comparingInt(e -> e.displayOrder))
                 .forEach(channel -> builder.append(getMdForChannel(group, channel, false, false)));
         return builder.toString();
     }

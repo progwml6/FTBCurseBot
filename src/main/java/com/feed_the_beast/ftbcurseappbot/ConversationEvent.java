@@ -14,6 +14,7 @@ import com.feed_the_beast.javacurselib.websocket.messages.notifications.Conversa
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Date;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
@@ -40,19 +41,19 @@ public class ConversationEvent implements Task<ConversationMessageNotification> 
                     MongoConnection
                             .logEvent(PersistanceEventType.getTypeFromConversationNotificationType(msg.notificationType), msg.rootConversationID, msg.conversationID, msg.editedUserID,
                                     msg.editedUsername, msg.senderID,
-                                    msg.senderName, msg.body, msg.senderName == Config.getUsername(), msg.editedTimestamp, msg.timestamp);
+                                    msg.senderName, msg.body, Objects.equals(msg.senderName, Config.getUsername()), msg.editedTimestamp, msg.timestamp);
                 }
             } else if (msg.notificationType == ConversationNotificationType.NORMAL) {
                 if (MongoConnection.isPersistanceEnabled()) {
                     MongoConnection
                             .logEvent(PersistanceEventType.getTypeFromConversationNotificationType(msg.notificationType), msg.rootConversationID, msg.conversationID, -1,
                                     null, msg.senderID,
-                                    msg.senderName, msg.body, msg.senderName == Config.getUsername(), msg.timestamp, msg.timestamp);
+                                    msg.senderName, msg.body, Objects.equals(msg.senderName, Config.getUsername()), msg.timestamp, msg.timestamp);
                 }
             }
             if (msg.mentions != null && msg.mentions.length > 0) {
                 Optional<GroupNotification> gn = Main.getCacheService().getGroupNotification(msg.rootConversationID);
-                String msgsend = "";
+                StringBuilder msgsend = new StringBuilder();
                 if (gn.isPresent()) {
                     for (int i : msg.mentions) {
                         Optional<GroupMemberContract> member = Main.getCacheService().getServerMember(msg.rootConversationID, i, true);
@@ -70,12 +71,12 @@ public class ConversationEvent implements Task<ConversationMessageNotification> 
                             }
                             if (!canView) {
                                 if (msgsend.length() == 0) {
-                                    msgsend += "User(s) can't see message: ";
+                                    msgsend.append("User(s) can't see message: ");
                                 }
                                 if (member.get().nickName != null) {
-                                    msgsend += member.get().nickName + " ";
+                                    msgsend.append(member.get().nickName).append(" ");
                                 } else {
-                                    msgsend += member.get().username + " ";
+                                    msgsend.append(member.get().username).append(" ");
                                 }
                             }
                         } else {
@@ -95,7 +96,7 @@ public class ConversationEvent implements Task<ConversationMessageNotification> 
                 MongoConnection
                         .logEvent(PersistanceEventType.getTypeFromConversationNotificationType(msg.notificationType), msg.rootConversationID, msg.conversationID, msg.deletedUserID,
                                 msg.deletedUsername, msg.senderID,
-                                msg.senderName, msg.body, msg.senderName == Config.getUsername(), msg.deletedTimestamp, msg.timestamp);
+                                msg.senderName, msg.body, Objects.equals(msg.senderName, Config.getUsername()), msg.deletedTimestamp, msg.timestamp);
             }
         }
     }

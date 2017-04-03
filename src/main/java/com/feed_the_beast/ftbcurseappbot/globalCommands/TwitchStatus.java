@@ -78,7 +78,7 @@ public class TwitchStatus extends StatusCommandBase {
 
     @Nonnull @Override
     public String updateServiceHealth () {
-        String ret = "";
+        StringBuilder ret = new StringBuilder();
         boolean init = false;
         changed = false;
         try {
@@ -91,12 +91,12 @@ public class TwitchStatus extends StatusCommandBase {
             for (Server nw : status.web.servers) {
                 Server old = componentStatuses.get(nw.server.toLowerCase());
                 if (old == null) {
-                    ret += init ? "" : getStatusUpdate(nw, "web") + ", ";
+                    ret.append(init ? "" : getStatusUpdate(nw, "web") + ", ");
                     componentStatuses.put(nw.server.toLowerCase(), nw);
                     types.put(nw.server.toLowerCase(), "web");
                 } else {//put it in an update if its changed
                     if (!old.status.equalsIgnoreCase(nw.status)) {
-                        ret += init ? "" : getStatusUpdate(nw, "web") + ", ";
+                        ret.append(init ? "" : getStatusUpdate(nw, "web") + ", ");
                         changed = true;
                         componentStatuses.replace(nw.server.toLowerCase(), nw);
                     }
@@ -105,12 +105,12 @@ public class TwitchStatus extends StatusCommandBase {
             for (Server nw : status.ingest.servers) {
                 Server old = componentStatuses.get(nw.server.toLowerCase());
                 if (old == null) {
-                    ret += init ? "" : getStatusUpdate(nw, "ingest") + ", ";
+                    ret.append(init ? "" : getStatusUpdate(nw, "ingest") + ", ");
                     componentStatuses.put(nw.server.toLowerCase(), nw);
                     types.put(nw.server.toLowerCase(), "ingest");
                 } else {//put it in an update if its changed
                     if (!old.status.equalsIgnoreCase(nw.status)) {
-                        ret += init ? "" : getStatusUpdate(nw, "ingest") + ", ";
+                        ret.append(init ? "" : getStatusUpdate(nw, "ingest") + ", ");
                         changed = true;
                         componentStatuses.replace(nw.server.toLowerCase(), nw);
                     }
@@ -120,12 +120,12 @@ public class TwitchStatus extends StatusCommandBase {
                 for (Server nw : status.chat.servers) {
                     Server old = componentStatuses.get(nw.server.toLowerCase());
                     if (old == null) {
-                        ret += init ? "" : getStatusUpdate(nw, "chat") + ", ";
+                        ret.append(init ? "" : getStatusUpdate(nw, "chat") + ", ");
                         componentStatuses.put(nw.server.toLowerCase(), nw);
                         types.put(nw.server.toLowerCase(), "chat");
                     } else {//put it in an update if its changed
                         if (!old.status.equalsIgnoreCase(nw.status)) {
-                            ret += init ? "" : getStatusUpdate(nw, "chat") + ", ";
+                            ret.append(init ? "" : getStatusUpdate(nw, "chat") + ", ");
                             changed = true;
                             componentStatuses.replace(nw.server.toLowerCase(), nw);
                         }
@@ -135,15 +135,15 @@ public class TwitchStatus extends StatusCommandBase {
 
         } catch (IOException e) {
             log.error("error getting " + getService() + " status", e);
-            ret = "Error getting " + getService() + " status";
+            ret = new StringBuilder("Error getting " + getService() + " status");
         }
-        if (ret.endsWith(", ")) {
-            ret = removeLastTwoChars(ret);
+        if (ret.toString().endsWith(", ")) {
+            ret = new StringBuilder(removeLastTwoChars(ret.toString()));
         }
-        if (StringUtils.isNotEmpty(ret)) {
-            ret = "Twitch Status: " + ret;
+        if (StringUtils.isNotEmpty(ret.toString())) {
+            ret.insert(0, "Twitch Status: ");
         }
-        return ret.replace("offline", ":negative_squared_cross_mark:").replace("slow", ":construction:").replace("online", ":white_check_mark:").replace("unknown", ":question:");
+        return ret.toString().replace("offline", ":negative_squared_cross_mark:").replace("slow", ":construction:").replace("online", ":white_check_mark:").replace("unknown", ":question:");
     }
 
     @Override

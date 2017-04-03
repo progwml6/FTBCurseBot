@@ -159,12 +159,7 @@ public class CacheService {
             if (members.isPresent()) {
                 gc = members.get().stream().filter(g -> g != null && g.userID == id).findFirst();
             }
-            if (!gc.isPresent()) {
-                return Optional.empty();
-
-            } else {
-                return gc;
-            }
+            return gc;
         }
         return Optional.empty();
     }
@@ -208,12 +203,7 @@ public class CacheService {
                 gc = members.get().stream().filter(g -> g != null && ((g.nickName != null && g.nickName.equalsIgnoreCase(name)) || (g.username != null && g.username.equalsIgnoreCase(name))))
                         .findFirst();
             }
-            if (!gc.isPresent()) {
-                return Optional.empty();
-
-            } else {
-                return gc;
-            }
+            return gc;
         }
         return Optional.empty();
     }

@@ -61,7 +61,7 @@ public abstract class StatusPageIOBase extends StatusCommandBase {
     }
 
     public @Nonnull String updateServiceHealth () {
-        String ret = "";
+        StringBuilder ret = new StringBuilder();
         boolean init = false;
         changed = false;
         try {
@@ -73,11 +73,11 @@ public abstract class StatusPageIOBase extends StatusCommandBase {
             for (Component nw : summary.components) {
                 Component old = componentStatuses.get(nw.getName());
                 if (old == null) {
-                    ret += init ? "" : getStatusUpdate(nw) + ", ";
+                    ret.append(init ? "" : getStatusUpdate(nw) + ", ");
                     componentStatuses.put(nw.getName(), nw);
                 } else {//put it in an update if its changed
                     if (old.getUpdatedAt().before(nw.getUpdatedAt())) {
-                        ret += init ? "" : getStatusUpdate(nw) + ", ";
+                        ret.append(init ? "" : getStatusUpdate(nw) + ", ");
                         changed = true;
                         componentStatuses.replace(nw.getName(), nw);
                     }
@@ -88,19 +88,19 @@ public abstract class StatusPageIOBase extends StatusCommandBase {
                 serviceName = summary.page.getName();
             } else {
                 if (changed || !mainStatus.getIndicator().equals(summary.status.getIndicator()) || !mainStatus.getDescription().equals(summary.status.getDescription())) {
-                    ret = getService() + " Status: " + summary.status.getDescription() + ", " + ret;
+                    ret.insert(0, getService() + " Status: " + summary.status.getDescription() + ", ");
                     changed = true;
                     mainStatus = summary.status;
                 }
             }
         } catch (IOException e) {
             log.error("error getting " + getService() + " status", e);
-            ret = "Error getting " + getService() + " status";
+            ret = new StringBuilder("Error getting " + getService() + " status");
         }
-        if (ret.endsWith(", ")) {
-            ret = removeLastTwoChars(ret);
+        if (ret.toString().endsWith(", ")) {
+            ret = new StringBuilder(removeLastTwoChars(ret.toString()));
         }
-        return ret.replace("critical", ":negative_squared_cross_mark:").replace("minor", ":construction:").replace("none", ":white_check_mark:")
+        return ret.toString().replace("critical", ":negative_squared_cross_mark:").replace("minor", ":construction:").replace("none", ":white_check_mark:")
                 .replace("major_outage", ":negative_squared_cross_mark:").replace("degraded_performance", ":construction:").replace("partial_outage", ":construction:")
                 .replace("operational", ":white_check_mark:").replace("major", ":construction:").replace("under_maintenance", ":construction:");
     }

@@ -32,15 +32,15 @@ public abstract class RssStatusCommandBase extends StatusCommandBase {
 
     @Nonnull
     @Override public String getServiceStatus () {
-        String ret = "";
+        StringBuilder ret = new StringBuilder();
         SyndFeed feed = RssUtils.getFeed(getFeedURL());
         if (lastUpdate == 0) {
             lastUpdate = new Date().getTime();
         }
         for (SyndEntryImpl syn : RssUtils.getFeedAfter(feed, lastUpdate)) {
-            ret += feed.getTitle() + ", ";
+            ret.append(feed.getTitle()).append(", ");
         }
-        return ret;
+        return ret.toString();
     }
 
     @Nonnull

@@ -34,7 +34,7 @@ public class MCStatus extends StatusCommandBase {
     private static String getPrettyStatus (String item, boolean needPipe) {
         String ret = getMCStatusFor(item);
         if (!ret.isEmpty()) {
-            String pretty = mcstatusmappings.containsKey(item) ? mcstatusmappings.get(item) : item;
+            String pretty = mcstatusmappings.getOrDefault(item, item);
             return pretty + ": " + ret + (needPipe ? "|" : "");
         }
         return "";
