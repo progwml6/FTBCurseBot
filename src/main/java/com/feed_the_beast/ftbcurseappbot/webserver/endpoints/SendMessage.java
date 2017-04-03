@@ -28,8 +28,8 @@ public class SendMessage {
         if (!Strings.isNullOrEmpty(keyheader) && !keyheader.contains("'") && !keyheader.contains(",") && !keyheader.contains(":")) {//we don't want hidden commands getting ran
             if (MongoConnection.isPersistanceEnabled()) {
                 Optional<API> data = MongoConnection.getAPIData(keyheader);
+                log.debug("returned from database, checking before sending");
                 if(data.isPresent()) {
-                    log.debug("found key in database, checking before sending");
                     MessageData md = JsonFactory.GSON.fromJson(request.body(), MessageData.class);
                     for(APIServer s : data.get().getChannels()) {
                         log.debug("s server {} channel {} md server {} channel {} ", s.getServerName(), s.getChannelName(), md.serverName, md.channelName);
