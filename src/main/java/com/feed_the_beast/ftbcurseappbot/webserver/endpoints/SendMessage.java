@@ -25,22 +25,18 @@ public class SendMessage {
     public static Route send = (Request request, Response response) -> {
         String keyheader = request.headers(API_KEY_HEADER);
         if (!Strings.isNullOrEmpty(keyheader) && !keyheader.contains("'") && !keyheader.contains(",") && !keyheader.contains(":")) {//we don't want hidden commands getting ran
-            log.debug("header {}, message {}", keyheader, request.body());
             if (MongoConnection.isPersistanceEnabled()) {
                 Optional<API> data = MongoConnection.getAPIData(keyheader);
-                log.debug("returned from database, checking before sending");
                 if(data.isPresent()) {
                     MessageData md = JsonFactory.GSON.fromJson(request.body(), MessageData.class);
                     for(APIServer s : data.get().getChannels()) {
-                        log.debug("s server {} channel {} md server {} channel {} ", s.getServerName(), s.getChannelName(), md.serverName, md.channelName);
                         if(s.getServerName().equalsIgnoreCase(md.serverName) && s.getChannelName().equalsIgnoreCase(md.channelName)) {
-                            log.debug("found server, sending");
+                            log.debug("found server, sending {} {} {}", md.serverName, md.channelName, md.message);
                             Main.sendMessage(CurseGUID.newInstance(s.getChannelID()), md.message);
                             return WebService.API_POST_SUCCESS;
                         }
                     }
                 } else {
-                    log.debug("key {} not found in database", keyheader);
                 }
             }
         } else {
