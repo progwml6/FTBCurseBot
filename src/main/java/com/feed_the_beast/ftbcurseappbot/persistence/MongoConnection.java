@@ -268,7 +268,7 @@ public class MongoConnection {
         try {
             return Optional.of(jongo.getCollection(MONGO_API_COLLECTION).findOne("{apikey: '" + key + "'}")
                     .as(API.class));
-        } catch (NullPointerException e) {
+        } catch (Exception e) {
             log.error("error getting api data for key", e);
             return Optional.empty();
         }

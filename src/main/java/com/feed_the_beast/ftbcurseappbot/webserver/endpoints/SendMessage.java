@@ -24,8 +24,8 @@ public class SendMessage {
 
     public static Route send = (Request request, Response response) -> {
         String keyheader = request.headers(API_KEY_HEADER);
-        log.debug("header {}, message {}", keyheader, request.body());
         if (!Strings.isNullOrEmpty(keyheader) && !keyheader.contains("'") && !keyheader.contains(",") && !keyheader.contains(":")) {//we don't want hidden commands getting ran
+            log.debug("header {}, message {}", keyheader, request.body());
             if (MongoConnection.isPersistanceEnabled()) {
                 Optional<API> data = MongoConnection.getAPIData(keyheader);
                 log.debug("returned from database, checking before sending");
