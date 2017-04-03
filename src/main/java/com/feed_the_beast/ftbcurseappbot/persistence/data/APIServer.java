@@ -10,6 +10,9 @@ public class APIServer {
     private String channelID;
     private String serverID;
 
+    public APIServer() {
+        //for jackson
+    }
     public APIServer(String serverName, String channelName, String serverID, String channelID) {
         this.serverName = serverName;
         this.channelName = channelName;

@@ -22,6 +22,9 @@ public class API {
     @Setter
     private List<APIServer> channels;
 
+    public API () {
+        //for jackson
+    }
     public API(String key, List<APIServer> channels) {
         this.apikey = key;
         this.channels = channels;
