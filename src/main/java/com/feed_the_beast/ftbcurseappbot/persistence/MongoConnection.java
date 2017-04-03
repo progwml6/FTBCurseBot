@@ -266,15 +266,9 @@ public class MongoConnection {
 
     public static Optional<API> getAPIData(String key) {
         try {
-            API commandRet = null;
-            MongoCursor<API> commands = jongo.getCollection(MONGO_API_COLLECTION).find("{apikey: '" + key + "'}")
-                    .as(API.class);
-            while (commands.hasNext()) {
-                commandRet = commands.next();
-            }
-            commands.close();
-            return Optional.of(commandRet);
-        } catch (IOException | NullPointerException e) {
+            return Optional.of(jongo.getCollection(MONGO_API_COLLECTION).findOne("{apikey: '" + key + "'}")
+                    .as(API.class));
+        } catch (NullPointerException e) {
             log.error("error getting api data for key", e);
             return Optional.empty();
         }
@@ -282,7 +276,14 @@ public class MongoConnection {
 
     public static void createorModifyAPIData(@Nonnull API data) {
         log.info("setting data for api key command '{}' for {} channels {}", data.getApikey(), data.getChannels().size());
-        jongo.getCollection(MONGO_COMMANDS_COLLECTION).save(data);
+        API found = jongo.getCollection(MONGO_API_COLLECTION).findOne("{apikey: '" + data.getApikey() + "'}").as(API.class);
+        if (found != null) {
+            found.setChannels(data.getChannels());
+            jongo.getCollection(MONGO_COMMANDS_COLLECTION).save(found);
+        } else {
+            jongo.getCollection(MONGO_COMMANDS_COLLECTION).save(data);
+        }
+
     }
 
     /**
@@ -309,7 +310,7 @@ public class MongoConnection {
             jongo.getCollection(MONGO_MODERATION_LOGGING_COLLECTION).ensureIndex("{channelID: 1, messageTime: -1}");
         }
         if (dbVersion.getVersion() < 6) {
-            jongo.getCollection(MONGO_API_COLLECTION).ensureIndex("{apikey: 1}","{unique: true}");
+            jongo.getCollection(MONGO_API_COLLECTION).ensureIndex("{apikey: 1}", "{unique: true}");
         }
         //do this last
         dbVersion.setVersion(expected.getVersion());
