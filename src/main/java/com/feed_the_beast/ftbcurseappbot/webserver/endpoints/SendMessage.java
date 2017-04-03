@@ -9,6 +9,7 @@ import com.feed_the_beast.ftbcurseappbot.utils.JsonFactory;
 import com.feed_the_beast.ftbcurseappbot.webserver.WebService;
 import com.feed_the_beast.javacurselib.utils.CurseGUID;
 import com.google.common.base.Strings;
+import lombok.extern.slf4j.Slf4j;
 import spark.Request;
 import spark.Response;
 import spark.Route;
@@ -17,11 +18,13 @@ import java.util.Optional;
 
 import static spark.Spark.halt;
 
+@Slf4j
 public class SendMessage {
     private static final String API_KEY_HEADER = "X-FTBBOT-KEY";
 
     public static Route send = (Request request, Response response) -> {
         String keyheader = request.headers(API_KEY_HEADER);
+        log.debug("header {}, message {}", keyheader, request.body());
         if (!Strings.isNullOrEmpty(keyheader) && !keyheader.contains("'") && !keyheader.contains(",") && !keyheader.contains(":")) {//we don't want hidden commands getting ran
             if (MongoConnection.isPersistanceEnabled()) {
                 Optional<API> data = MongoConnection.getAPIData(keyheader);
@@ -33,6 +36,8 @@ public class SendMessage {
                             return WebService.API_POST_SUCCESS;
                         }
                     }
+                } else {
+                    log.debug("key {} not found in database", keyheader);
                 }
             }
         } else {
