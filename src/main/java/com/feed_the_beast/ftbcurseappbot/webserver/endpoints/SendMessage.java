@@ -36,7 +36,7 @@ public class SendMessage {
                 }
             }
         } else {
-            halt(500, "internal server error");//TODO put better error here
+            halt(500, "Internal Server Error, keyzzzz");//TODO put better error here
         }
         return WebService.API_POST_BUST;
     };
